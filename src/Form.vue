@@ -1,0 +1,67 @@
+<template>
+    <div class="vue-form">
+        <div class="text-right">
+            <span class="close-icon fa fa-times" @click="cancel"></span>
+        </div>
+        <form @submit.prevent="">
+            <component v-for="field in formConfig.fields" key="id"
+                       :is="getFormFieldComponent(field.widget)"
+                       v-if="field.visible"
+                       :field-name="field.name"
+                       v-model="form[field.value_field]"
+                       ></component>
+            <div class="controls-row" v-if="disabled === false">
+                <button class="inputbutton1" @click="submitForm">Save</button>
+                <button class="inputbutton1" @click="cancel">Cancel</button>
+                <button class="inputbutton1" @click="resetForm">Reset</button>
+            </div>
+        </form>
+    </div>
+</template>
+<script>
+    import FormProps from './mixins/FormProps';
+    import FormConfig from './mixins/FormConfig';
+    import Actions from './mixins/Actions'
+    import {Form} from "./Form";
+    import jQuery from 'jquery';
+    export default {
+
+        mixins: [
+            FormProps,
+            FormConfig,
+            Actions
+        ],
+
+
+        data() {
+            return {
+                form: {},
+            }
+        },
+
+        created() {
+
+            // TODO: Think about what cloning form data means, and if we should listen for changes for form data
+
+            var formData = Object.assign({}, this.formData);
+
+            var data = this.defaultFields(formData);
+            this.form = new Form(data, this.formConfig, this.disabled);
+
+        },
+
+        provide() {
+
+            let provide = {};
+
+            Object.defineProperty(provide, 'form', {
+                enumerable: true,
+                get: () => this.form
+            });
+            return provide;
+        }
+
+
+
+    }
+</script>

@@ -1,0 +1,25 @@
+{
+  "name": "laravel-vue-forms",
+  "version": "0.0.1",
+  "description": "VueJS package for building forms with vue.  Has a companion laravel package that can be used in a more programmatic fashion.  Otherwise, this package can also be used standalone",
+  "repository": "https://github.com/jhoopes/laravel-vue-forms-js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Vue",
+    "Laravel",
+    "Form",
+    "Form",
+    "Builder"
+  ],
+  "author": "John Hoopes <john.hoopes@madisoncreativeweb.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "webpack": "^3.6.0",
+    "webpack-merge": "^4.1.0"
+  }
+}

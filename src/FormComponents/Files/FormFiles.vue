@@ -1,0 +1,158 @@
+<template>
+    <div class="form-group form-file-upload-container"
+         :id="fieldName + '-text-field'"
+         :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
+    >
+        <label class="col-sm-2 control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
+        <div class="col-sm-10">
+            <form-file :files="files" @deletedFile="deleteFile"></form-file>
+            <form-file-upload
+                    v-if="showUploadContainer"
+                    :type="fieldConfig.fileableType"
+                    :type-id="fieldConfig.fileableId"
+                    :meta-type="fieldConfig.fieldName"
+                    :max-files="fieldConfig.maxFiles"
+                    @addFile="addFile"
+            ></form-file-upload>
+            <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
+                {{ form.errors.get(this.fieldConfig.value_field, true) }}
+            </span>
+        </div>
+    </div>
+</template>
+<script>
+    import FormField from '../../mixins/FormField';
+    import FormFile from './FormFile.vue';
+    import FormFileUpload from './FormFileUpload.vue';
+    export default {
+
+        mixins: [
+            FormField
+        ],
+
+        components: {
+            FormFile,
+            FormFileUpload
+        },
+
+        props: {
+            stepId: {
+                type: Number,
+                default: null,
+            },
+            metaType: {
+                type: String,
+            },
+            maxFiles: {
+                type: Number,
+                default: 100,
+            },
+            disabled: {
+                type:Boolean,
+                default: false
+            },
+            fileableType: {
+                type: String,
+            },
+            fileableId: {
+                type: Number
+            }
+        },
+
+        data() {
+            return {
+                files: [],
+                showUploadContainer: true,
+            }
+        },
+
+//        watch: {
+//            'form.id': function (newId) {
+//                this.$set(this.fieldConfig, 'fileableId', newId);
+//            }
+//        },
+
+
+        created() {
+
+            if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+                this.form.formConfig.fields.forEach(field => {
+                    if (field.name === this.fieldName) {
+
+                        var fieldExtra = this.getFormFieldFieldExtra(field);
+                        this.$set(this.fieldConfig, 'fileableType', this.form.formConfig.entity_model);
+
+                        //TODO: Will need to figure out a better way to define the entity id and not
+                        //TODO: hard checking id on form
+                        if(this.form.id) {
+                            this.$set(this.fieldConfig, 'fileableId', this.form.id);
+                        }
+
+                        if(fieldExtra.maxFiles) {
+                            this.$set(this.fieldConfig, 'maxFiles', fieldExtra.maxFiles);
+                        }else {
+                            this.$set(this.fieldConfig, 'maxFiles', 100);
+                        }
+
+                    }
+                });
+
+                this.$watch('form.id', {
+                    handler: function(newFormId, oldFormId) {
+                        if(newFormId !== oldFormId) {
+                            this.$set(this.fieldConfig, 'fileableId', newFormId);
+                        }
+                    },
+                    deep:true
+                })
+            }else {
+                this.$set(this.fieldConfig, 'fileableType', this.fileableType);
+                this.$set(this.fieldConfig, 'fileableId', this.fileableId);
+                this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
+            }
+
+            this.getFiles();
+
+        },
+
+        methods: {
+            getFiles() {
+                if(!this.fieldConfig.fileableId) {
+                    return;
+                }
+
+                var fileRequest = {
+                    metaType: this.fieldConfig.fieldName,
+                    fileableType: this.fieldConfig.fileableType,
+                    fileableID: this.fieldConfig.fileableId
+                }
+
+                axios.post('/api/files/getFiles', fileRequest).then( response => {
+                    this.files = response.data;
+                    this.checkIfReachedMaxFiles();
+                }).catch( error => {
+                    window.notify.apiError(error);
+                });
+            },
+            deleteFile(deleteFile) {
+                this.files = this.files.filter( file => {
+                    return file.id !== deleteFile.id
+                });
+                this.checkIfReachedMaxFiles();
+            },
+            addFile(file) {
+                this.files.push(file);
+                this.checkIfReachedMaxFiles();
+            },
+
+            checkIfReachedMaxFiles() {
+                if((this.files.length == this.fieldConfig.maxFiles) || this.fieldConfig.disabled === 1) {
+                    this.showUploadContainer = false;
+                }else {
+                    this.showUploadContainer = true;
+                }
+            }
+        }
+
+    }
+</script>
