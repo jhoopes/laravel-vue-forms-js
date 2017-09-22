@@ -18,7 +18,7 @@ module.exports = merge(require('./webpack.base'), {
     },
 
     externals: [
-        'moment', 'vue',
+        'moment', 'vue', 'dropzone', 'vue-multiselect', 'tempusdominus-bootstrap-3', 'axios', 'jquery', 'sizzle'
     ],
 
     plugins: [

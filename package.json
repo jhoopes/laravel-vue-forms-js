@@ -5,7 +5,7 @@
   "repository": "https://github.com/jhoopes/laravel-vue-forms-js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rm -rf dist && NODE_ENV=production webpack"
   },
   "keywords": [
     "Vue",
@@ -14,11 +14,22 @@
     "Form",
     "Builder"
   ],
-  "author": "John Hoopes <john.hoopes@madisoncreativeweb.com>",
+  "author": "John Hoopes",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.2",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "css-loader": "^0.28.7",
+    "dropzone": "^5.1.1",
+    "tempusdominus-bootstrap-3": "^5.0.0-alpha9",
+    "vue": "^2.4.4",
+    "vue-loader": "^13.0.5",
+    "vue-multiselect": "^2.0.2",
+    "vue-template-compiler": "^2.4.4",
     "webpack": "^3.6.0",
     "webpack-merge": "^4.1.0"
   }
