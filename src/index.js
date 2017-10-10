@@ -1,3 +1,4 @@
+import VueM from 'vue';
 import { Form } from './Form';
 import VueForm from './Form.vue';
 import FormText from './FormComponents/FormText.vue';
@@ -13,14 +14,13 @@ export default {
 
     install(Vue, options) {
 
-        Vue.component('vue-form', VueForm);
-        Vue.component('form-text', FormText);
-        Vue.component('form-textarea', FormTextarea);
-        Vue.component('form-select', FormSelect);
-        Vue.component('form-datepicker', FormDatePicker);
-        Vue.component('form-radio', FormRadio);
-        Vue.component('form-files', FormFiles);
-
+        Vue.component(VueForm.name, VueForm);
+        Vue.component(FormText.name, FormText);
+        Vue.component(FormTextarea.name, FormTextarea);
+        Vue.component(FormSelect.name, FormSelect);
+        Vue.component(FormDatePicker.name, FormDatePicker);
+        Vue.component(FormRadio.name, FormRadio);
+        Vue.component(FormFiles.name, FormFiles);
     }
 
 }

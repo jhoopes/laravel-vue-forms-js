@@ -25,6 +25,8 @@
     export default {
         mixins: [FormField],
 
+        name: 'form-textarea',
+
         props: {
             rows: {
                 type: Number,

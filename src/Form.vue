@@ -26,6 +26,8 @@
     import jQuery from 'jquery';
     export default {
 
+        name: 'vue-form',
+
         mixins: [
             FormProps,
             FormConfig,
@@ -60,8 +62,5 @@
             });
             return provide;
         }
-
-
-
     }
 </script>

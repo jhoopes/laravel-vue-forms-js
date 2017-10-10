@@ -26,6 +26,8 @@
     import FormFileUpload from './FormFileUpload.vue';
     export default {
 
+        name: 'form-files',
+
         mixins: [
             FormField
         ],

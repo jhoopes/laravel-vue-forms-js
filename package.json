@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "VueJS package for building forms with vue.  Has a companion laravel package that can be used in a more programmatic fashion.  Otherwise, this package can also be used standalone",
   "repository": "https://github.com/jhoopes/laravel-vue-forms-js",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "rm -rf dist && NODE_ENV=production webpack"
   },

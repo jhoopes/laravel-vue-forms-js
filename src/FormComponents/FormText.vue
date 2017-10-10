@@ -20,6 +20,8 @@
     export default {
         mixins: [FormField],
 
+        name: 'form-text',
+
         methods: {
             updateValue(value) {
                 this.form.errors.clear(this.fieldConfig.value_field);

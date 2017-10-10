@@ -24,6 +24,8 @@
     import HasOptions from '../mixins/HasOptions';
     export default {
 
+        name: 'form-radio',
+
         mixins: [ FormField, HasOptions ],
 
         methods: {
