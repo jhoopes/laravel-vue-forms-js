@@ -24,6 +24,14 @@
     import Actions from './mixins/Actions'
     import {Form} from "./Form";
     import jQuery from 'jquery';
+
+
+    import FormText from './FormComponents/FormText.vue';
+    import FormTextarea from './FormComponents/FormTextarea.vue';
+    import FormSelect from './FormComponents/FormSelect.vue';
+    import FormDatePicker from './FormComponents/FormDatePicker.vue';
+    import FormRadio from './FormComponents/FormRadio.vue';
+    import FormFiles from './FormComponents/Files/FormFiles.vue';
     export default {
 
         name: 'vue-form',
@@ -33,6 +41,15 @@
             FormConfig,
             Actions
         ],
+
+        components: {
+            FormText,
+            FormTextarea,
+            FormSelect,
+            FormDatePicker,
+            FormRadio,
+            FormFiles
+        },
 
 
         data() {
