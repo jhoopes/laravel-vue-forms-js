@@ -25,6 +25,7 @@
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.7",
     "dropzone": "^5.1.1",
+    "jquery": "^3.2.1",
     "tempusdominus-bootstrap-3": "^5.0.0-alpha9",
     "vue": "^2.4.4",
     "vue-loader": "^13.0.5",
