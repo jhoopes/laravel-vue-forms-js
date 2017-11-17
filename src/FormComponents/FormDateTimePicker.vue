@@ -1,5 +1,7 @@
 <template>
-    <div class="datepicker form-group row">
+    <div class="datepicker form-group row"
+         :id="fieldName + '-datetime-field'"
+         :class="{ 'has-error': form.errors.has(fieldConfig.value_field) }">
         <label class="col-sm-2 control-label">Date Picking</label>
         <div class="col-sm-10">
             <div class="input-group date" style="position: static" :id="datePickerId" data-target-input="nearest">
@@ -11,16 +13,22 @@
                 />
                 <span class="input-group-addon" :data-target="'#' + datePickerId" data-toggle="datetimepicker">
                         <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+                </span>
             </div>
+            <span class="help-block" v-if="form.errors.has(fieldConfig.value_field)">
+                {{ form.errors.get(this.fieldConfig.value_field, true) }}
+            </span>
         </div>
     </div>
 </template>
 <script>
     import { guid } from '../utilities/utils';
+    import FormField from './../mixins/FormField';
     export default {
 
         name: 'form-datetimepicker',
+
+        mixins: [FormField],
 
         data() {
             return {

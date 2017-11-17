@@ -47,7 +47,13 @@ export class FormErrors {
      */
     setErrors(errors) {
         console.log(errors);
-        this.errors = errors;
+
+        // check for Laravel 5.5 validation errors message
+        if(errors.hasOwnProperty('errors')) {
+            this.errors = errors.errors;
+        } else {
+            this.errors = errors;
+        }
     }
 
 

@@ -19,9 +19,12 @@
 <script>
     import { guid } from '../utilities/utils';
     import jQuery from 'jquery';
+    import FormField from '../mixins/FormField';
     export default {
 
         name: 'form-datepicker',
+
+        mixins: [FormField],
 
         data() {
             return {
