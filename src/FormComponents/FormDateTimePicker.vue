@@ -8,6 +8,8 @@
                 <input type="text"
                        class="form-control datetimepicker-input"
                        :data-target="'#' + datePickerId"
+                       @input="updateValue($event.target.value)"
+                       @change="updateValue($event.target.value)"
                        @focus="showPicker"
                        @blur="hidePicker"
                 />
@@ -44,12 +46,19 @@
         },
 
         mounted() {
+            let vm = this;
             this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker( {
                 allowInputToggle: true,
                 widgetPositioning: {
                     horizontal: 'auto',
                     vertical: 'bottom'
                 }
+            });
+            window.jQuery('#' + this.datePickerId).on('change.datetimepicker', function(e) {
+                vm.updateValue(e.date.format('MM/DD/YYYY h:m A'));
+            });
+            window.jQuery('#' + this.datePickerId).on('update.datetimepicker', function(e) {
+                vm.updateValue(e.viewDate.format('MM/DD/YYYY h:m A'));
             });
         },
 
@@ -60,6 +69,10 @@
             },
             hidePicker() {
                 window.jQuery('#' + this.datePickerId).datetimepicker('hide');
+            },
+            updateValue(value) {
+                this.form.errors.clear(this.fieldConfig.value_field);
+                this.$emit('input', value);
             }
         }
 
