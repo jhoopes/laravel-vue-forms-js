@@ -55,10 +55,10 @@
                 }
             });
             window.jQuery('#' + this.datePickerId).on('change.datetimepicker', function(e) {
-                vm.updateValue(e.date.format('MM/DD/YYYY h:m A'));
+                vm.updateValue(e.date.format('MM/DD/YYYY hh:mm A'));
             });
             window.jQuery('#' + this.datePickerId).on('update.datetimepicker', function(e) {
-                vm.updateValue(e.viewDate.format('MM/DD/YYYY h:m A'));
+                vm.updateValue(e.viewDate.format('MM/DD/YYYY hh:mm A'));
             });
         },
 
