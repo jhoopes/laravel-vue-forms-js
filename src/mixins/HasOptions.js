@@ -1,4 +1,4 @@
-import { get, isArray } from 'lodash';
+import { get } from 'lodash';
 export default {
 
     props: {
@@ -109,13 +109,8 @@ export default {
         setUpOptions(field) {
 
             var options = [];
-            if(!isArray(field.field_extra.options_config.options)) {
-                console.error('Invalid Field Options options array... ', field.field_extra.options_config.options)
-                return;
-            }
-
             field.field_extra.options_config.options.forEach(fieldOption => {
-               options.push(fieldOption);
+                options.push(fieldOption);
             });
 
             this.$set(this.fieldConfig, 'options', options);

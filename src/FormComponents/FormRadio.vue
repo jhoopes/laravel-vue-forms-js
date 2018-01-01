@@ -1,5 +1,5 @@
 <template>
-    <div class="form-group row">
+    <div class="form-group">
         <label>
             {{ fieldConfig.label }}
             <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>

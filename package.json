@@ -22,16 +22,17 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.7",
-    "dropzone": "^5.1.1",
+    "dropzone": "^5.2.0",
     "jquery": "^3.2.1",
     "tempusdominus-bootstrap-3": "^5.0.0-alpha9",
-    "vue": "^2.4.4",
-    "vue-loader": "^13.0.5",
-    "vue-multiselect": "^2.0.2",
-    "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
-    "webpack-merge": "^4.1.0"
+    "vue": "^2.5.13",
+    "vue-loader": "^13.6.2",
+    "vue-multiselect": "^2.0.8",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^3.10.0",
+    "webpack-merge": "^4.1.1"
   }
 }

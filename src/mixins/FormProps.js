@@ -18,9 +18,16 @@ export default {
             type: Function,
             default: function(response, actionType) {
                 this.$emit(actionType, response.data);
+                if(this.closeOnSave) {
+                    this.close()
+                }
             }
         },
         disabled: {
+            type: Boolean,
+            default: false,
+        },
+        closeOnSave: {
             type: Boolean,
             default: false,
         }

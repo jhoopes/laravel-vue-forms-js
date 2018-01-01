@@ -4,7 +4,7 @@
             <span class="close-icon fa fa-times" @click="cancel"></span>
         </div>
         <form @submit.prevent="">
-            <component v-for="field in formConfig.fields" key="id"
+            <component v-for="field in formConfig.fields" :key="field.id"
                        :is="getFormFieldComponent(field.widget)"
                        v-if="field.visible"
                        :field-name="field.name"

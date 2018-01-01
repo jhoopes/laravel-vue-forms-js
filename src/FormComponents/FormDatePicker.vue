@@ -1,7 +1,7 @@
 <template>
     <div class="datepicker form-group row">
-        <label class="col-sm-2 control-label">Date Picking</label>
-        <div class="col-sm-10">
+        <label class="control-label">Date Picking</label>
+        <div>
             <div class="input-group date" :id="datePickerId" data-target-input="nearest">
                 <input type="text"
                        class="form-control datetimepicker-input"

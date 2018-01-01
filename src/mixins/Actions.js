@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export default {
 
 
@@ -7,6 +5,9 @@ export default {
     methods: {
         cancel() {
             this.$emit('cancel-form');
+        },
+        close() {
+            this.$emit('close-form');
         },
         resetForm() {
             this.form.reset();
