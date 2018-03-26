@@ -1,6 +1,16 @@
+import {FormErrors} from "../FormErrors";
+
 export default {
 
-    inject: ['form'],
+    inject: {
+        form: {
+            default() {
+                return {
+                    errors: new FormErrors()
+                }
+            }
+        }
+    },
 
     props: {
         label: {
@@ -52,14 +62,6 @@ export default {
             });
 
         }else {
-            this.form = {
-                errors: {
-                    has() {
-                        return false;
-                    }
-                }
-            }
-
             this.$set(this.fieldConfig, 'fieldName', this.fieldName);
             this.$set(this.fieldConfig, 'field_extra', {
                 required: this.required

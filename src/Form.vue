@@ -1,7 +1,7 @@
 <template>
     <div class="vue-form">
         <div class="text-right">
-            <span class="close-icon fa fa-times" @click="cancel"></span>
+            <span class="close-icon fa fa-times" @click="close"></span>
         </div>
         <form @submit.prevent="">
             <component v-for="field in formConfig.fields" :key="field.id"
@@ -9,7 +9,7 @@
                        v-if="field.visible"
                        :field-name="field.name"
                        v-model="form[field.value_field]"
-                       ></component>
+            ></component>
             <div class="controls-row" v-if="disabled === false">
                 <button class="inputbutton1" @click="submitForm">Save</button>
                 <button class="inputbutton1" @click="cancel">Cancel</button>
@@ -23,7 +23,6 @@
     import FormConfig from './mixins/FormConfig';
     import Actions from './mixins/Actions'
     import {Form} from "./Form";
-    import jQuery from 'jquery';
 
 
     import FormText from './FormComponents/FormText.vue';

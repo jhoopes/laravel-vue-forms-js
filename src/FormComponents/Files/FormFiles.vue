@@ -3,8 +3,8 @@
          :id="fieldName + '-text-field'"
          :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
     >
-        <label class="col-sm-2 control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
-        <div class="col-sm-10">
+        <label class="form-control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
+        <div>
             <form-file :files="files" @deletedFile="deleteFile"></form-file>
             <form-file-upload
                     v-if="showUploadContainer"
@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-    import FormField from '../../mixins/FormField';
+    import FormField from './../../mixins/FormField';
     import FormFile from './FormFile.vue';
     import FormFileUpload from './FormFileUpload.vue';
     export default {

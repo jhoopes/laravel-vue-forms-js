@@ -1,6 +1,6 @@
 <template>
-    <div class="datepicker form-group row">
-        <label class="control-label">Date Picking</label>
+    <div class="datepicker form-group">
+        <label class="form-control-label">{{ fieldConfig.label }}</label>
         <div>
             <div class="input-group date" :id="datePickerId" data-target-input="nearest">
                 <input type="text"
@@ -17,8 +17,7 @@
     </div>
 </template>
 <script>
-    import { guid } from '../utilities/utils';
-    import jQuery from 'jquery';
+    import { guid } from './../utilities/utils';
     import FormField from '../mixins/FormField';
     export default {
 

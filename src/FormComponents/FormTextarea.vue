@@ -1,25 +1,27 @@
 <template>
     <div class="form-group"
          :id="fieldName + '-textarea-field'"
-         :class="{ 'has-error': form.errors.has(fieldConfig.value_field) }"
+         :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
     >
-        <label class="control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
-        <textarea
-                  class="form-control"
-                  :name="fieldConfig.fieldName"
-                  :value="value"
-                  @input="updateValue($event.target.value)"
-                  :disabled="fieldConfig.disabled === 1"
-                  :rows="fieldConfig.rows"
-                  :cols="fieldConfig.cols"
-        ></textarea>
-        <span class="help-block" v-if="form.errors.has(fieldConfig.value_field)">
-            {{ form.errors.get(this.fieldConfig.value_field, true) }}
-        </span>
+        <label class="form-control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
+        <div>
+            <textarea
+                      class="form-control"
+                      :name="fieldConfig.fieldName"
+                      :value="value"
+                      @input="updateValue($event.target.value)"
+                      :disabled="fieldConfig.disabled === 1"
+                      :rows="fieldConfig.rows"
+                      :cols="fieldConfig.cols"
+            ></textarea>
+            <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
+                {{ form.errors.get(this.fieldConfig.value_field, true) }}
+            </span>
+        </div>
     </div>
 </template>
 <script>
-    import FormField from '../mixins/FormField';
+    import FormField from './../mixins/FormField';
     export default {
         mixins: [FormField],
 
