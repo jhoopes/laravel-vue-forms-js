@@ -1,6 +1,6 @@
 <template>
     <div class="vue-form">
-        <div class="text-right">
+        <div class="text-right" v-if="showCloseIcon">
             <span class="close-icon fa fa-times" @click="close"></span>
         </div>
         <form @submit.prevent="">
@@ -8,7 +8,8 @@
                        :is="getFormFieldComponent(field.widget)"
                        v-if="field.visible"
                        :field-name="field.name"
-                       v-model="form[field.value_field]"
+                       :value="getFieldValue(form, field)"
+                       @input="(newVal) => { updateFormValue(field, newVal) }"
             ></component>
             <div class="controls-row" v-if="disabled === false">
                 <button class="inputbutton1" @click="submitForm">Save</button>

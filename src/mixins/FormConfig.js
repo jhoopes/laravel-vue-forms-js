@@ -1,3 +1,5 @@
+import { assignOnObject } from "../utilities/utils";
+
 export default {
 
     methods: {
@@ -36,11 +38,18 @@ export default {
 
             return false;
         },
+        getFieldValue(form, field) {
+            let value =  Object.getFormValueByString(form, field.value_field);
+            return value;
+        },
+        updateFormValue(field, newVal) {
+            assignOnObject(this.form, field.value_field, newVal);
+        },
         defaultFields(data) {
 
             this.formConfig.fields.forEach(field => {
-                if(typeof data[field.value_field] === 'undefined') {
-                    data[field.value_field] = null;
+                if(typeof this.getFieldValue(data, field) === 'undefined') {
+                    this.$set(data, field.value_field, null);
 
                     if(field.field_extra !== null && typeof field.field_extra.default !== 'undefined') {
                         data[field.value_field] = field.field_extra.default;

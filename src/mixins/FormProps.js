@@ -30,6 +30,10 @@ export default {
         closeOnSave: {
             type: Boolean,
             default: false,
+        },
+        showCloseIcon: {
+            type: Boolean,
+            default: false,
         }
     }
 

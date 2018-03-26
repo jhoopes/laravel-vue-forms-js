@@ -1,5 +1,6 @@
 import jQuery from 'jquery';
 import { Form } from './Form';
+import { byString} from "./utilities/utils";
 import VueForm from './Form.vue';
 import FormText from './FormComponents/FormText.vue';
 import FormTextarea from './FormComponents/FormTextarea.vue';
@@ -29,6 +30,8 @@ export default {
         // }
         // require('tempusdominus-bootstrap-3');
 
+
+        Object.getFormValueByString = byString
     }
 
 }
