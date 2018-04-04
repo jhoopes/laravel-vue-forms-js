@@ -10,6 +10,8 @@ import FormDatePicker from './FormComponents/FormDatePicker.vue';
 import FormRadio from './FormComponents/FormRadio.vue';
 import FormFiles from './FormComponents/Files/FormFiles.vue';
 
+import FormFieldMixin from './mixins/FormField';
+import HasOptionsMixin from './mixins/HasOptions';
 
 
 export default {
@@ -36,4 +38,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles }
+export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles }

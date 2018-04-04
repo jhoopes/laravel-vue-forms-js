@@ -12,9 +12,9 @@
                        @input="(newVal) => { updateFormValue(field, newVal) }"
             ></component>
             <div class="controls-row" v-if="disabled === false">
-                <button class="inputbutton1" @click="submitForm">Save</button>
-                <button class="inputbutton1" @click="cancel">Cancel</button>
-                <button class="inputbutton1" @click="resetForm">Reset</button>
+                <button class="inputbutton1" @click.prevent="submitForm">Save</button>
+                <button class="inputbutton1" @click.prevent="cancel">Cancel</button>
+                <button class="inputbutton1" @click.prevent="resetForm">Reset</button>
             </div>
         </form>
     </div>
