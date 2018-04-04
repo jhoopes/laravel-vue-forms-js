@@ -20,7 +20,9 @@ export default {
             type: String,
             required: true
         },
-        value: '',
+        value: {
+            required: true,
+        },
         showLabel: {
             type: Boolean,
             default: true
@@ -53,6 +55,10 @@ export default {
                         this.$set(this.fieldConfig, 'disabled', 1);
                     }else {
                         this.$set(this.fieldConfig, 'disabled', field.disabled);
+                    }
+
+                    if(typeof fieldExtra.default !== 'undefined' && (this.value === null || typeof this.value === 'undefined')) {
+                        this.$emit('input', fieldExtra.default);
                     }
 
                     this.$set(this.fieldConfig, 'field_extra', fieldExtra);
