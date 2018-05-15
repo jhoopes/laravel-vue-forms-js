@@ -8,8 +8,8 @@
             <form-file :files="files" @deletedFile="deleteFile"></form-file>
             <form-file-upload
                     v-if="showUploadContainer"
-                    :type="fieldConfig.fileableType"
-                    :type-id="fieldConfig.fileableId"
+                    :type="fieldConfig.fileable_type"
+                    :type-id="fieldConfig.fileable_id"
                     :meta-type="fieldConfig.fieldName"
                     :max-files="fieldConfig.maxFiles"
                     @addFile="addFile"
@@ -82,12 +82,12 @@
                     if (field.name === this.fieldName) {
 
                         var fieldExtra = this.getFormFieldFieldExtra(field);
-                        this.$set(this.fieldConfig, 'fileableType', this.form.formConfig.entity_model);
+                        this.$set(this.fieldConfig, 'fileable_type', this.form.formConfig.entity_model);
 
                         //TODO: Will need to figure out a better way to define the entity id and not
                         //TODO: hard checking id on form
                         if(this.form.id) {
-                            this.$set(this.fieldConfig, 'fileableId', this.form.id);
+                            this.$set(this.fieldConfig, 'fileable_id', this.form.id);
                         }
 
                         if(fieldExtra.maxFiles) {
@@ -108,8 +108,8 @@
                     deep:true
                 })
             }else {
-                this.$set(this.fieldConfig, 'fileableType', this.fileableType);
-                this.$set(this.fieldConfig, 'fileableId', this.fileableId);
+                this.$set(this.fieldConfig, 'fileable_type', this.fileableType);
+                this.$set(this.fieldConfig, 'fileable_id', this.fileableId);
                 this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
             }
 
@@ -119,14 +119,14 @@
 
         methods: {
             getFiles() {
-                if(!this.fieldConfig.fileableId) {
+                if(!this.fieldConfig.fileable_id) {
                     return;
                 }
 
                 var fileRequest = {
                     metaType: this.fieldConfig.fieldName,
-                    fileableType: this.fieldConfig.fileableType,
-                    fileableID: this.fieldConfig.fileableId
+                    fileable_type: this.fieldConfig.fileable_type,
+                    fileable_id: this.fieldConfig.fileable_id
                 }
 
                 axios.post('/api/files/getFiles', fileRequest).then( response => {
