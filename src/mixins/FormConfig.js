@@ -48,11 +48,11 @@ export default {
         defaultFields(data) {
 
             this.formConfig.fields.forEach(field => {
-                if(typeof this.getFieldValue(data, field) === 'undefined') {
-                    this.$set(data, field.value_field, null);
-
+                if(typeof this.getFieldValue(data, field) === 'undefined' || this.getFieldValue(data, field) === '') {
+                    assignOnObject(data, field.value_field, null);
                     if(field.field_extra !== null && typeof field.field_extra.default !== 'undefined') {
-                        data[field.value_field] = field.field_extra.default;
+
+                        assignOnObject(data, field.value_field, field.field_extra.default);
                     }
                 }
             });
