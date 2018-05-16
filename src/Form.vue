@@ -1,19 +1,20 @@
 <template>
     <div class="vue-form">
-        <div class="text-right">
-            <span class="close-icon fa fa-times" @click="cancel"></span>
+        <div class="text-right" v-if="showCloseIcon">
+            <span class="close-icon fa fa-times" @click="close"></span>
         </div>
         <form @submit.prevent="">
             <component v-for="field in formConfig.fields" :key="field.id"
                        :is="getFormFieldComponent(field.widget)"
                        v-if="field.visible"
                        :field-name="field.name"
-                       v-model="form[field.value_field]"
-                       ></component>
+                       :value="getFieldValue(form, field)"
+                       @input="(newVal) => { updateFormValue(field, newVal) }"
+            ></component>
             <div class="controls-row" v-if="disabled === false">
-                <button class="inputbutton1" @click="submitForm">Save</button>
-                <button class="inputbutton1" @click="cancel">Cancel</button>
-                <button class="inputbutton1" @click="resetForm">Reset</button>
+                <button class="inputbutton1" @click.prevent="submitForm">Save</button>
+                <button class="inputbutton1" @click.prevent="cancel">Cancel</button>
+                <button class="inputbutton1" @click.prevent="resetForm">Reset</button>
             </div>
         </form>
     </div>
@@ -23,7 +24,6 @@
     import FormConfig from './mixins/FormConfig';
     import Actions from './mixins/Actions'
     import {Form} from "./Form";
-    import jQuery from 'jquery';
 
 
     import FormText from './FormComponents/FormText.vue';

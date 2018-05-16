@@ -4,7 +4,7 @@
             {{ fieldConfig.label }}
             <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>
         </label>
-        <div class="radio" v-for="option in fieldConfig.options" :key="fieldConfig.optionValueField">
+        <div class="radio" v-for="option in fieldConfig.options" :key="option[fieldConfig.optionValueField]">
             <label>
                 <input type="radio"
                        :name="fieldConfig.fieldName"
@@ -20,8 +20,8 @@
     </div>
 </template>
 <script>
-    import FormField from '../mixins/FormField';
-    import HasOptions from '../mixins/HasOptions';
+    import FormField from './../mixins/FormField';
+    import HasOptions from './../mixins/HasOptions';
     export default {
 
         name: 'form-radio',

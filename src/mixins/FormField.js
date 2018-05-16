@@ -1,6 +1,16 @@
+import {FormErrors} from "../FormErrors";
+
 export default {
 
-    inject: ['form'],
+    inject: {
+        form: {
+            default() {
+                return {
+                    errors: new FormErrors()
+                }
+            }
+        }
+    },
 
     props: {
         label: {
@@ -10,7 +20,9 @@ export default {
             type: String,
             required: true
         },
-        value: '',
+        value: {
+            required: true,
+        },
         showLabel: {
             type: Boolean,
             default: true
@@ -45,6 +57,10 @@ export default {
                         this.$set(this.fieldConfig, 'disabled', field.disabled);
                     }
 
+                    if(typeof fieldExtra.default !== 'undefined' && (this.value === null || typeof this.value === 'undefined')) {
+                        this.$emit('input', fieldExtra.default);
+                    }
+
                     this.$set(this.fieldConfig, 'field_extra', fieldExtra);
                     this.$set(this.fieldConfig, 'label', field.label);
                     this.$set(this.fieldConfig, 'value_field', field.value_field);
@@ -52,14 +68,6 @@ export default {
             });
 
         }else {
-            this.form = {
-                errors: {
-                    has() {
-                        return false;
-                    }
-                }
-            }
-
             this.$set(this.fieldConfig, 'fieldName', this.fieldName);
             this.$set(this.fieldConfig, 'field_extra', {
                 required: this.required

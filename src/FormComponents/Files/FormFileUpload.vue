@@ -72,7 +72,7 @@
 
         methods: {
             handleSending(file, xhr, formData) {
-                formData.append('_token', window.Nexant.csrfToken);
+                formData.append('_token', window.csrfToken);
                 formData.append('fileable_type', this.type);
                 formData.append('fileable_id', this.typeId);
                 if(this.stepId) {

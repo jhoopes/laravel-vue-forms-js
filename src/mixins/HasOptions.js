@@ -4,12 +4,17 @@ export default {
     props: {
         options: {
             type: Array,
+            default() {
+                return []
+            }
         },
         optionLabelField: {
             type: String,
+            default: 'name',
         },
         optionValueField: {
             type: String,
+            default: 'id'
         }
     },
 
@@ -54,9 +59,12 @@ export default {
 
                 }
             });
+        }else {
+            this.$set(this.fieldConfig, 'options', this.options);
+            this.$set(this.fieldConfig, 'optionValueField',  this.optionValueField);
+            this.$set(this.fieldConfig, 'optionLabelField',  this.optionLabelField);
         }
 
-        // TODO: Needs updating to work outside of being used in VueForm
     },
 
     computed: {
@@ -90,6 +98,9 @@ export default {
     watch: {
         'currentOptionsURL': function(newURL) {
             this.getOptions();
+        },
+        'options' : function(newOptions) {
+            this.$set(this.fieldConfig, 'options', newOptions);
         }
     },
 
@@ -110,7 +121,7 @@ export default {
 
             var options = [];
             field.field_extra.options_config.options.forEach(fieldOption => {
-                options.push(fieldOption);
+               options.push(fieldOption);
             });
 
             this.$set(this.fieldConfig, 'options', options);
