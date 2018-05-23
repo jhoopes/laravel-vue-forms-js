@@ -18,6 +18,9 @@
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
         </div>
+        <div v-if="validateBillAccountFields(fieldConfig.field_extra)" class="col-xs-1">
+            <span class="requiredbox fa fa-info-circle" :title="fieldConfig.field_extra.helpText"></span>
+         </div>
     </div>
 </template>
 <script>

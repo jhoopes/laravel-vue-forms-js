@@ -38,7 +38,7 @@ export default {
             fieldConfig: {}
         }
     },
-
+    
     created() {
 
         if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
@@ -84,7 +84,16 @@ export default {
                 fieldExtra = {};
             }
             return fieldExtra;
-        }
+        },
+        
+        validateBillAccountFields(fieldExtra) {
+    		if(fieldExtra.requiredForProjectSubmission && fieldExtra.withIcon) {
+    			return true;  					
+    		} else 
+    			return false;    				
+    			
+    		
+    	}
     }
 
 }

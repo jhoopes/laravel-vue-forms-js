@@ -17,6 +17,9 @@
                 class="form-control"
                 :disabled="fieldConfig.disabled === 1"
         ></multi-select>
+        <div v-if="validateBillAccountFields(fieldConfig.field_extra)" class="col-xs-1">
+            <span class="requiredbox fa fa-info-circle" :title="fieldConfig.field_extra.helpText"></span>
+         </div>
         <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
             {{ form.errors.get(this.fieldConfig.value_field, true) }}
         </span>
