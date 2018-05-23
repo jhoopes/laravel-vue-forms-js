@@ -18,6 +18,9 @@ export default {
                 case 'radio':
                     return 'form-radio';
                     break;
+                case 'datepicker':
+                    return 'form-datepicker';
+                    break;
                 case 'datetimepicker':
                     return 'form-datetimepicker';
                     break;
