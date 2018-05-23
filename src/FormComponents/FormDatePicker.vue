@@ -6,6 +6,7 @@
                 <input type="text"
                        class="form-control datetimepicker-input"
                        :data-target="'#' + datePickerId"
+                       :value="value"
                        @focus="showPicker"
                        @blur="hidePicker"
                        @input="updateValue($event.target.value)"
