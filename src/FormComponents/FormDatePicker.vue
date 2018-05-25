@@ -1,6 +1,8 @@
 <template>
     <div class="datepicker form-group">
-        <label class="form-control-label">{{ fieldConfig.label }}</label>
+        <label class="form-control-label">{{ fieldConfig.label }}
+            <span v-if="validateBillAccountFields(fieldConfig.field_extra)" class="requiredbox" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+        </label>
         <div>
             <div class="input-group date" :id="datePickerId" data-target-input="nearest">
                 <input type="text"
@@ -13,10 +15,7 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
             </div>
-        </div>
-        <div v-if="validateBillAccountFields(fieldConfig.field_extra)" class="col-xs-1">
-            <span class="requiredbox fa fa-info-circle" :title="fieldConfig.field_extra.helpText"></span>
-         </div>
+        </div>        
     </div>
 </template>
 <script>

@@ -90,9 +90,14 @@ export default {
     		if(fieldExtra.requiredForProjectSubmission && fieldExtra.withIcon) {
     			return true;  					
     		} else 
-    			return false;    				
-    			
-    		
+    			return false;    		
+    	},
+    	
+    	hasHelperText(fieldExtra) {
+    		if(fieldExtra.helpText && !fieldExtra.withIcon) {
+    			return true;  					
+    		} else 
+    			return false;
     	}
     }
 
