@@ -8,8 +8,11 @@
                 <input type="text"
                        class="form-control datetimepicker-input"
                        :data-target="'#' + datePickerId"
+                       :value="value"
                        @focus="showPicker"
                        @blur="hidePicker"
+                       @input="updateValue($event.target.value)"
+                       @change="updateValue($event.target.value)"
                 />
                 <span class="input-group-addon" :data-target="'#' + datePickerId" data-toggle="datetimepicker">
                         <span class="glyphicon glyphicon-calendar"></span>
@@ -41,9 +44,15 @@
         },
 
         mounted() {
+            var vm = this;
+
             this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker( {
-                debug: true,
-                allowInputToggle: true
+                allowInputToggle: true,
+                format: 'L',
+            });
+
+            window.jQuery('#' + this.datePickerId).on('change.datetimepicker', e => {
+                this.updateValue(e.date.format('MM/DD/YYYY'));
             });
         },
 
@@ -54,6 +63,10 @@
             },
             hidePicker() {
                 window.jQuery('#' + this.datePickerId).datetimepicker('hide');
+            },
+            updateValue(value) {
+                this.form.errors.clear(this.fieldConfig.value_field);
+                this.$emit('input', value);
             }
         }
 
