@@ -3,7 +3,7 @@
         <label>
             {{ fieldConfig.label }}
             <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>
-            <span v-if="validateBillAccountFields(fieldConfig.field_extra)" class="requiredbox" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+            <span v-if="withHelpIcon()" class="requiredbox" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="radio" v-for="option in fieldConfig.options" :key="option[fieldConfig.optionValueField]">
             <label>

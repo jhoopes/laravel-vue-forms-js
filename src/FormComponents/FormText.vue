@@ -5,7 +5,7 @@
     >
         <label class="form-control-label">{{ fieldConfig.label }} 
             <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>
-            <span v-if="validateBillAccountFields(fieldConfig.field_extra)" class="requiredbox" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+            <span v-if="withHelpIcon()" class="requiredbox" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="">
             <input type="text" class="form-control" :name="fieldConfig.fieldName" ref="formText" :value="value"
@@ -16,7 +16,7 @@
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
         </div>
-        <div v-if="hasHelperText(fieldConfig.field_extra)">
+        <div v-if="hasHelpText()">
             <span v-html="fieldConfig.field_extra.helpText"></span>
         </div>
     </div>

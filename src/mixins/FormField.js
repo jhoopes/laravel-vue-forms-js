@@ -86,15 +86,15 @@ export default {
             return fieldExtra;
         },
         
-        validateBillAccountFields(fieldExtra) {
-    		if(fieldExtra.requiredForProjectSubmission && fieldExtra.withIcon) {
+        withHelpIcon() {
+        	if(this.fieldConfig.field_extra.withIcon) {
     			return true;  					
     		} else 
     			return false;    		
     	},
     	
-    	hasHelperText(fieldExtra) {
-    		if(fieldExtra.helpText && !fieldExtra.withIcon) {
+    	hasHelpText() {
+    		if(this.fieldConfig.field_extra.helpText && !this.fieldConfig.field_extra.withIcon) {
     			return true;  					
     		} else 
     			return false;
