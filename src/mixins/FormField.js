@@ -38,23 +38,23 @@ export default {
             fieldConfig: {}
         }
     },
-    
+
     computed: {
     	withHelpIcon() {
         	if(this.fieldConfig.field_extra.withIcon) {
-    			return true;  					
-    		} else 
-    			return false;    		
+    			return true;
+    		} else
+    			return false;
     	},
-    	
+
     	hasHelpText() {
     		if(this.fieldConfig.field_extra.helpText && !this.fieldConfig.field_extra.withIcon) {
-    			return true;  					
-    		} else 
+    			return true;
+    		} else
     			return false;
     	}
     },
-    
+
     created() {
 
         if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
@@ -101,20 +101,6 @@ export default {
             }
             return fieldExtra;
         },
-        
-        /*withHelpIcon() {
-        	if(this.fieldConfig.field_extra.withIcon) {
-    			return true;  					
-    		} else 
-    			return false;    		
-    	},
-    	
-    	hasHelpText() {
-    		if(this.fieldConfig.field_extra.helpText && !this.fieldConfig.field_extra.withIcon) {
-    			return true;  					
-    		} else 
-    			return false;
-    	}*/
     }
 
 }
