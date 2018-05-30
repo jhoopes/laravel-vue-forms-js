@@ -3,6 +3,7 @@
         <label>
             {{ fieldConfig.label }}
             <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>
+            <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="radio" v-for="option in fieldConfig.options" :key="option[fieldConfig.optionValueField]">
             <label>
@@ -16,6 +17,9 @@
                 >
                 {{ option[fieldConfig.optionLabelField] }}
             </label>
+        </div>
+        <div v-if="hasHelpText">
+            <span v-html="fieldConfig.field_extra.helpText"></span>
         </div>
     </div>
 </template>

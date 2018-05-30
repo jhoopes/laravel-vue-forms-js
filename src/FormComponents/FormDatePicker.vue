@@ -1,6 +1,8 @@
 <template>
     <div class="datepicker form-group">
-        <label class="form-control-label">{{ fieldConfig.label }}</label>
+        <label class="form-control-label">{{ fieldConfig.label }}
+            <span v-if="withHelpIcon()" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+        </label>
         <div>
             <div class="input-group date" :id="datePickerId" data-target-input="nearest">
                 <input type="text"
@@ -13,8 +15,11 @@
                        @change="updateValue($event.target.value)"
                 />
                 <span class="input-group-addon" :data-target="'#' + datePickerId" data-toggle="datetimepicker">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+            <div v-if="hasHelpText">
+                <span v-html="fieldConfig.field_extra.helpText"></span>
             </div>
         </div>
     </div>

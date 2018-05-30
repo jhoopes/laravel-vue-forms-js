@@ -2,7 +2,9 @@
     <div class="datepicker form-group row"
          :id="fieldName + '-datetime-field'"
          :class="{ 'has-error': form.errors.has(fieldConfig.value_field) }">
-        <label class="col-sm-2 control-label">{{ fieldConfig.label }}</label>
+        <label class="col-sm-2 control-label">{{ fieldConfig.label }}
+            <span v-if="withHelpIcon()" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+        </label>
         <div class="col-sm-10">
             <div class="input-group date" style="position: static" :id="datePickerId" data-target-input="nearest">
                 <input type="text"
