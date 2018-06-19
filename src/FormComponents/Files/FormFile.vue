@@ -9,7 +9,7 @@
             </div>
             <div class="action-row">
                 <span class="fa fa-download" @click="downloadFile(file)"></span>
-                <span class="fa fa-close" @click="selectForDeletion(file)"></span>
+                <span class="fa fa-close" @click="selectForDeletion(file)" v-if="disabled === false"></span>
             </div>
             <div class="file-name">
                 {{ file.original_filename }}
@@ -32,7 +32,7 @@
     import axios from 'axios';
     export default {
 
-        props: ['files'],
+        props: ['files', 'disabled'],
 
         data() {
             return {

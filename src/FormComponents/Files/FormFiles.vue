@@ -5,7 +5,7 @@
     >
         <label class="form-control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
         <div>
-            <form-file :files="files" @deletedFile="deleteFile"></form-file>
+            <form-file :files="files" :disabled="fieldConfig.disabled" @deletedFile="deleteFile"></form-file>
             <form-file-upload
                     v-if="showUploadContainer"
                     :type="fieldConfig.fileable_type"
