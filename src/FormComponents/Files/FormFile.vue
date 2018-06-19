@@ -57,6 +57,11 @@
                 this.showFileDeleteModal = true;
             },
             deleteSelectedFile() {
+
+                if(this.disabled) {
+                    return;
+                }
+
                 this.showFileDeleteModal = false;
                 axios.delete('/api/files/' + this.deleteFile.id).then( response => {
                     this.$emit('deletedFile', this.deleteFile);
