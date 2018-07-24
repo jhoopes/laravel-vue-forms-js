@@ -9,7 +9,7 @@
             </div>
             <div class="action-row">
                 <span class="fa fa-download" @click="downloadFile(file)"></span>
-                <span class="fa fa-close" @click="selectForDeletion(file)" v-if="disabled === false"></span>
+                <span class="fa fa-close" @click="selectForDeletion(file)" v-if="disabled === 0"></span>
             </div>
             <div class="file-name">
                 {{ file.original_filename }}
@@ -58,7 +58,7 @@
             },
             deleteSelectedFile() {
 
-                if(this.disabled) {
+                if(this.disabled === 1) {
                     return;
                 }
 
