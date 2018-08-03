@@ -8,5 +8,5 @@
             "modules": "umd"
         }]
     ],
-    "plugins": ["transform-object-rest-spread", "transform-class-properties"]
+    "plugins": ["transform-object-rest-spread", "transform-class-properties", "babel-plugin-syntax-dynamic-import"]
 }
