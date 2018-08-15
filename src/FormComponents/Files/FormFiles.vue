@@ -5,7 +5,7 @@
     >
         <label class="form-control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
         <div>
-            <form-file :files="files" :disabled="fieldConfig.disabled" @deletedFile="deleteFile"></form-file>
+            <form-file :files="value" :disabled="fieldConfig.disabled" @deletedFile="deleteFile"></form-file>
             <form-file-upload
                     v-if="showUploadContainer"
                     :type="fieldConfig.fileable_type"
@@ -63,7 +63,6 @@
 
         data() {
             return {
-                files: [],
                 showUploadContainer: true,
             }
         },
@@ -113,37 +112,41 @@
                 this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
             }
 
-            this.getFiles();
+            //this.getFiles();
 
         },
 
         methods: {
-            getFiles() {
-                if(!this.fieldConfig.fileable_id) {
-                    return;
-                }
-
-                var fileRequest = {
-                    metaType: this.fieldConfig.fieldName,
-                    fileable_type: this.fieldConfig.fileable_type,
-                    fileable_id: this.fieldConfig.fileable_id
-                }
-
-                axios.post('/api/files/getFiles', fileRequest).then( response => {
-                    this.files = response.data;
-                    this.checkIfReachedMaxFiles();
-                }).catch( error => {
-                    window.notify.apiError(error);
-                });
-            },
+            // getFiles() {
+            //     if(!this.fieldConfig.fileable_id) {
+            //         return;
+            //     }
+            //
+            //     var fileRequest = {
+            //         metaType: this.fieldConfig.fieldName,
+            //         fileable_type: this.fieldConfig.fileable_type,
+            //         fileable_id: this.fieldConfig.fileable_id
+            //     }
+            //
+            //     axios.post('/api/files/getFiles', fileRequest).then( response => {
+            //         this.files = response.data;
+            //         this.checkIfReachedMaxFiles();
+            //     }).catch( error => {
+            //         window.notify.apiError(error);
+            //     });
+            // },
             deleteFile(deleteFile) {
-                this.files = this.files.filter( file => {
+                this.$emit('input', this.value.filter( file => {
                     return file.id !== deleteFile.id
-                });
+                }));
+
                 this.checkIfReachedMaxFiles();
             },
             addFile(file) {
-                this.files.push(file);
+                var newFiles = this.value;
+                newFiles.push(file);
+                this.$emit('input', newFiles);
+
                 this.checkIfReachedMaxFiles();
             },
 
