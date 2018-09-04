@@ -2,7 +2,7 @@
     <div class="form-group"
          :id="fieldName + '-select-field'"
          :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }">
-        <label class="form-control-label">
+        <label class="form-control-label" v-if="showLabel">
             {{ fieldConfig.label }}
             <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
