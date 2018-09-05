@@ -8,13 +8,17 @@ export default {
                 return []
             }
         },
+        optionsUrl: {
+            type: String,
+            default: null,
+        },
         optionLabelField: {
             type: String,
-            default: 'name',
+            default: '',
         },
         optionValueField: {
             type: String,
-            default: 'id'
+            default: ''
         }
     },
 
@@ -63,8 +67,8 @@ export default {
             this.$set(this.fieldConfig, 'options', this.options);
             this.$set(this.fieldConfig, 'optionValueField',  this.optionValueField);
             this.$set(this.fieldConfig, 'optionLabelField',  this.optionLabelField);
+            this.$set(this.fieldConfig, 'optionsURL', this.optionsUrl);
         }
-
     },
 
     computed: {

@@ -2,6 +2,7 @@ import jQuery from 'jquery';
 import { Form } from './Form';
 import { byString} from "./utilities/utils";
 import VueForm from './Form.vue';
+import FormAutocomplete from './FormComponents/FormAutocomplete.vue';
 import FormText from './FormComponents/FormText.vue';
 import FormTextarea from './FormComponents/FormTextarea.vue';
 import FormSelect from './FormComponents/FormSelect.vue';
@@ -26,6 +27,7 @@ export default {
         Vue.component(FormDatePicker.name, FormDatePicker);
         Vue.component(FormRadio.name, FormRadio);
         Vue.component(FormFiles.name, FormFiles);
+        Vue.component(FormAutocomplete.name, FormAutocomplete);
 
         // if (window.$ === undefined || window.jQuery === undefined) {
         //     window.$ = window.jQuery = jQuery;
@@ -38,4 +40,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles }
+export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete }
