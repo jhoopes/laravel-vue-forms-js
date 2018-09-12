@@ -8,6 +8,7 @@ import FormTextarea from './FormComponents/FormTextarea.vue';
 import FormSelect from './FormComponents/FormSelect.vue';
 import FormDateTimePicker from './FormComponents/FormDateTimePicker.vue';
 import FormDatePicker from './FormComponents/FormDatePicker.vue';
+import FormCheckbox from './FormComponents/FormCheckbox.vue';
 import FormRadio from './FormComponents/FormRadio.vue';
 import FormFiles from './FormComponents/Files/FormFiles.vue';
 
@@ -26,6 +27,7 @@ export default {
         Vue.component(FormDateTimePicker.name, FormDateTimePicker);
         Vue.component(FormDatePicker.name, FormDatePicker);
         Vue.component(FormRadio.name, FormRadio);
+        Vue.component(FormCheckbox.name, FormCheckbox);
         Vue.component(FormFiles.name, FormFiles);
         Vue.component(FormAutocomplete.name, FormAutocomplete);
 
@@ -40,4 +42,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete }
+export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox }

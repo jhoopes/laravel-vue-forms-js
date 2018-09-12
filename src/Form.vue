@@ -7,9 +7,10 @@
             <component v-for="field in formConfig.fields" :key="field.id"
                        :is="getFormFieldComponent(field.widget)"
                        v-if="field.visible"
+                       v-show="conditionValues[field.name]"
                        :field-name="field.name"
                        :value="getFieldValue(form, field)"
-                       @input="(newVal) => { updateFormValue(field, newVal) }"
+                       @input="(newVal) => updateValueAndConditionals(newVal, field)"
             ></component>
             <div class="controls-row" v-if="disabled === false">
                 <button class="inputbutton1" @click.prevent="submitForm">Save</button>
@@ -32,6 +33,8 @@
     import FormDateTimePicker from './FormComponents/FormDateTimePicker.vue';
     import FormDatePicker from './FormComponents/FormDatePicker.vue';
     import FormRadio from './FormComponents/FormRadio.vue';
+    import FormCheckbox from './FormComponents/FormCheckbox.vue';
+    import FormAutocomplete from './FormComponents/FormAutocomplete.vue';
     import FormFiles from './FormComponents/Files/FormFiles.vue';
     export default {
 
@@ -45,10 +48,12 @@
 
         components: {
             FormText,
+            FormAutocomplete,
             FormTextarea,
             FormSelect,
             FormDatePicker,
             FormRadio,
+            FormCheckbox,
             FormFiles,
             'form-datetimepicker': FormDateTimePicker
         },
@@ -57,6 +62,7 @@
         data() {
             return {
                 form: {},
+                conditionValues: {},
             }
         },
 
@@ -69,6 +75,7 @@
             var data = this.defaultFields(formData);
             this.form = new Form(data, this.formConfig, this.disabled);
 
+            this.generateConditionValues();
         },
 
         provide() {
@@ -80,6 +87,40 @@
                 get: () => this.form
             });
             return provide;
+        },
+
+        methods: {
+            generateConditionValues() {
+                this.formConfig.fields.forEach(field => {
+                    this.meetsConditions(field);
+                });
+            },
+            meetsConditions(field) {
+
+                let fieldExtra = this.getFormFieldFieldExtra(field);
+                if(fieldExtra.condition && fieldExtra.condition.fieldName && fieldExtra.condition.fieldValue) {
+
+                    if(this.form[fieldExtra.condition.fieldName] === fieldExtra.condition.fieldValue) {
+                        this.$set(this.conditionValues, field.name, true);
+                    }else {
+                        this.$set(this.conditionValues, field.name, false);
+                    }
+
+                } else {
+
+                    this.$set(this.conditionValues, field.name, true);
+                }
+            },
+            getFormFieldFieldExtra(field) {
+                var fieldExtra = field.field_extra;
+                if(!fieldExtra) {
+                    fieldExtra = {};
+                }
+                return fieldExtra;
+            },
+            updateValueAndConditionals(newVal, field) {
+                this.updateFormValue(field, newVal); this.generateConditionValues();
+            }
         }
     }
 </script>

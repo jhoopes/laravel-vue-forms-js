@@ -9,11 +9,17 @@ export default {
                 case 'text':
                     return 'form-text';
                     break;
+                case 'autocomplete':
+                    return 'form-autocomplete';
+                    break;
                 case 'textarea':
                     return 'form-textarea';
                     break;
                 case 'dropdown':
                     return 'form-select';
+                    break;
+                case 'checkbox':
+                    return 'form-checkbox';
                     break;
                 case 'radio':
                     return 'form-radio';
