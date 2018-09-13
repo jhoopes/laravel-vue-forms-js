@@ -1,4 +1,3 @@
-import axios from 'axios';
 
 export default {
 
@@ -19,7 +18,7 @@ export default {
             let method = this.getSubmitHttpMethod();
             let data = this.getSubmitData();
 
-            axios[method](this.formSubmitUrl, data).then(response => {
+            this.apiClient[method](this.formSubmitUrl, data).then(response => {
 
                 if(method === 'post') { // we're creating so set the response id onto the form object
                     this.$set(this.form, 'id', response.data.id);

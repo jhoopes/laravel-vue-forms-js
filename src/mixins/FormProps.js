@@ -1,3 +1,4 @@
+import axios from 'axios';
 export default {
 
     props: {
@@ -13,6 +14,11 @@ export default {
         formSubmitUrl: {
             type: String,
             default: '/api/forms/submit'
+        },
+        apiClient: {
+            default() {
+                return axios;
+            },
         },
         saveSuccess: {
             type: Function,
