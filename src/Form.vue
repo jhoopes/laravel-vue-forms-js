@@ -11,6 +11,7 @@
                        :field-name="field.name"
                        :value="getFieldValue(form, field)"
                        @input="(newVal) => updateValueAndConditionals(newVal, field)"
+                       @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
             ></component>
             <div class="controls-row" v-if="disabled === false">
                 <button class="inputbutton1" @click.prevent="submitForm">Save</button>
@@ -24,6 +25,7 @@
     import FormProps from './mixins/FormProps';
     import FormConfig from './mixins/FormConfig';
     import Actions from './mixins/Actions'
+    import UpdatesValuesAndConditions from './mixins/UpdatesValuesAndConditions';
     import {Form} from "./Form";
 
 
@@ -43,7 +45,8 @@
         mixins: [
             FormProps,
             FormConfig,
-            Actions
+            Actions,
+            UpdatesValuesAndConditions
         ],
 
         components: {
@@ -62,7 +65,6 @@
         data() {
             return {
                 form: {},
-                conditionValues: {},
             }
         },
 
@@ -89,38 +91,6 @@
             return provide;
         },
 
-        methods: {
-            generateConditionValues() {
-                this.formConfig.fields.forEach(field => {
-                    this.meetsConditions(field);
-                });
-            },
-            meetsConditions(field) {
 
-                let fieldExtra = this.getFormFieldFieldExtra(field);
-                if(fieldExtra.condition && fieldExtra.condition.fieldName && fieldExtra.condition.fieldValue) {
-
-                    if(this.form[fieldExtra.condition.fieldName] === fieldExtra.condition.fieldValue) {
-                        this.$set(this.conditionValues, field.name, true);
-                    }else {
-                        this.$set(this.conditionValues, field.name, false);
-                    }
-
-                } else {
-
-                    this.$set(this.conditionValues, field.name, true);
-                }
-            },
-            getFormFieldFieldExtra(field) {
-                var fieldExtra = field.field_extra;
-                if(!fieldExtra) {
-                    fieldExtra = {};
-                }
-                return fieldExtra;
-            },
-            updateValueAndConditionals(newVal, field) {
-                this.updateFormValue(field, newVal); this.generateConditionValues();
-            }
-        }
     }
 </script>

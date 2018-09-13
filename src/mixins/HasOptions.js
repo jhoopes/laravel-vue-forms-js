@@ -105,6 +105,9 @@ export default {
         },
         'options' : function(newOptions) {
             this.$set(this.fieldConfig, 'options', newOptions);
+        },
+        'fieldConfig.options': function(newOptions) {
+            this.$emit('options-updated', newOptions);
         }
     },
 
