@@ -88,6 +88,11 @@
                 enumerable: true,
                 get: () => this.form
             });
+
+            Object.defineProperty(provide, 'apiClient', {
+                enumerable: true,
+                get: () => this.apiClient
+            });
             return provide;
         },
 

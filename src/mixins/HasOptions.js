@@ -137,7 +137,7 @@ export default {
         getOptions() {
 
             if(this.currentOptionsURL.length > 0) {
-                axios.get(this.currentOptionsURL).then( response => {
+                this.apiClient.get(this.currentOptionsURL).then( response => {
 
                     this.fieldConfig.options = response.data;
 

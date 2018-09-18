@@ -1,4 +1,5 @@
 import {FormErrors} from "../FormErrors";
+import axios from 'axios';
 
 export default {
 
@@ -8,6 +9,11 @@ export default {
                 return {
                     errors: new FormErrors()
                 }
+            }
+        },
+        apiClient: {
+            default() {
+                return axios;
             }
         }
     },
