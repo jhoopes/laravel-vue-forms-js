@@ -83,6 +83,10 @@ export default {
                         this.$emit('input', fieldExtra.default);
                     }
 
+                    if(fieldExtra.default) {
+                        this.$set(this.fieldConfig, 'default', fieldExtra.default);
+                    }
+
                     this.$set(this.fieldConfig, 'field_extra', fieldExtra);
                     this.$set(this.fieldConfig, 'label', field.label);
                     this.$set(this.fieldConfig, 'value_field', field.value_field);

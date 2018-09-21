@@ -61,6 +61,10 @@ export default {
                         this.fieldConfig.optionLabelField = field.field_extra.options_config.optionLabelField;
                     }
 
+                    if(field.field_extra.options_config.default) {
+                        this.fieldConfig.default = field.field_extra.options_config.default;
+                    }
+
                 }
             });
         }else {
@@ -105,9 +109,12 @@ export default {
         },
         'options' : function(newOptions) {
             this.$set(this.fieldConfig, 'options', newOptions);
+
+            this.defaultField()
         },
         'fieldConfig.options': function(newOptions) {
             this.$emit('options-updated', newOptions);
+            this.defaultField();
         }
     },
 
@@ -147,6 +154,23 @@ export default {
 
             }
 
+        },
+        defaultField() {
+
+            try {
+
+                if(!this.optionValue && this.fieldConfig.default) {
+                    this.fieldConfig.options.forEach(option => {
+                        if(option[this.fieldConfig.optionLabelField] === this.fieldConfig.default) {
+                            this.updateValue(option);
+                        }else {
+                        }
+                    })
+                }
+
+            }catch (error) {
+                //console.trace(error);
+            }
         }
 
     }
