@@ -6,6 +6,9 @@ export default {
         getFormFieldComponent(fieldWidget) {
 
             switch(fieldWidget) {
+                case 'column':
+                    return 'form-column';
+                    break;
                 case 'text':
                     return 'form-text';
                     break;
@@ -48,6 +51,11 @@ export default {
             return false;
         },
         getFieldValue(form, field) {
+
+            if(!field.value_field) {
+                return null;
+            }
+
             let value =  Object.getFormValueByString(form, field.value_field);
             return value;
         },

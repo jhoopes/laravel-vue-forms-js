@@ -4,15 +4,19 @@
             <span class="close-icon fa fa-times" @click="close"></span>
         </div>
         <form @submit.prevent="">
-            <component v-for="field in formConfig.fields" :key="field.id"
-                       :is="getFormFieldComponent(field.widget)"
-                       v-if="field.visible"
-                       v-show="conditionValues[field.name]"
-                       :field-name="field.name"
-                       :value="getFieldValue(form, field)"
-                       @input="(newVal) => updateValueAndConditionals(newVal, field)"
-                       @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
-            ></component>
+            <div :class="{ 'flex' : (columnCount > 1) }">
+                <component v-for="field in fields" :key="field.id"
+                           :is="getFormFieldComponent(field.widget)"
+                           v-if="field.visible"
+                           v-show="conditionValues[field.name]"
+                           :field-name="field.name"
+                           :value="getFieldValue(form, field)"
+                           @input="(newVal) => updateValueAndConditionals(newVal, field)"
+                           @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
+                           :children="field.children || null"
+                           :class="columnWidth + ' ' + 'm-2'"
+                ></component>
+            </div>
             <div class="controls-row" v-if="disabled === false">
                 <button class="inputbutton1" @click.prevent="submitForm">Save</button>
                 <button class="inputbutton1" @click.prevent="cancel">Cancel</button>
@@ -29,6 +33,7 @@
     import {Form} from "./Form";
 
 
+    import FormColumn from './FormComponents/FormColumn';
     import FormText from './FormComponents/FormText.vue';
     import FormTextarea from './FormComponents/FormTextarea.vue';
     import FormSelect from './FormComponents/FormSelect.vue';
@@ -50,6 +55,7 @@
         ],
 
         components: {
+            FormColumn,
             FormText,
             FormAutocomplete,
             FormTextarea,
@@ -80,6 +86,48 @@
             this.generateConditionValues();
         },
 
+        computed: {
+
+            fields() {
+
+                let topLevelFields = this.formConfig.fields.filter(field => {
+                    if(field.parent_id) {
+                        return false;
+                    }
+                    return true;
+                });
+
+                topLevelFields.forEach(topLevelField => {
+                    topLevelField.children = this.formConfig.fields.filter(field => {
+                        return field.parent_id === topLevelField.id;
+                    })
+                });
+
+                return topLevelFields;
+            },
+            columnCount() {
+                var columnCount = 0;
+                this.fields.forEach(field => {
+                    if(field.widget === 'column') {
+                        columnCount++;
+                    }
+                });
+
+                if(columnCount === 0) {
+                    columnCount = 1;
+                }
+
+                return columnCount;
+            },
+            columnWidth() {
+                if(this.columnCount === 0) {
+                    return null;
+                }
+
+                return 'w-1/' + this.columnCount;
+            }
+        },
+
         provide() {
 
             let provide = {};
@@ -99,3 +147,13 @@
 
     }
 </script>
+<style scoped>
+    .flex {
+        display: flex;
+    }
+
+    .mx-2 {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+</style>

@@ -9,7 +9,7 @@ export default {
 
     methods: {
         generateConditionValues() {
-            this.formConfig.fields.forEach(field => {
+            this.form.formConfig.fields.forEach(field => {
                 this.meetsConditions(field);
             });
         },
@@ -26,9 +26,9 @@ export default {
                     conditionFieldFieldExtra = this.getFormFieldFieldExtra(conditionField);
                 }
 
-                if (this.fieldOptions[fieldExtra.condition.fieldName]) {
+                if (this.form.formFieldOptions[fieldExtra.condition.fieldName]) {
 
-                    let conditionOption = this.fieldOptions[fieldExtra.condition.fieldName].filter(option => {
+                    let conditionOption = this.form.formFieldOptions[fieldExtra.condition.fieldName].filter(option => {
                         return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue
                     })[0];
 
@@ -59,7 +59,7 @@ export default {
             this.updateFormValue(field, newVal); this.generateConditionValues();
         },
         updateOptionsForField(newOptions, field) {
-            this.$set(this.fieldOptions, field.name, newOptions);
+            this.$set(this.form.formFieldOptions, field.name, newOptions);
             this.generateConditionValues();
         },
     }

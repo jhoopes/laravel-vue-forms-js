@@ -7,7 +7,7 @@
 		exports["laravel-vue-forms"] = factory(require("axios"), require("jquery"), require("vue-multiselect"), require("dropzone"));
 	else
 		root["laravel-vue-forms"] = factory(root["axios"], root["jquery"], root["vue-multiselect"], root["dropzone"]);
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_25__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_42__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_36__, __WEBPACK_EXTERNAL_MODULE_45__, __WEBPACK_EXTERNAL_MODULE_59__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 35);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -188,25 +188,34 @@ module.exports = function normalizeComponent (
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(6)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(6), __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('../FormErrors'));
+        factory(exports, require('../FormErrors'), require('axios'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.FormErrors);
+        factory(mod.exports, global.FormErrors, global.axios);
         global.FormField = mod.exports;
     }
-})(this, function (exports, _FormErrors) {
+})(this, function (exports, _FormErrors, _axios) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
+
+    var _axios2 = _interopRequireDefault(_axios);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
     exports.default = {
 
         inject: {
@@ -215,6 +224,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     return {
                         errors: new _FormErrors.FormErrors()
                     };
+                }
+            },
+            apiClient: {
+                default: function _default() {
+                    return _axios2.default;
                 }
             }
         },
@@ -245,6 +259,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 fieldConfig: {}
             };
         },
+
+
+        computed: {
+            withHelpIcon: function withHelpIcon() {
+                if (this.fieldConfig.field_extra.withIcon) {
+                    return true;
+                } else return false;
+            },
+            hasHelpText: function hasHelpText() {
+                if (this.fieldConfig.field_extra.helpText && !this.fieldConfig.field_extra.withIcon) {
+                    return true;
+                } else return false;
+            }
+        },
+
         created: function created() {
             var _this = this;
 
@@ -266,6 +295,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                         if (typeof fieldExtra.default !== 'undefined' && (_this.value === null || typeof _this.value === 'undefined')) {
                             _this.$emit('input', fieldExtra.default);
+                        }
+
+                        if (fieldExtra.default) {
+                            _this.$set(_this.fieldConfig, 'default', fieldExtra.default);
                         }
 
                         _this.$set(_this.fieldConfig, 'field_extra', fieldExtra);
@@ -366,7 +399,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(32)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -394,13 +427,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     return [];
                 }
             },
+            optionsUrl: {
+                type: String,
+                default: null
+            },
             optionLabelField: {
                 type: String,
-                default: 'name'
+                default: ''
             },
             optionValueField: {
                 type: String,
-                default: 'id'
+                default: ''
             }
         },
 
@@ -440,12 +477,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                         if (field.field_extra.options_config.optionLabelField) {
                             _this.fieldConfig.optionLabelField = field.field_extra.options_config.optionLabelField;
                         }
+
+                        if (field.field_extra.options_config.default) {
+                            _this.fieldConfig.default = field.field_extra.options_config.default;
+                        }
                     }
                 });
             } else {
                 this.$set(this.fieldConfig, 'options', this.options);
                 this.$set(this.fieldConfig, 'optionValueField', this.optionValueField);
                 this.$set(this.fieldConfig, 'optionLabelField', this.optionLabelField);
+                this.$set(this.fieldConfig, 'optionsURL', this.optionsUrl);
             }
         },
 
@@ -487,6 +529,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             'options': function options(newOptions) {
                 this.$set(this.fieldConfig, 'options', newOptions);
+
+                this.defaultField();
+            },
+            'fieldConfig.options': function fieldConfigOptions(newOptions) {
+                this.$emit('options-updated', newOptions);
+                this.defaultField();
             }
         },
 
@@ -517,12 +565,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 var _this4 = this;
 
                 if (this.currentOptionsURL.length > 0) {
-                    axios.get(this.currentOptionsURL).then(function (response) {
+                    this.apiClient.get(this.currentOptionsURL).then(function (response) {
 
                         _this4.fieldConfig.options = response.data;
                     }).catch(function (error) {
                         window.notify.apiError(error);
                     });
+                }
+            },
+            defaultField: function defaultField() {
+                var _this5 = this;
+
+                try {
+
+                    if (!this.optionValue && this.fieldConfig.default) {
+                        this.fieldConfig.options.forEach(function (option) {
+                            if (option[_this5.fieldConfig.optionLabelField] === _this5.fieldConfig.default) {
+                                _this5.updateValue(option);
+                            } else {}
+                        });
+                    }
+                } catch (error) {
+                    //console.trace(error);
                 }
             }
         }
@@ -588,6 +652,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             this.initialData = data;
             this.fields = [];
             this.disabled = false;
+            this.formFieldOptions = {};
 
             for (var field in data) {
                 if (data.hasOwnProperty(field)) {
@@ -796,24 +861,334 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(40)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(27), __webpack_require__(28), __webpack_require__(29), __webpack_require__(5), __webpack_require__(8), __webpack_require__(22), __webpack_require__(10), __webpack_require__(12), __webpack_require__(14), __webpack_require__(16), __webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(41), __webpack_require__(10), __webpack_require__(42), __webpack_require__(11), __webpack_require__(5), __webpack_require__(12), __webpack_require__(14), __webpack_require__(33), __webpack_require__(16), __webpack_require__(19), __webpack_require__(21), __webpack_require__(23), __webpack_require__(25), __webpack_require__(27), __webpack_require__(29)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./mixins/FormProps'), require('./mixins/FormConfig'), require('./mixins/Actions'), require('./Form'), require('./FormComponents/FormText.vue'), require('./FormComponents/FormTextarea.vue'), require('./FormComponents/FormSelect.vue'), require('./FormComponents/FormDateTimePicker.vue'), require('./FormComponents/FormDatePicker.vue'), require('./FormComponents/FormRadio.vue'), require('./FormComponents/Files/FormFiles.vue'));
+        factory(exports, require('./mixins/FormProps'), require('./mixins/FormConfig'), require('./mixins/Actions'), require('./mixins/UpdatesValuesAndConditions'), require('./Form'), require('./FormComponents/FormColumn'), require('./FormComponents/FormText.vue'), require('./FormComponents/FormTextarea.vue'), require('./FormComponents/FormSelect.vue'), require('./FormComponents/FormDateTimePicker.vue'), require('./FormComponents/FormDatePicker.vue'), require('./FormComponents/FormRadio.vue'), require('./FormComponents/FormCheckbox.vue'), require('./FormComponents/FormAutocomplete.vue'), require('./FormComponents/Files/FormFiles.vue'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.FormProps, global.FormConfig, global.Actions, global.Form, global.FormText, global.FormTextarea, global.FormSelect, global.FormDateTimePicker, global.FormDatePicker, global.FormRadio, global.FormFiles);
+        factory(mod.exports, global.FormProps, global.FormConfig, global.Actions, global.UpdatesValuesAndConditions, global.Form, global.FormColumn, global.FormText, global.FormTextarea, global.FormSelect, global.FormDateTimePicker, global.FormDatePicker, global.FormRadio, global.FormCheckbox, global.FormAutocomplete, global.FormFiles);
         global.Form = mod.exports;
     }
-})(this, function (exports, _FormProps, _FormConfig, _Actions, _Form, _FormText, _FormTextarea, _FormSelect, _FormDateTimePicker, _FormDatePicker, _FormRadio, _FormFiles) {
+})(this, function (exports, _FormProps, _FormConfig, _Actions, _UpdatesValuesAndConditions, _Form, _FormColumn, _FormText, _FormTextarea, _FormSelect, _FormDateTimePicker, _FormDatePicker, _FormRadio, _FormCheckbox, _FormAutocomplete, _FormFiles) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -825,6 +1200,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     var _FormConfig2 = _interopRequireDefault(_FormConfig);
 
     var _Actions2 = _interopRequireDefault(_Actions);
+
+    var _UpdatesValuesAndConditions2 = _interopRequireDefault(_UpdatesValuesAndConditions);
+
+    var _FormColumn2 = _interopRequireDefault(_FormColumn);
 
     var _FormText2 = _interopRequireDefault(_FormText);
 
@@ -838,6 +1217,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     var _FormRadio2 = _interopRequireDefault(_FormRadio);
 
+    var _FormCheckbox2 = _interopRequireDefault(_FormCheckbox);
+
+    var _FormAutocomplete2 = _interopRequireDefault(_FormAutocomplete);
+
     var _FormFiles2 = _interopRequireDefault(_FormFiles);
 
     function _interopRequireDefault(obj) {
@@ -850,14 +1233,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         name: 'vue-form',
 
-        mixins: [_FormProps2.default, _FormConfig2.default, _Actions2.default],
+        mixins: [_FormProps2.default, _FormConfig2.default, _Actions2.default, _UpdatesValuesAndConditions2.default],
 
         components: {
+            FormColumn: _FormColumn2.default,
             FormText: _FormText2.default,
+            FormAutocomplete: _FormAutocomplete2.default,
             FormTextarea: _FormTextarea2.default,
             FormSelect: _FormSelect2.default,
             FormDatePicker: _FormDatePicker2.default,
             FormRadio: _FormRadio2.default,
+            FormCheckbox: _FormCheckbox2.default,
             FormFiles: _FormFiles2.default,
             'form-datetimepicker': _FormDateTimePicker2.default
         },
@@ -875,16 +1261,69 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             var data = this.defaultFields(formData);
             this.form = new _Form.Form(data, this.formConfig, this.disabled);
+
+            this.generateConditionValues();
         },
+
+
+        computed: {
+            fields: function fields() {
+                var _this = this;
+
+                var topLevelFields = this.formConfig.fields.filter(function (field) {
+                    if (field.parent_id) {
+                        return false;
+                    }
+                    return true;
+                });
+
+                topLevelFields.forEach(function (topLevelField) {
+                    topLevelField.children = _this.formConfig.fields.filter(function (field) {
+                        return field.parent_id === topLevelField.id;
+                    });
+                });
+
+                return topLevelFields;
+            },
+            columnCount: function columnCount() {
+                var columnCount = 0;
+                this.fields.forEach(function (field) {
+                    if (field.widget === 'column') {
+                        columnCount++;
+                    }
+                });
+
+                if (columnCount === 0) {
+                    columnCount = 1;
+                }
+
+                return columnCount;
+            },
+            columnWidth: function columnWidth() {
+                if (this.columnCount === 0) {
+                    return null;
+                }
+
+                return 'w-1/' + this.columnCount;
+            }
+        },
+
         provide: function provide() {
-            var _this = this;
+            var _this2 = this;
 
             var provide = {};
 
             Object.defineProperty(provide, 'form', {
                 enumerable: true,
                 get: function get() {
-                    return _this.form;
+                    return _this2.form;
+                }
+            });
+
+            Object.defineProperty(provide, 'apiClient', {
+                enumerable: true,
+                get: function get() {
+                    return _this2.apiClient;
                 }
             });
             return provide;
@@ -893,15 +1332,317 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 8 */
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('../utilities/utils'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.utils);
+        global.FormConfig = mod.exports;
+    }
+})(this, function (exports, _utils) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = {
+
+        methods: {
+            getFormFieldComponent: function getFormFieldComponent(fieldWidget) {
+
+                switch (fieldWidget) {
+                    case 'column':
+                        return 'form-column';
+                        break;
+                    case 'text':
+                        return 'form-text';
+                        break;
+                    case 'autocomplete':
+                        return 'form-autocomplete';
+                        break;
+                    case 'textarea':
+                        return 'form-textarea';
+                        break;
+                    case 'dropdown':
+                        return 'form-select';
+                        break;
+                    case 'checkbox':
+                        return 'form-checkbox';
+                        break;
+                    case 'radio':
+                        return 'form-radio';
+                        break;
+                    case 'datepicker':
+                        return 'form-datepicker';
+                        break;
+                    case 'datetimepicker':
+                        return 'form-datetimepicker';
+                        break;
+                    case 'files':
+                        return 'form-files';
+                        break;
+                    default:
+                        return fieldWidget;
+                        break;
+                }
+            },
+            getRequiredBool: function getRequiredBool(field) {
+
+                if (field.field_extra.required) {
+                    return true;
+                }
+
+                return false;
+            },
+            getFieldValue: function getFieldValue(form, field) {
+
+                if (!field.value_field) {
+                    return null;
+                }
+
+                var value = Object.getFormValueByString(form, field.value_field);
+                return value;
+            },
+            updateFormValue: function updateFormValue(field, newVal) {
+                (0, _utils.assignOnObject)(this.form, field.value_field, newVal);
+            },
+            defaultFields: function defaultFields(data) {
+                var _this = this;
+
+                this.formConfig.fields.forEach(function (field) {
+                    if (typeof _this.getFieldValue(data, field) === 'undefined' || _this.getFieldValue(data, field) === '') {
+                        (0, _utils.assignOnObject)(data, field.value_field, null);
+                        if (field.field_extra !== null && typeof field.field_extra.default !== 'undefined') {
+
+                            (0, _utils.assignOnObject)(data, field.value_field, field.field_extra.default);
+                        }
+                    }
+                });
+
+                return data;
+            }
+        }
+    };
+});
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports);
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports);
+        global.UpdatesValuesAndConditions = mod.exports;
+    }
+})(this, function (exports) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = {
+        data: function data() {
+            return {
+                conditionValues: {},
+                fieldOptions: {}
+            };
+        },
+
+
+        methods: {
+            generateConditionValues: function generateConditionValues() {
+                var _this = this;
+
+                this.form.formConfig.fields.forEach(function (field) {
+                    _this.meetsConditions(field);
+                });
+            },
+            meetsConditions: function meetsConditions(field) {
+
+                var fieldExtra = this.getFormFieldFieldExtra(field);
+
+                if (fieldExtra.condition && fieldExtra.condition.fieldName && fieldExtra.condition.fieldValue) {
+
+                    var conditionField = this.form.formConfig.fields.filter(function (f) {
+                        return f.name === fieldExtra.condition.fieldName;
+                    })[0];
+                    var conditionFieldFieldExtra = null;
+                    if (conditionField) {
+                        conditionFieldFieldExtra = this.getFormFieldFieldExtra(conditionField);
+                    }
+
+                    if (this.form.formFieldOptions[fieldExtra.condition.fieldName]) {
+
+                        var conditionOption = this.form.formFieldOptions[fieldExtra.condition.fieldName].filter(function (option) {
+                            return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue;
+                        })[0];
+
+                        if (conditionOption && this.form[conditionField.value_field] === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
+                            this.$set(this.conditionValues, field.name, true);
+                        } else {
+                            this.$set(this.conditionValues, field.name, false);
+                        }
+                    } else if (this.form[fieldExtra.condition.fieldName] === fieldExtra.condition.fieldValue) {
+                        this.$set(this.conditionValues, field.name, true);
+                    } else {
+                        this.$set(this.conditionValues, field.name, false);
+                    }
+                } else {
+
+                    this.$set(this.conditionValues, field.name, true);
+                }
+            },
+            getFormFieldFieldExtra: function getFormFieldFieldExtra(field) {
+                var fieldExtra = field.field_extra;
+                if (!fieldExtra) {
+                    fieldExtra = {};
+                }
+                return fieldExtra;
+            },
+            updateValueAndConditionals: function updateValueAndConditionals(newVal, field) {
+                this.updateFormValue(field, newVal);this.generateConditionValues();
+            },
+            updateOptionsForField: function updateOptionsForField(newOptions, field) {
+                this.$set(this.form.formFieldOptions, field.name, newOptions);
+                this.generateConditionValues();
+            }
+        }
+    };
+});
+
+/***/ }),
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormColumn_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormColumn_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormColumn_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormColumn_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormColumn_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48e57322_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormColumn_vue__ = __webpack_require__(43);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormColumn_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48e57322_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormColumn_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1), __webpack_require__(10), __webpack_require__(11)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../mixins/FormField'), require('./../mixins/FormConfig'), require('./../mixins/UpdatesValuesAndConditions'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.FormField, global.FormConfig, global.UpdatesValuesAndConditions);
+        global.FormColumn = mod.exports;
+    }
+})(this, function (exports, _FormField, _FormConfig, _UpdatesValuesAndConditions) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    var _FormConfig2 = _interopRequireDefault(_FormConfig);
+
+    var _UpdatesValuesAndConditions2 = _interopRequireDefault(_UpdatesValuesAndConditions);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        mixins: [_FormField2.default, _FormConfig2.default, _UpdatesValuesAndConditions2.default],
+        name: 'form-column',
+
+        props: {
+            children: {
+                type: Array,
+                default: function _default() {
+                    return [];
+                }
+            }
+        },
+
+        created: function created() {
+            var _this = this;
+
+            if (this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+                this.form.formConfig.fields.forEach(function (field) {
+                    if (field.name === _this.fieldName) {}
+                });
+            } else {}
+
+            this.generateConditionValues();
+        }
+    };
+});
+
+/***/ }),
+/* 14 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue__);
 /* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3f6413cc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormText_vue__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_472a5812_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormText_vue__ = __webpack_require__(44);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -918,7 +1659,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormText_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3f6413cc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormText_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_472a5812_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormText_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -929,7 +1670,7 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 9 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -978,15 +1719,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 10 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue__);
 /* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1002a6b1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormSelect_vue__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_786fa62f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormSelect_vue__ = __webpack_require__(48);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -1003,7 +1744,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormSelect_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1002a6b1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormSelect_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_786fa62f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormSelect_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -1014,12 +1755,12 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 11 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(31), __webpack_require__(1), __webpack_require__(4), __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(45), __webpack_require__(1), __webpack_require__(4), __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1078,1280 +1819,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e46a1a96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDateTimePicker_vue__ = __webpack_require__(36);
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e46a1a96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDateTimePicker_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('../utilities/utils'), require('./../mixins/FormField'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.utils, global.FormField);
-        global.FormDateTimePicker = mod.exports;
-    }
-})(this, function (exports, _utils, _FormField) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _FormField2 = _interopRequireDefault(_FormField);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        name: 'form-datetimepicker',
-
-        mixins: [_FormField2.default],
-
-        data: function data() {
-            return {
-                guid: (0, _utils.guid)(),
-                datePicker: {}
-            };
-        },
-
-
-        computed: {
-            datePickerId: function datePickerId() {
-                return this.guid + '-datepicker';
-            }
-        },
-
-        mounted: function mounted() {
-            var vm = this;
-            this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker({
-                allowInputToggle: true,
-                widgetPositioning: {
-                    horizontal: 'auto',
-                    vertical: 'bottom'
-                }
-            });
-            window.jQuery('#' + this.datePickerId).on('change.datetimepicker', function (e) {
-                vm.updateValue(e.date.format('MM/DD/YYYY hh:mm A'));
-            });
-            window.jQuery('#' + this.datePickerId).on('update.datetimepicker', function (e) {
-                vm.updateValue(e.viewDate.format('MM/DD/YYYY hh:mm A'));
-            });
-        },
-
-
-        methods: {
-            showPicker: function showPicker() {
-                window.jQuery('#' + this.datePickerId).datetimepicker('show');
-            },
-            hidePicker: function hidePicker() {
-                window.jQuery('#' + this.datePickerId).datetimepicker('hide');
-            },
-            updateValue: function updateValue(value) {
-                this.form.errors.clear(this.fieldConfig.value_field);
-                this.$emit('input', value);
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 14 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ce8d6de0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDatePicker_vue__ = __webpack_require__(37);
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ce8d6de0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDatePicker_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('./../utilities/utils'), require('../mixins/FormField'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.utils, global.FormField);
-        global.FormDatePicker = mod.exports;
-    }
-})(this, function (exports, _utils, _FormField) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _FormField2 = _interopRequireDefault(_FormField);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        name: 'form-datepicker',
-
-        mixins: [_FormField2.default],
-
-        data: function data() {
-            return {
-                guid: (0, _utils.guid)(),
-                datePicker: {}
-            };
-        },
-
-
-        computed: {
-            datePickerId: function datePickerId() {
-                return this.guid + '-datepicker';
-            }
-        },
-
-        mounted: function mounted() {
-            this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker({
-                debug: true,
-                allowInputToggle: true
-            });
-        },
-
-
-        methods: {
-            showPicker: function showPicker() {
-                window.jQuery('#' + this.datePickerId).datetimepicker('show');
-            },
-            hidePicker: function hidePicker() {
-                window.jQuery('#' + this.datePickerId).datetimepicker('hide');
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 16 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_17ec6f63_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormRadio_vue__ = __webpack_require__(38);
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_17ec6f63_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormRadio_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1), __webpack_require__(4)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('./../mixins/FormField'), require('./../mixins/HasOptions'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.FormField, global.HasOptions);
-        global.FormRadio = mod.exports;
-    }
-})(this, function (exports, _FormField, _HasOptions) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _FormField2 = _interopRequireDefault(_FormField);
-
-    var _HasOptions2 = _interopRequireDefault(_HasOptions);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        name: 'form-radio',
-
-        mixins: [_FormField2.default, _HasOptions2.default],
-
-        methods: {
-            updateValue: function updateValue(optionValue) {
-                this.$emit('input', optionValue);
-            }
-        }
-
-    };
-});
-
-/***/ }),
 /* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4b23f9f8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFiles_vue__ = __webpack_require__(44);
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4b23f9f8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFiles_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1), __webpack_require__(39), __webpack_require__(41)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('./../../mixins/FormField'), require('./FormFile.vue'), require('./FormFileUpload.vue'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.FormField, global.FormFile, global.FormFileUpload);
-        global.FormFiles = mod.exports;
-    }
-})(this, function (exports, _FormField, _FormFile, _FormFileUpload) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _FormField2 = _interopRequireDefault(_FormField);
-
-    var _FormFile2 = _interopRequireDefault(_FormFile);
-
-    var _FormFileUpload2 = _interopRequireDefault(_FormFileUpload);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        name: 'form-files',
-
-        mixins: [_FormField2.default],
-
-        components: {
-            FormFile: _FormFile2.default,
-            FormFileUpload: _FormFileUpload2.default
-        },
-
-        props: {
-            stepId: {
-                type: Number,
-                default: null
-            },
-            metaType: {
-                type: String
-            },
-            maxFiles: {
-                type: Number,
-                default: 100
-            },
-            disabled: {
-                type: Boolean,
-                default: false
-            },
-            fileableType: {
-                type: String
-            },
-            fileableId: {
-                type: Number
-            }
-        },
-
-        data: function data() {
-            return {
-                files: [],
-                showUploadContainer: true
-            };
-        },
-
-
-        //        watch: {
-        //            'form.id': function (newId) {
-        //                this.$set(this.fieldConfig, 'fileableId', newId);
-        //            }
-        //        },
-
-
-        created: function created() {
-            var _this = this;
-
-            if (this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
-                this.form.formConfig.fields.forEach(function (field) {
-                    if (field.name === _this.fieldName) {
-
-                        var fieldExtra = _this.getFormFieldFieldExtra(field);
-                        _this.$set(_this.fieldConfig, 'fileable_type', _this.form.formConfig.entity_model);
-
-                        //TODO: Will need to figure out a better way to define the entity id and not
-                        //TODO: hard checking id on form
-                        if (_this.form.id) {
-                            _this.$set(_this.fieldConfig, 'fileable_id', _this.form.id);
-                        }
-
-                        if (fieldExtra.maxFiles) {
-                            _this.$set(_this.fieldConfig, 'maxFiles', fieldExtra.maxFiles);
-                        } else {
-                            _this.$set(_this.fieldConfig, 'maxFiles', 100);
-                        }
-                    }
-                });
-
-                this.$watch('form.id', {
-                    handler: function handler(newFormId, oldFormId) {
-                        if (newFormId !== oldFormId) {
-                            this.$set(this.fieldConfig, 'fileableId', newFormId);
-                        }
-                    },
-                    deep: true
-                });
-            } else {
-                this.$set(this.fieldConfig, 'fileable_type', this.fileableType);
-                this.$set(this.fieldConfig, 'fileable_id', this.fileableId);
-                this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
-            }
-
-            this.getFiles();
-        },
-
-
-        methods: {
-            getFiles: function getFiles() {
-                var _this2 = this;
-
-                if (!this.fieldConfig.fileable_id) {
-                    return;
-                }
-
-                var fileRequest = {
-                    metaType: this.fieldConfig.fieldName,
-                    fileable_type: this.fieldConfig.fileable_type,
-                    fileable_id: this.fieldConfig.fileable_id
-                };
-
-                axios.post('/api/files/getFiles', fileRequest).then(function (response) {
-                    _this2.files = response.data;
-                    _this2.checkIfReachedMaxFiles();
-                }).catch(function (error) {
-                    window.notify.apiError(error);
-                });
-            },
-            deleteFile: function deleteFile(_deleteFile) {
-                this.files = this.files.filter(function (file) {
-                    return file.id !== _deleteFile.id;
-                });
-                this.checkIfReachedMaxFiles();
-            },
-            addFile: function addFile(file) {
-                this.files.push(file);
-                this.checkIfReachedMaxFiles();
-            },
-            checkIfReachedMaxFiles: function checkIfReachedMaxFiles() {
-                if (this.files.length == this.fieldConfig.maxFiles || this.fieldConfig.disabled === 1) {
-                    this.showUploadContainer = false;
-                } else {
-                    this.showUploadContainer = true;
-                }
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('axios'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.axios);
-        global.FormFile = mod.exports;
-    }
-})(this, function (exports, _axios) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _axios2 = _interopRequireDefault(_axios);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        props: ['files'],
-
-        data: function data() {
-            return {
-                showFileDeleteModal: false,
-                deleteFile: {}
-            };
-        },
-
-
-        methods: {
-            downloadFile: function downloadFile(file) {
-                window.open('/files/' + file.id + '/download');
-            },
-            previewIcon: function previewIcon(file) {
-                if (file.thumbnail && file.thumbnail !== null) {
-                    return '/files/' + file.id + '/thumbnail';
-                }
-
-                return false;
-            },
-            selectForDeletion: function selectForDeletion(file) {
-                this.deleteFile = file;
-                this.showFileDeleteModal = true;
-            },
-            deleteSelectedFile: function deleteSelectedFile() {
-                var _this = this;
-
-                this.showFileDeleteModal = false;
-                _axios2.default.delete('/api/files/' + this.deleteFile.id).then(function (response) {
-                    _this.$emit('deletedFile', _this.deleteFile);
-                    _this.deleteFile = {};
-                    window.notify.message('Successfully deleted file', 'success');
-                }).catch(function (error) {
-                    window.notify.apiError(error);
-                });
-            }
-        }
-    };
-});
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(42)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('dropzone'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.dropzone);
-        global.FormFileUpload = mod.exports;
-    }
-})(this, function (exports, _dropzone) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _dropzone2 = _interopRequireDefault(_dropzone);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        props: {
-            type: String,
-            typeId: Number,
-            stepId: Number,
-            metaType: String,
-            maxFiles: Number,
-            uploadMultiple: {
-                type: Boolean,
-                default: true
-            }
-        },
-
-        data: function data() {
-            return {
-                dropzone: {},
-                dropzoneId: '',
-                autoProcessQueue: false
-            };
-        },
-        created: function created() {
-            this.dropzoneId = this.randomizeId();
-
-            if (this.typeId) {
-                this.autoProcessQueue = true;
-            }
-        },
-
-
-        watch: {
-            typeId: function typeId(newId) {
-                this.dropzone.processQueue();
-            }
-        },
-
-        mounted: function mounted() {
-
-            this.dropzone = new _dropzone2.default('#' + this.dropzoneId, {
-                url: '/api/files/saveFiles',
-                autoProcessQueue: this.autoProcessQueue,
-                uploadMultiple: this.uploadMultiple,
-                parallelUploads: this.maxFiles,
-                maxFiles: this.maxFiles,
-                addRemoveLinks: true
-            });
-
-            if (this.uploadMultiple) {
-                this.dropzone.on('sendingmultiple', this.handleSending);
-                this.dropzone.on('successmultiple', this.handleSuccess);
-            } else {
-                this.dropzone.on('sending', this.handleSending);
-                this.dropzone.on('success', this.handleSuccess);
-            }
-            this.dropzone.on('error', this.handleError);
-        },
-
-
-        methods: {
-            handleSending: function handleSending(file, xhr, formData) {
-                formData.append('_token', window.csrfToken);
-                formData.append('fileable_type', this.type);
-                formData.append('fileable_id', this.typeId);
-                if (this.stepId) {
-                    formData.append('step_id', this.stepId);
-                }
-                formData.append('meta_type', this.metaType);
-            },
-            handleSuccess: function handleSuccess(file, response) {
-                var _this = this;
-
-                // add logic to add the file to the files viewer
-                if (Array.isArray(response.file)) {
-                    // check if there were multiple files
-                    response.file.forEach(function (file) {
-                        _this.$emit('addFile', file);
-                    });
-
-                    file.forEach(function (dzFile) {
-                        // remove the file from the dropzone element on success
-                        _this.dropzone.removeFile(dzFile);
-                    });
-                } else {
-                    this.$emit('addFile', response.file);
-                    // remove the file from the dropzone element on success
-                    this.dropzone.removeFile(file);
-                }
-                window.notify.message('Successfully uploaded file', 'success');
-            },
-            handleError: function handleError(file, response) {
-                window.notify.message('Error Uploading File', 'error');
-            },
-            openDropzone: function openDropzone() {
-                this.dropzone.hiddenFileInput.click();
-            },
-            randomizeId: function randomizeId() {
-                var text = "";
-                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-                for (var i = 0; i < 20; i++) {
-                    text += possible.charAt(Math.floor(Math.random() * possible.length));
-                }return text;
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_486aa51d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormTextarea_vue__ = __webpack_require__(45);
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_486aa51d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormTextarea_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('./../mixins/FormField'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.FormField);
-        global.FormTextarea = mod.exports;
-    }
-})(this, function (exports, _FormField) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _FormField2 = _interopRequireDefault(_FormField);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-        mixins: [_FormField2.default],
-
-        name: 'form-textarea',
-
-        props: {
-            rows: {
-                type: Number,
-                default: 4
-            },
-            cols: {
-                type: Number,
-                default: 30
-            }
-        },
-
-        created: function created() {
-            var _this = this;
-
-            if (this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
-                this.form.formConfig.fields.forEach(function (field) {
-                    if (field.name === _this.fieldName) {
-
-                        var rows = 4,
-                            cols = 30;
-                        var fieldExtra = _this.getFormFieldFieldExtra(field);
-                        if (fieldExtra.rows) {
-                            rows = fieldExtra.rows;
-                        }
-
-                        if (fieldExtra.cols) {
-                            cols = fieldExtra.cols;
-                        }
-
-                        _this.$set(_this.fieldConfig, 'rows', rows);
-                        _this.$set(_this.fieldConfig, 'cols', cols);
-                    }
-                });
-            } else {
-                this.$set(this.fieldConfig, 'rows', this.rows);
-                this.$set(this.fieldConfig, 'cols', this.cols);
-            }
-        },
-
-
-        methods: {
-            updateValue: function updateValue(value) {
-                this.form.errors.clear(this.fieldConfig.value_field);
-                this.$emit('input', value);
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(25), __webpack_require__(5), __webpack_require__(2), __webpack_require__(26), __webpack_require__(8), __webpack_require__(22), __webpack_require__(10), __webpack_require__(12), __webpack_require__(14), __webpack_require__(16), __webpack_require__(18), __webpack_require__(1), __webpack_require__(4)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('jquery'), require('./Form'), require('./utilities/utils'), require('./Form.vue'), require('./FormComponents/FormText.vue'), require('./FormComponents/FormTextarea.vue'), require('./FormComponents/FormSelect.vue'), require('./FormComponents/FormDateTimePicker.vue'), require('./FormComponents/FormDatePicker.vue'), require('./FormComponents/FormRadio.vue'), require('./FormComponents/Files/FormFiles.vue'), require('./mixins/FormField'), require('./mixins/HasOptions'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.jquery, global.Form, global.utils, global.Form, global.FormText, global.FormTextarea, global.FormSelect, global.FormDateTimePicker, global.FormDatePicker, global.FormRadio, global.FormFiles, global.FormField, global.HasOptions);
-        global.index = mod.exports;
-    }
-})(this, function (exports, _jquery, _Form, _utils, _Form2, _FormText, _FormTextarea, _FormSelect, _FormDateTimePicker, _FormDatePicker, _FormRadio, _FormFiles, _FormField, _HasOptions) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.FormFiles = exports.FormRadio = exports.FormDatePicker = exports.FormDateTimePicker = exports.FormSelect = exports.FormTextarea = exports.FormText = exports.HasOptionsMixin = exports.FormFieldMixin = exports.VueForm = exports.Form = undefined;
-
-    var _jquery2 = _interopRequireDefault(_jquery);
-
-    var _Form3 = _interopRequireDefault(_Form2);
-
-    var _FormText2 = _interopRequireDefault(_FormText);
-
-    var _FormTextarea2 = _interopRequireDefault(_FormTextarea);
-
-    var _FormSelect2 = _interopRequireDefault(_FormSelect);
-
-    var _FormDateTimePicker2 = _interopRequireDefault(_FormDateTimePicker);
-
-    var _FormDatePicker2 = _interopRequireDefault(_FormDatePicker);
-
-    var _FormRadio2 = _interopRequireDefault(_FormRadio);
-
-    var _FormFiles2 = _interopRequireDefault(_FormFiles);
-
-    var _FormField2 = _interopRequireDefault(_FormField);
-
-    var _HasOptions2 = _interopRequireDefault(_HasOptions);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-        install: function install(Vue, options) {
-
-            Vue.component(_Form3.default.name, _Form3.default);
-            Vue.component(_FormText2.default.name, _FormText2.default);
-            Vue.component(_FormTextarea2.default.name, _FormTextarea2.default);
-            Vue.component(_FormSelect2.default.name, _FormSelect2.default);
-            Vue.component(_FormDateTimePicker2.default.name, _FormDateTimePicker2.default);
-            Vue.component(_FormDatePicker2.default.name, _FormDatePicker2.default);
-            Vue.component(_FormRadio2.default.name, _FormRadio2.default);
-            Vue.component(_FormFiles2.default.name, _FormFiles2.default);
-
-            // if (window.$ === undefined || window.jQuery === undefined) {
-            //     window.$ = window.jQuery = jQuery;
-            // }
-            // require('tempusdominus-bootstrap-3');
-
-
-            Object.getFormValueByString = _utils.byString;
-        }
-    };
-    exports.Form = _Form.Form;
-    exports.VueForm = _Form3.default;
-    exports.FormFieldMixin = _FormField2.default;
-    exports.HasOptionsMixin = _HasOptions2.default;
-    exports.FormText = _FormText2.default;
-    exports.FormTextarea = _FormTextarea2.default;
-    exports.FormSelect = _FormSelect2.default;
-    exports.FormDateTimePicker = _FormDateTimePicker2.default;
-    exports.FormDatePicker = _FormDatePicker2.default;
-    exports.FormRadio = _FormRadio2.default;
-    exports.FormFiles = _FormFiles2.default;
-});
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_25__;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_26025668_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Form_vue__ = __webpack_require__(46);
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_26025668_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Form_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports);
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports);
-        global.FormProps = mod.exports;
-    }
-})(this, function (exports) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.default = {
-
-        props: {
-
-            formConfig: {
-                required: true,
-                type: Object
-            },
-            formData: {
-                required: true,
-                type: Object
-            },
-            formSubmitUrl: {
-                type: String,
-                default: '/api/forms/submit'
-            },
-            saveSuccess: {
-                type: Function,
-                default: function _default(response, actionType) {
-                    this.$emit(actionType, response.data);
-                    if (this.closeOnSave) {
-                        this.close();
-                    }
-                }
-            },
-            disabled: {
-                type: Boolean,
-                default: false
-            },
-            closeOnSave: {
-                type: Boolean,
-                default: false
-            },
-            showCloseIcon: {
-                type: Boolean,
-                default: false
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('../utilities/utils'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.utils);
-        global.FormConfig = mod.exports;
-    }
-})(this, function (exports, _utils) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.default = {
-
-        methods: {
-            getFormFieldComponent: function getFormFieldComponent(fieldWidget) {
-
-                switch (fieldWidget) {
-                    case 'text':
-                        return 'form-text';
-                        break;
-                    case 'textarea':
-                        return 'form-textarea';
-                        break;
-                    case 'dropdown':
-                        return 'form-select';
-                        break;
-                    case 'radio':
-                        return 'form-radio';
-                        break;
-                    case 'datetimepicker':
-                        return 'form-datetimepicker';
-                        break;
-                    case 'files':
-                        return 'form-files';
-                        break;
-                    default:
-                        return fieldWidget;
-                        break;
-                }
-            },
-            getRequiredBool: function getRequiredBool(field) {
-
-                if (field.field_extra.required) {
-                    return true;
-                }
-
-                return false;
-            },
-            getFieldValue: function getFieldValue(form, field) {
-                var value = Object.getFormValueByString(form, field.value_field);
-                return value;
-            },
-            updateFormValue: function updateFormValue(field, newVal) {
-                (0, _utils.assignOnObject)(this.form, field.value_field, newVal);
-            },
-            defaultFields: function defaultFields(data) {
-                var _this = this;
-
-                this.formConfig.fields.forEach(function (field) {
-                    if (typeof _this.getFieldValue(data, field) === 'undefined' || _this.getFieldValue(data, field) === '') {
-                        (0, _utils.assignOnObject)(data, field.value_field, null);
-                        if (field.field_extra !== null && typeof field.field_extra.default !== 'undefined') {
-
-                            (0, _utils.assignOnObject)(data, field.value_field, field.field_extra.default);
-                        }
-                    }
-                });
-
-                return data;
-            }
-        }
-    };
-});
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('axios'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.axios);
-        global.Actions = mod.exports;
-    }
-})(this, function (exports, _axios) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _axios2 = _interopRequireDefault(_axios);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    exports.default = {
-
-        methods: {
-            cancel: function cancel() {
-                this.$emit('cancel-form');
-            },
-            close: function close() {
-                this.$emit('close-form');
-            },
-            resetForm: function resetForm() {
-                this.form.reset();
-            },
-            submitForm: function submitForm() {
-                var _this = this;
-
-                var method = this.getSubmitHttpMethod();
-                var data = this.getSubmitData();
-
-                _axios2.default[method](this.formSubmitUrl, data).then(function (response) {
-
-                    if (method === 'post') {
-                        // we're creating so set the response id onto the form object
-                        _this.$set(_this.form, 'id', response.data.id);
-                    }
-                    _this.$nextTick(function () {
-                        var actionType = 'updated';
-                        if (method === 'post') {
-                            actionType = 'created';
-                        }
-
-                        _this.saveSuccess(response, actionType);
-                    });
-                }).catch(function (error) {
-                    if (error.response && error.response.status === 422) {
-                        _this.form.errors.setErrors(error.response.data);
-                    } else {
-                        window.notify.apiError(error);
-                    }
-                });
-            },
-            getSubmitHttpMethod: function getSubmitHttpMethod() {
-
-                if (this.form.id) {
-                    return 'patch';
-                }
-
-                return 'post';
-            },
-            getSubmitData: function getSubmitData() {
-                var data = {};
-                if (this.form.id) {
-                    data.entityId = this.form.id;
-                }
-                data.formConfigurationId = this.formConfig.id;
-                data.data = this.form.data();
-
-                return data;
-            }
-        }
-
-    };
-});
-
-/***/ }),
-/* 30 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-text-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+" "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e()]),_vm._v(" "),_c('div',{},[_c('input',{ref:"formText",staticClass:"form-control",attrs:{"type":"text","name":_vm.fieldConfig.fieldName,"disabled":_vm.fieldConfig.disabled === 1},domProps:{"value":_vm.value},on:{"input":function($event){_vm.updateValue($event.target.value)}}}),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
-
-/***/ }),
-/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -2368,7 +1836,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.5';
+  var VERSION = '4.17.10';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -2792,6 +2260,14 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
   /** Used to access faster Node.js helpers. */
   var nodeUtil = (function() {
     try {
+      // Use `util.types` for Node.js 10+.
+      var types = freeModule && freeModule.require && freeModule.require('util').types;
+
+      if (types) {
+        return types;
+      }
+
+      // Legacy `process.binding('util')` for Node.js < 10.
       return freeProcess && freeProcess.binding && freeProcess.binding('util');
     } catch (e) {}
   }());
@@ -19453,10 +18929,1702 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33), __webpack_require__(34)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(46), __webpack_require__(47)(module)))
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67640b43_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDateTimePicker_vue__ = __webpack_require__(49);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDateTimePicker_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67640b43_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDateTimePicker_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('../utilities/utils'), require('./../mixins/FormField'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.utils, global.FormField);
+        global.FormDateTimePicker = mod.exports;
+    }
+})(this, function (exports, _utils, _FormField) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        name: 'form-datetimepicker',
+
+        mixins: [_FormField2.default],
+
+        data: function data() {
+            return {
+                guid: (0, _utils.guid)(),
+                datePicker: {}
+            };
+        },
+
+
+        computed: {
+            datePickerId: function datePickerId() {
+                return this.guid + '-datepicker';
+            }
+        },
+
+        mounted: function mounted() {
+            var vm = this;
+            this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker({
+                allowInputToggle: true,
+                widgetPositioning: {
+                    horizontal: 'auto',
+                    vertical: 'bottom'
+                }
+            });
+            window.jQuery('#' + this.datePickerId).on('change.datetimepicker', function (e) {
+                vm.updateValue(e.date.format('MM/DD/YYYY hh:mm A'));
+            });
+            window.jQuery('#' + this.datePickerId).on('update.datetimepicker', function (e) {
+                vm.updateValue(e.viewDate.format('MM/DD/YYYY hh:mm A'));
+            });
+        },
+
+
+        methods: {
+            showPicker: function showPicker() {
+                window.jQuery('#' + this.datePickerId).datetimepicker('show');
+            },
+            hidePicker: function hidePicker() {
+                window.jQuery('#' + this.datePickerId).datetimepicker('hide');
+            },
+            updateValue: function updateValue(value) {
+                this.form.errors.clear(this.fieldConfig.value_field);
+                this.$emit('input', value);
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_185b6d6f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDatePicker_vue__ = __webpack_require__(50);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormDatePicker_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_185b6d6f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormDatePicker_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../utilities/utils'), require('../mixins/FormField'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.utils, global.FormField);
+        global.FormDatePicker = mod.exports;
+    }
+})(this, function (exports, _utils, _FormField) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        name: 'form-datepicker',
+
+        mixins: [_FormField2.default],
+
+        data: function data() {
+            return {
+                guid: (0, _utils.guid)(),
+                datePicker: {}
+            };
+        },
+
+
+        computed: {
+            datePickerId: function datePickerId() {
+                return this.guid + '-datepicker';
+            }
+        },
+
+        mounted: function mounted() {
+            var _this = this;
+
+            var vm = this;
+
+            this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker({
+                allowInputToggle: true,
+                format: 'L'
+            });
+
+            window.jQuery('#' + this.datePickerId).on('change.datetimepicker', function (e) {
+                _this.updateValue(e.date.format('MM/DD/YYYY'));
+            });
+        },
+
+
+        methods: {
+            showPicker: function showPicker() {
+                window.jQuery('#' + this.datePickerId).datetimepicker('show');
+            },
+            hidePicker: function hidePicker() {
+                window.jQuery('#' + this.datePickerId).datetimepicker('hide');
+            },
+            updateValue: function updateValue(value) {
+                this.form.errors.clear(this.fieldConfig.value_field);
+                this.$emit('input', value);
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_56aec8e9_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormRadio_vue__ = __webpack_require__(51);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormRadio_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_56aec8e9_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormRadio_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1), __webpack_require__(4)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../mixins/FormField'), require('./../mixins/HasOptions'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.FormField, global.HasOptions);
+        global.FormRadio = mod.exports;
+    }
+})(this, function (exports, _FormField, _HasOptions) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    var _HasOptions2 = _interopRequireDefault(_HasOptions);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        name: 'form-radio',
+
+        mixins: [_FormField2.default, _HasOptions2.default],
+
+        methods: {
+            updateValue: function updateValue(optionValue) {
+                this.$emit('input', optionValue);
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 25 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormCheckbox_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormCheckbox_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormCheckbox_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormCheckbox_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormCheckbox_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c09a477a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormCheckbox_vue__ = __webpack_require__(52);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormCheckbox_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c09a477a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormCheckbox_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../mixins/FormField'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.FormField);
+        global.FormCheckbox = mod.exports;
+    }
+})(this, function (exports, _FormField) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        mixins: [_FormField2.default],
+        name: 'form-checkbox',
+
+        props: ['checkboxValue'],
+
+        data: function data() {
+            return {
+                checked: false
+            };
+        },
+
+
+        watch: {
+            'checked': function checked() {
+                if (this.checked) {
+                    this.$emit('input', this.fieldConfig.checkboxValue);
+                } else {
+                    this.$emit('input', null);
+                }
+            }
+        },
+
+        created: function created() {
+            var _this = this;
+
+            if (this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+                this.form.formConfig.fields.forEach(function (field) {
+                    if (field.name === _this.fieldName) {
+                        var fieldExtra = _this.getFormFieldFieldExtra(field);
+
+                        _this.$set(_this.fieldConfig, 'checkboxValue', fieldExtra.checkboxValue);
+                    }
+                });
+            } else {
+                this.$set(this.fieldConfig, 'checkboxValue', this.checkboxValue);
+            }
+        }
+    };
+});
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormAutocomplete_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormAutocomplete_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormAutocomplete_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormAutocomplete_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormAutocomplete_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_27fde35f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormAutocomplete_vue__ = __webpack_require__(55);
+function injectStyle (ssrContext) {
+  __webpack_require__(53)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormAutocomplete_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_27fde35f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormAutocomplete_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1), __webpack_require__(4), __webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../mixins/FormField'), require('./../mixins/HasOptions'), require('lodash'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.FormField, global.HasOptions, global.lodash);
+        global.FormAutocomplete = mod.exports;
+    }
+})(this, function (exports, _FormField, _HasOptions, _lodash) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    var _HasOptions2 = _interopRequireDefault(_HasOptions);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+        name: 'form-autocomplete',
+
+        mixins: [_FormField2.default, _HasOptions2.default],
+
+        props: {
+            tagging: {
+                type: Boolean,
+                default: false
+            }
+        },
+
+        data: function data() {
+            return {
+                search: '',
+                items: [],
+                results: [],
+                currentItem: null,
+                isOpen: false,
+                loading: false,
+                arrowCounter: 0
+            };
+        },
+        created: function created() {
+            var _this = this;
+
+            this.getOptions().then(function (options) {
+                _this.setSearch();
+            });
+        },
+        mounted: function mounted() {
+            document.addEventListener('click', this.handleClickOutside);
+        },
+        destroyed: function destroyed() {
+            document.removeEventListener('click', this.handleClickOutside);
+        },
+
+
+        computed: {
+            currentOptionsURL: function currentOptionsURL() {
+                return '';
+            },
+            currentOptionsUrl: function currentOptionsUrl() {
+                var _this2 = this;
+
+                if (this.fieldConfig.optionsURL) {
+                    var optionsURL = this.fieldConfig.optionsURL;
+                    this.fieldsToWatch.forEach(function (match) {
+                        var fieldValue = get(_this2.form, match[1], '');
+                        optionsURL = optionsURL.replace(match[0], fieldValue);
+                    });
+                    optionsURL += '?q=' + this.search;
+                    return optionsURL;
+                }
+                return '';
+            }
+        },
+
+        watch: {
+            'currentOptionsUrl': function currentOptionsUrl(newURL) {
+                this.updateOptions();
+            }
+        },
+
+        methods: {
+            handleClickOutside: function handleClickOutside(evt) {
+                if (!this.$el.contains(evt.target)) {
+                    this.isOpen = false;
+                    this.arrowCounter = -1;
+                }
+            },
+            onChange: function onChange() {
+
+                if (!this.currentOptionsURL) {
+                    this.isOpen = true;
+                    this.filterResults();
+                } else {
+                    this.loading = true;
+                    this.isOpen = true;
+                }
+            },
+            filterResults: function filterResults() {
+                var _this3 = this;
+
+                this.results = this.items.filter(function (item) {
+                    return item.toLowerCase().indexOf(_this3.search.toLowerCase()) > -1;
+                });
+            },
+            setResult: function setResult(result) {
+
+                this.search = result;
+                this.isOpen = false;
+
+                this.$emit('input', this.getValue());
+            },
+            previousItem: function previousItem() {
+                if (this.arrowCounter > 0) {
+                    this.arrowCounter = this.arrowCounter - 1;
+                }
+            },
+            nextItem: function nextItem() {
+                if (this.arrowCounter < this.results.length) {
+                    this.arrowCounter = this.arrowCounter + 1;
+                }
+            },
+            onEnter: function onEnter() {
+                var result = this.results[this.arrowCounter];
+                this.setResult(result);
+                this.isOpen = false;
+                this.arrowCounter = -1;
+            },
+
+            updateOptions: (0, _lodash.debounce)(function () {
+                this.getOptions();
+            }, 1000),
+            getOptions: function getOptions() {
+                var _this4 = this;
+
+                return new Promise(function (resolve, reject) {
+                    if (_this4.currentOptionsUrl.length > 0) {
+                        _this4.loading = true;
+                        axios.get(_this4.currentOptionsUrl).then(function (response) {
+
+                            _this4.fieldConfig.options = response.data;
+                            _this4.loading = false;
+
+                            _this4.setItems();
+                            _this4.filterResults();
+                            resolve(response.data);
+                        }).catch(function (error) {
+                            window.notify.apiError(error);
+                            _this4.loading = false;
+                            reject(error);
+                        });
+                    } else {
+                        _this4.setItems();
+                    }
+                });
+            },
+            setItems: function setItems() {
+                var _this5 = this;
+
+                if (this.fieldConfig.optionLabelField) {
+                    this.items = this.fieldConfig.options.map(function (option) {
+                        return option[_this5.fieldConfig.optionLabelField];
+                    });
+                } else {
+                    this.items = this.fieldConfig.options;
+                }
+            },
+            setSearch: function setSearch() {
+                var _this6 = this;
+
+                if (!this.value) {
+                    return;
+                }
+
+                if (this.fieldConfig.optionValueField && this.fieldConfig.optionLabelField) {
+
+                    var items = this.fieldConfig.options.filter(function (item) {
+                        return item[_this6.fieldConfig.optionValueField] === _this6.value;
+                    });
+                    this.search = items[0][this.fieldConfig.optionLabelField];
+                } else {
+                    this.search = this.value;
+                }
+            },
+            getValue: function getValue() {
+                var _this7 = this;
+
+                var value = null;
+                if (this.fieldConfig.optionValueField) {
+                    value = this.fieldConfig.options.filter(function (item) {
+                        return item[_this7.fieldConfig.optionLabelField] === _this7.search;
+                    });
+                    if (value.length > 0) {
+                        value = value[0][this.fieldConfig.optionValueField];
+                    }
+                } else {
+                    value = this.items.filter(function (item) {
+                        return item === _this7.search;
+                    })[0];
+                }
+                console.log(value);
+                return value;
+            },
+            createItem: function createItem() {
+                var _this8 = this;
+
+                if (!this.tagging) {
+                    return;
+                }
+
+                if (this.fieldConfig.optionsURL) {
+                    this.loading = true;
+                    var data = {};
+                    data[this.fieldConfig.fieldName] = this.search;
+                    axios.post(this.fieldConfig.optionsURL, data).then(function (response) {
+                        _this8.loading = false;
+                        _this8.fieldConfig.options.push(response.data);
+                        _this8.setResult(response.data[_this8.fieldConfig.optionLabelField]);
+                    }).catch(function (error) {
+                        _this8.loading = false;
+                        console.log(error);
+                    });
+                } else {
+                    this.$emit('create-tag', this.search);
+                }
+            }
+        }
+    };
+});
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3803d616_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFiles_vue__ = __webpack_require__(61);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFiles_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3803d616_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFiles_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1), __webpack_require__(56), __webpack_require__(58)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../../mixins/FormField'), require('./FormFile.vue'), require('./FormFileUpload.vue'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.FormField, global.FormFile, global.FormFileUpload);
+        global.FormFiles = mod.exports;
+    }
+})(this, function (exports, _FormField, _FormFile, _FormFileUpload) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    var _FormFile2 = _interopRequireDefault(_FormFile);
+
+    var _FormFileUpload2 = _interopRequireDefault(_FormFileUpload);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        name: 'form-files',
+
+        mixins: [_FormField2.default],
+
+        components: {
+            FormFile: _FormFile2.default,
+            FormFileUpload: _FormFileUpload2.default
+        },
+
+        props: {
+            stepId: {
+                type: Number,
+                default: null
+            },
+            metaType: {
+                type: String
+            },
+            maxFiles: {
+                type: Number,
+                default: 100
+            },
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+            fileableType: {
+                type: String
+            },
+            fileableId: {
+                type: Number
+            }
+        },
+
+        data: function data() {
+            return {
+                showUploadContainer: true
+            };
+        },
+
+
+        //        watch: {
+        //            'form.id': function (newId) {
+        //                this.$set(this.fieldConfig, 'fileableId', newId);
+        //            }
+        //        },
+
+
+        created: function created() {
+            var _this = this;
+
+            if (this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+                this.form.formConfig.fields.forEach(function (field) {
+                    if (field.name === _this.fieldName) {
+
+                        var fieldExtra = _this.getFormFieldFieldExtra(field);
+                        _this.$set(_this.fieldConfig, 'fileable_type', _this.form.formConfig.entity_model);
+
+                        //TODO: Will need to figure out a better way to define the entity id and not
+                        //TODO: hard checking id on form
+                        if (_this.form.id) {
+                            _this.$set(_this.fieldConfig, 'fileable_id', _this.form.id);
+                        }
+
+                        if (fieldExtra.maxFiles) {
+                            _this.$set(_this.fieldConfig, 'maxFiles', fieldExtra.maxFiles);
+                        } else {
+                            _this.$set(_this.fieldConfig, 'maxFiles', 100);
+                        }
+                    }
+                });
+
+                this.$watch('form.id', {
+                    handler: function handler(newFormId, oldFormId) {
+                        if (newFormId !== oldFormId) {
+                            this.$set(this.fieldConfig, 'fileableId', newFormId);
+                        }
+                    },
+                    deep: true
+                });
+            } else {
+                this.$set(this.fieldConfig, 'fileable_type', this.fileableType);
+                this.$set(this.fieldConfig, 'fileable_id', this.fileableId);
+                this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
+            }
+
+            //this.getFiles();
+        },
+
+
+        methods: {
+            // getFiles() {
+            //     if(!this.fieldConfig.fileable_id) {
+            //         return;
+            //     }
+            //
+            //     var fileRequest = {
+            //         metaType: this.fieldConfig.fieldName,
+            //         fileable_type: this.fieldConfig.fileable_type,
+            //         fileable_id: this.fieldConfig.fileable_id
+            //     }
+            //
+            //     axios.post('/api/files/getFiles', fileRequest).then( response => {
+            //         this.files = response.data;
+            //         this.checkIfReachedMaxFiles();
+            //     }).catch( error => {
+            //         window.notify.apiError(error);
+            //     });
+            // },
+            deleteFile: function deleteFile(_deleteFile) {
+                this.$emit('input', this.value.filter(function (file) {
+                    return file.id !== _deleteFile.id;
+                }));
+
+                this.checkIfReachedMaxFiles();
+            },
+            addFile: function addFile(file) {
+                var newFiles = this.value;
+                newFiles.push(file);
+                this.$emit('input', newFiles);
+
+                this.checkIfReachedMaxFiles();
+            },
+            checkIfReachedMaxFiles: function checkIfReachedMaxFiles() {
+                if (this.files.length == this.fieldConfig.maxFiles || this.fieldConfig.disabled === 1) {
+                    this.showUploadContainer = false;
+                } else {
+                    this.showUploadContainer = true;
+                }
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('axios'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.axios);
+        global.FormFile = mod.exports;
+    }
+})(this, function (exports, _axios) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _axios2 = _interopRequireDefault(_axios);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        props: ['files', 'disabled'],
+
+        data: function data() {
+            return {
+                showFileDeleteModal: false,
+                deleteFile: {}
+            };
+        },
+
+
+        methods: {
+            downloadFile: function downloadFile(file) {
+                window.open('/files/' + file.id + '/download');
+            },
+            previewIcon: function previewIcon(file) {
+                if (file.thumbnail && file.thumbnail !== null) {
+                    return '/files/' + file.id + '/thumbnail';
+                }
+
+                return false;
+            },
+            selectForDeletion: function selectForDeletion(file) {
+                this.deleteFile = file;
+                this.showFileDeleteModal = true;
+            },
+            deleteSelectedFile: function deleteSelectedFile() {
+                var _this = this;
+
+                if (this.disabled === 1) {
+                    return;
+                }
+
+                this.showFileDeleteModal = false;
+                _axios2.default.delete('/api/files/' + this.deleteFile.id).then(function (response) {
+                    _this.$emit('deletedFile', _this.deleteFile);
+                    _this.deleteFile = {};
+                    window.notify.message('Successfully deleted file', 'success');
+                }).catch(function (error) {
+                    window.notify.apiError(error);
+                });
+            }
+        }
+    };
+});
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(59)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('dropzone'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.dropzone);
+        global.FormFileUpload = mod.exports;
+    }
+})(this, function (exports, _dropzone) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _dropzone2 = _interopRequireDefault(_dropzone);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        props: {
+            type: String,
+            typeId: Number,
+            stepId: Number,
+            metaType: String,
+            maxFiles: Number,
+            uploadMultiple: {
+                type: Boolean,
+                default: true
+            }
+        },
+
+        data: function data() {
+            return {
+                dropzone: {},
+                dropzoneId: '',
+                autoProcessQueue: false
+            };
+        },
+        created: function created() {
+            this.dropzoneId = this.randomizeId();
+
+            if (this.typeId) {
+                this.autoProcessQueue = true;
+            }
+        },
+
+
+        watch: {
+            typeId: function typeId(newId) {
+                this.dropzone.processQueue();
+            }
+        },
+
+        mounted: function mounted() {
+
+            this.dropzone = new _dropzone2.default('#' + this.dropzoneId, {
+                url: '/api/files/saveFiles',
+                autoProcessQueue: this.autoProcessQueue,
+                uploadMultiple: this.uploadMultiple,
+                parallelUploads: this.maxFiles,
+                maxFiles: this.maxFiles,
+                addRemoveLinks: true
+            });
+
+            if (this.uploadMultiple) {
+                this.dropzone.on('sendingmultiple', this.handleSending);
+                this.dropzone.on('successmultiple', this.handleSuccess);
+            } else {
+                this.dropzone.on('sending', this.handleSending);
+                this.dropzone.on('success', this.handleSuccess);
+            }
+            this.dropzone.on('error', this.handleError);
+        },
+
+
+        methods: {
+            handleSending: function handleSending(file, xhr, formData) {
+                formData.append('_token', window.csrfToken);
+                formData.append('fileable_type', this.type);
+                formData.append('fileable_id', this.typeId);
+                if (this.stepId) {
+                    formData.append('step_id', this.stepId);
+                }
+                formData.append('meta_type', this.metaType);
+            },
+            handleSuccess: function handleSuccess(file, response) {
+                var _this = this;
+
+                // add logic to add the file to the files viewer
+                if (Array.isArray(response.file)) {
+                    // check if there were multiple files
+                    response.file.forEach(function (file) {
+                        _this.$emit('addFile', file);
+                    });
+
+                    file.forEach(function (dzFile) {
+                        // remove the file from the dropzone element on success
+                        _this.dropzone.removeFile(dzFile);
+                    });
+                } else {
+                    this.$emit('addFile', response.file);
+                    // remove the file from the dropzone element on success
+                    this.dropzone.removeFile(file);
+                }
+                window.notify.message('Successfully uploaded file', 'success');
+            },
+            handleError: function handleError(file, response) {
+                window.notify.message('Error Uploading File', 'error');
+            },
+            openDropzone: function openDropzone() {
+                this.dropzone.hiddenFileInput.click();
+            },
+            randomizeId: function randomizeId() {
+                var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+                for (var i = 0; i < 20; i++) {
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+                }return text;
+            }
+        }
+
+    };
+});
 
 /***/ }),
 /* 33 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9494ab9e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormTextarea_vue__ = __webpack_require__(62);
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormTextarea_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9494ab9e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormTextarea_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('./../mixins/FormField'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.FormField);
+        global.FormTextarea = mod.exports;
+    }
+})(this, function (exports, _FormField) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+        mixins: [_FormField2.default],
+
+        name: 'form-textarea',
+
+        props: {
+            rows: {
+                type: Number,
+                default: 4
+            },
+            cols: {
+                type: Number,
+                default: 30
+            }
+        },
+
+        created: function created() {
+            var _this = this;
+
+            if (this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+                this.form.formConfig.fields.forEach(function (field) {
+                    if (field.name === _this.fieldName) {
+
+                        var rows = 4,
+                            cols = 30;
+                        var fieldExtra = _this.getFormFieldFieldExtra(field);
+                        if (fieldExtra.rows) {
+                            rows = fieldExtra.rows;
+                        }
+
+                        if (fieldExtra.cols) {
+                            cols = fieldExtra.cols;
+                        }
+
+                        _this.$set(_this.fieldConfig, 'rows', rows);
+                        _this.$set(_this.fieldConfig, 'cols', cols);
+                    }
+                });
+            } else {
+                this.$set(this.fieldConfig, 'rows', this.rows);
+                this.$set(this.fieldConfig, 'cols', this.cols);
+            }
+        },
+
+
+        methods: {
+            updateValue: function updateValue(value) {
+                this.form.errors.clear(this.fieldConfig.value_field);
+                this.$emit('input', value);
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(36), __webpack_require__(5), __webpack_require__(2), __webpack_require__(37), __webpack_require__(12), __webpack_require__(27), __webpack_require__(14), __webpack_require__(33), __webpack_require__(16), __webpack_require__(19), __webpack_require__(21), __webpack_require__(25), __webpack_require__(23), __webpack_require__(29), __webpack_require__(1), __webpack_require__(4)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('jquery'), require('./Form'), require('./utilities/utils'), require('./Form.vue'), require('./FormComponents/FormColumn.vue'), require('./FormComponents/FormAutocomplete.vue'), require('./FormComponents/FormText.vue'), require('./FormComponents/FormTextarea.vue'), require('./FormComponents/FormSelect.vue'), require('./FormComponents/FormDateTimePicker.vue'), require('./FormComponents/FormDatePicker.vue'), require('./FormComponents/FormCheckbox.vue'), require('./FormComponents/FormRadio.vue'), require('./FormComponents/Files/FormFiles.vue'), require('./mixins/FormField'), require('./mixins/HasOptions'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.jquery, global.Form, global.utils, global.Form, global.FormColumn, global.FormAutocomplete, global.FormText, global.FormTextarea, global.FormSelect, global.FormDateTimePicker, global.FormDatePicker, global.FormCheckbox, global.FormRadio, global.FormFiles, global.FormField, global.HasOptions);
+        global.index = mod.exports;
+    }
+})(this, function (exports, _jquery, _Form, _utils, _Form2, _FormColumn, _FormAutocomplete, _FormText, _FormTextarea, _FormSelect, _FormDateTimePicker, _FormDatePicker, _FormCheckbox, _FormRadio, _FormFiles, _FormField, _HasOptions) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.FormCheckbox = exports.FormAutocomplete = exports.FormFiles = exports.FormRadio = exports.FormDatePicker = exports.FormDateTimePicker = exports.FormSelect = exports.FormTextarea = exports.FormText = exports.FormColumn = exports.HasOptionsMixin = exports.FormFieldMixin = exports.VueForm = exports.Form = undefined;
+
+    var _jquery2 = _interopRequireDefault(_jquery);
+
+    var _Form3 = _interopRequireDefault(_Form2);
+
+    var _FormColumn2 = _interopRequireDefault(_FormColumn);
+
+    var _FormAutocomplete2 = _interopRequireDefault(_FormAutocomplete);
+
+    var _FormText2 = _interopRequireDefault(_FormText);
+
+    var _FormTextarea2 = _interopRequireDefault(_FormTextarea);
+
+    var _FormSelect2 = _interopRequireDefault(_FormSelect);
+
+    var _FormDateTimePicker2 = _interopRequireDefault(_FormDateTimePicker);
+
+    var _FormDatePicker2 = _interopRequireDefault(_FormDatePicker);
+
+    var _FormCheckbox2 = _interopRequireDefault(_FormCheckbox);
+
+    var _FormRadio2 = _interopRequireDefault(_FormRadio);
+
+    var _FormFiles2 = _interopRequireDefault(_FormFiles);
+
+    var _FormField2 = _interopRequireDefault(_FormField);
+
+    var _HasOptions2 = _interopRequireDefault(_HasOptions);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+        install: function install(Vue, options) {
+
+            Vue.component(_Form3.default.name, _Form3.default);
+            Vue.component(_FormColumn2.default.name, _FormColumn2.default);
+            Vue.component(_FormText2.default.name, _FormText2.default);
+            Vue.component(_FormTextarea2.default.name, _FormTextarea2.default);
+            Vue.component(_FormSelect2.default.name, _FormSelect2.default);
+            Vue.component(_FormDateTimePicker2.default.name, _FormDateTimePicker2.default);
+            Vue.component(_FormDatePicker2.default.name, _FormDatePicker2.default);
+            Vue.component(_FormRadio2.default.name, _FormRadio2.default);
+            Vue.component(_FormCheckbox2.default.name, _FormCheckbox2.default);
+            Vue.component(_FormFiles2.default.name, _FormFiles2.default);
+            Vue.component(_FormAutocomplete2.default.name, _FormAutocomplete2.default);
+
+            // if (window.$ === undefined || window.jQuery === undefined) {
+            //     window.$ = window.jQuery = jQuery;
+            // }
+            // require('tempusdominus-bootstrap-3');
+
+
+            Object.getFormValueByString = _utils.byString;
+        }
+    };
+    exports.Form = _Form.Form;
+    exports.VueForm = _Form3.default;
+    exports.FormFieldMixin = _FormField2.default;
+    exports.HasOptionsMixin = _HasOptions2.default;
+    exports.FormColumn = _FormColumn2.default;
+    exports.FormText = _FormText2.default;
+    exports.FormTextarea = _FormTextarea2.default;
+    exports.FormSelect = _FormSelect2.default;
+    exports.FormDateTimePicker = _FormDateTimePicker2.default;
+    exports.FormDatePicker = _FormDatePicker2.default;
+    exports.FormRadio = _FormRadio2.default;
+    exports.FormFiles = _FormFiles2.default;
+    exports.FormAutocomplete = _FormAutocomplete2.default;
+    exports.FormCheckbox = _FormCheckbox2.default;
+});
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_36__;
+
+/***/ }),
+/* 37 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7dddc17b_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Form_vue__ = __webpack_require__(63);
+function injectStyle (ssrContext) {
+  __webpack_require__(38)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-7dddc17b"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Form_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7dddc17b_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Form_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(39);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(8)("1a30fb27", content, true, {});
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".flex[data-v-7dddc17b]{display:flex}.mx-2[data-v-7dddc17b]{margin-left:.5rem;margin-right:.5rem}", ""]);
+
+// exports
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('axios'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.axios);
+        global.FormProps = mod.exports;
+    }
+})(this, function (exports, _axios) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _axios2 = _interopRequireDefault(_axios);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    exports.default = {
+
+        props: {
+
+            formConfig: {
+                required: true,
+                type: Object
+            },
+            formData: {
+                required: true,
+                type: Object
+            },
+            formSubmitUrl: {
+                type: String,
+                default: '/api/forms/submit'
+            },
+            apiClient: {
+                default: function _default() {
+                    return _axios2.default;
+                }
+            },
+            saveSuccess: {
+                type: Function,
+                default: function _default(response, actionType) {
+                    this.$emit(actionType, response.data);
+                    if (this.closeOnSave) {
+                        this.close();
+                    }
+                }
+            },
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+            closeOnSave: {
+                type: Boolean,
+                default: false
+            },
+            showCloseIcon: {
+                type: Boolean,
+                default: false
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+        factory(exports);
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports);
+        global.Actions = mod.exports;
+    }
+})(this, function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = {
+
+        methods: {
+            cancel: function cancel() {
+                this.$emit('cancel-form');
+            },
+            close: function close() {
+                this.$emit('close-form');
+            },
+            resetForm: function resetForm() {
+                this.form.reset();
+            },
+            submitForm: function submitForm() {
+                var _this = this;
+
+                var method = this.getSubmitHttpMethod();
+                var data = this.getSubmitData();
+
+                this.apiClient[method](this.formSubmitUrl, data).then(function (response) {
+
+                    if (method === 'post') {
+                        // we're creating so set the response id onto the form object
+                        _this.$set(_this.form, 'id', response.data.id);
+                    }
+                    _this.$nextTick(function () {
+                        var actionType = 'updated';
+                        if (method === 'post') {
+                            actionType = 'created';
+                        }
+
+                        _this.saveSuccess(response, actionType);
+                    });
+                }).catch(function (error) {
+                    if (error.response && error.response.status === 422) {
+                        _this.form.errors.setErrors(error.response.data);
+                    } else {
+                        window.notify.apiError(error);
+                    }
+                });
+            },
+            getSubmitHttpMethod: function getSubmitHttpMethod() {
+
+                if (this.form.id) {
+                    return 'patch';
+                }
+
+                return 'post';
+            },
+            getSubmitData: function getSubmitData() {
+                var data = {};
+                if (this.form.id) {
+                    data.entityId = this.form.id;
+                }
+                data.formConfigurationId = this.formConfig.id;
+                data.data = this.form.data();
+
+                return data;
+            }
+        }
+
+    };
+});
+
+/***/ }),
+/* 43 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',_vm._l((_vm.children),function(field){return (field.visible)?_c(_vm.getFormFieldComponent(field.widget),{directives:[{name:"show",rawName:"v-show",value:(_vm.conditionValues[field.name]),expression:"conditionValues[field.name]"}],key:field.id,tag:"component",attrs:{"field-name":field.name,"value":_vm.getFieldValue(_vm.form, field),"children":field.children || null},on:{"input":function (newVal) { return _vm.updateValueAndConditionals(newVal, field); },"options-updated":function (newOptions) { return _vm.updateOptionsForField(newOptions, field); }}}):_vm._e()}))}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-text-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e(),_vm._v(" "),(_vm.withHelpIcon)?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]),_vm._v(" "),_c('div',{},[_c('input',{ref:"formText",staticClass:"form-control",attrs:{"type":"text","name":_vm.fieldConfig.fieldName,"disabled":_vm.fieldConfig.disabled === 1},domProps:{"value":_vm.value},on:{"input":function($event){_vm.updateValue($event.target.value)}}}),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()]),_vm._v(" "),(_vm.hasHelpText)?_c('div',[_c('span',{domProps:{"innerHTML":_vm._s(_vm.fieldConfig.field_extra.helpText)}})]):_vm._e()])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_45__;
+
+/***/ }),
+/* 46 */
 /***/ (function(module, exports) {
 
 var g;
@@ -19483,7 +20651,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 34 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -19511,55 +20679,102 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 35 */
+/* 48 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-select-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v("\n        "+_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e()]),_vm._v(" "),_c('multi-select',{staticClass:"form-control",attrs:{"value":_vm.optionValue,"options":_vm.fieldConfig.options,"track-by":_vm.fieldConfig.optionValueField,"label":_vm.fieldConfig.optionLabelField,"placeholder":_vm.fieldConfig.label,"disabled":_vm.fieldConfig.disabled === 1},on:{"input":_vm.updateValue}}),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n        "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n    ")]):_vm._e()],1)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-select-field'}},[(_vm.showLabel)?_c('label',{staticClass:"form-control-label"},[_vm._v("\n        "+_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e(),_vm._v(" "),(_vm.withHelpIcon)?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]):_vm._e(),_vm._v(" "),_c('multi-select',{staticClass:"form-control",attrs:{"value":_vm.optionValue,"options":_vm.fieldConfig.options,"track-by":_vm.fieldConfig.optionValueField,"label":_vm.fieldConfig.optionLabelField,"placeholder":_vm.fieldConfig.label,"disabled":_vm.fieldConfig.disabled === 1},on:{"input":_vm.updateValue}}),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n        "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n    ")]):_vm._e(),_vm._v(" "),(_vm.hasHelpText)?_c('div',[_c('span',{domProps:{"innerHTML":_vm._s(_vm.fieldConfig.field_extra.helpText)}})]):_vm._e()],1)}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 36 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"datepicker form-group row",class:{ 'has-error': _vm.form.errors.has(_vm.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-datetime-field'}},[_c('label',{staticClass:"col-sm-2 control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label))]),_vm._v(" "),_c('div',{staticClass:"col-sm-10"},[_c('div',{staticClass:"input-group date",staticStyle:{"position":"static"},attrs:{"id":_vm.datePickerId,"data-target-input":"nearest"}},[_c('input',{staticClass:"form-control datetimepicker-input",attrs:{"type":"text","data-target":'#' + _vm.datePickerId},on:{"input":function($event){_vm.updateValue($event.target.value)},"change":function($event){_vm.updateValue($event.target.value)},"focus":_vm.showPicker,"blur":_vm.hidePicker}}),_vm._v(" "),_c('span',{staticClass:"input-group-addon",attrs:{"data-target":'#' + _vm.datePickerId,"data-toggle":"datetimepicker"}},[_c('span',{staticClass:"glyphicon glyphicon-calendar"})])]),_vm._v(" "),(_vm.form.errors.has(_vm.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()])])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"datepicker form-group row",class:{ 'has-error': _vm.form.errors.has(_vm.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-datetime-field'}},[_c('label',{staticClass:"col-sm-2 control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.withHelpIcon())?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"col-sm-10"},[_c('div',{staticClass:"input-group date",staticStyle:{"position":"static"},attrs:{"id":_vm.datePickerId,"data-target-input":"nearest"}},[_c('input',{staticClass:"form-control datetimepicker-input",attrs:{"type":"text","data-target":'#' + _vm.datePickerId},on:{"input":function($event){_vm.updateValue($event.target.value)},"change":function($event){_vm.updateValue($event.target.value)},"focus":_vm.showPicker,"blur":_vm.hidePicker}}),_vm._v(" "),_c('span',{staticClass:"input-group-addon",attrs:{"data-target":'#' + _vm.datePickerId,"data-toggle":"datetimepicker"}},[_c('span',{staticClass:"glyphicon glyphicon-calendar"})])]),_vm._v(" "),(_vm.form.errors.has(_vm.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()])])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 37 */
+/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"datepicker form-group"},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label))]),_vm._v(" "),_c('div',[_c('div',{staticClass:"input-group date",attrs:{"id":_vm.datePickerId,"data-target-input":"nearest"}},[_c('input',{staticClass:"form-control datetimepicker-input",attrs:{"type":"text","data-target":'#' + _vm.datePickerId},on:{"focus":_vm.showPicker,"blur":_vm.hidePicker}}),_vm._v(" "),_c('span',{staticClass:"input-group-addon",attrs:{"data-target":'#' + _vm.datePickerId,"data-toggle":"datetimepicker"}},[_c('span',{staticClass:"glyphicon glyphicon-calendar"})])])])])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"datepicker form-group"},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.withHelpIcon())?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]),_vm._v(" "),_c('div',[_c('div',{staticClass:"input-group date",attrs:{"id":_vm.datePickerId,"data-target-input":"nearest"}},[_c('input',{staticClass:"form-control datetimepicker-input",attrs:{"type":"text","data-target":'#' + _vm.datePickerId},domProps:{"value":_vm.value},on:{"focus":_vm.showPicker,"blur":_vm.hidePicker,"input":function($event){_vm.updateValue($event.target.value)},"change":function($event){_vm.updateValue($event.target.value)}}}),_vm._v(" "),_c('span',{staticClass:"input-group-addon",attrs:{"data-target":'#' + _vm.datePickerId,"data-toggle":"datetimepicker"}},[_c('span',{staticClass:"glyphicon glyphicon-calendar"})])]),_vm._v(" "),(_vm.hasHelpText)?_c('div',[_c('span',{domProps:{"innerHTML":_vm._s(_vm.fieldConfig.field_extra.helpText)}})]):_vm._e()])])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 38 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group"},[_c('label',[_vm._v("\n        "+_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e()]),_vm._v(" "),_vm._l((_vm.fieldConfig.options),function(option){return _c('div',{key:option[_vm.fieldConfig.optionValueField],staticClass:"radio"},[_c('label',[_c('input',{attrs:{"type":"radio","name":_vm.fieldConfig.fieldName,"id":_vm.fieldConfig.fieldName,"disabled":_vm.fieldConfig.disabled === 1},domProps:{"value":option[_vm.fieldConfig.optionValueField],"checked":_vm.value === option[_vm.fieldConfig.optionValueField]},on:{"click":function($event){_vm.updateValue(option[_vm.fieldConfig.optionValueField])}}}),_vm._v("\n            "+_vm._s(option[_vm.fieldConfig.optionLabelField])+"\n        ")])])})],2)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group"},[_c('label',[_vm._v("\n        "+_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e(),_vm._v(" "),(_vm.withHelpIcon)?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]),_vm._v(" "),_vm._l((_vm.fieldConfig.options),function(option){return _c('div',{key:option[_vm.fieldConfig.optionValueField],staticClass:"radio"},[_c('label',[_c('input',{attrs:{"type":"radio","name":_vm.fieldConfig.fieldName,"id":_vm.fieldConfig.fieldName,"disabled":_vm.fieldConfig.disabled === 1},domProps:{"value":option[_vm.fieldConfig.optionValueField],"checked":_vm.value === option[_vm.fieldConfig.optionValueField]},on:{"click":function($event){_vm.updateValue(option[_vm.fieldConfig.optionValueField])}}}),_vm._v("\n            "+_vm._s(option[_vm.fieldConfig.optionLabelField])+"\n        ")])])}),_vm._v(" "),(_vm.hasHelpText)?_c('div',[_c('span',{domProps:{"innerHTML":_vm._s(_vm.fieldConfig.field_extra.helpText)}})]):_vm._e()],2)}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 39 */
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"form-check form-check-inline"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.checked),expression:"checked"}],staticClass:"form-check-input",attrs:{"type":"checkbox","id":_vm.fieldConfig.fieldName + '-checkbox',"true-value":_vm.fieldConfig.checkboxValue,"false-value":false},domProps:{"checked":Array.isArray(_vm.checked)?_vm._i(_vm.checked,null)>-1:_vm._q(_vm.checked,_vm.fieldConfig.checkboxValue)},on:{"change":function($event){var $$a=_vm.checked,$$el=$event.target,$$c=$$el.checked?(_vm.fieldConfig.checkboxValue):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.checked=$$a.concat([$$v]))}else{$$i>-1&&(_vm.checked=$$a.slice(0,$$i).concat($$a.slice($$i+1)))}}else{_vm.checked=$$c}}}}),_vm._v(" "),_c('label',{staticClass:"form-check-label",attrs:{"for":_vm.fieldConfig.fieldName + '-checkbox'}},[_vm._v(_vm._s(_vm.fieldConfig.label))])])])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(54);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(8)("246c3648", content, true, {});
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".autocomplete{position:relative}.autocomplete-results{position:absolute;top:0;left:0;padding:5px;margin-top:3.5rem;border:1px solid #a5a5a5;background:#fff;min-width:100%;height:120px;overflow:auto;z-index:999}.autocomplete-result{list-style:none;text-align:left;padding:4px 2px;cursor:pointer}.autocomplete-result.is-active,.autocomplete-result:hover{background-color:#4aae9b;color:#fff}", ""]);
+
+// exports
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group autocomplete",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-text-field'},on:{"keyup":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"esc",27,$event.key,"Escape")){ return null; }_vm.isOpen = false},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.previousItem($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.nextItem($event)}]}},[(_vm.showLabel)?_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e(),_vm._v(" "),(_vm.withHelpIcon)?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]):_vm._e(),_vm._v(" "),_c('div',{},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.search),expression:"search"}],staticClass:"form-control",attrs:{"type":"text"},domProps:{"value":(_vm.search)},on:{"input":[function($event){if($event.target.composing){ return; }_vm.search=$event.target.value},_vm.onChange],"~keydown":[function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }return _vm.nextItem($event)},function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }return _vm.previousItem($event)}],"keydown":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.onEnter($event)}}}),_vm._v(" "),_c('ul',{directives:[{name:"show",rawName:"v-show",value:(_vm.isOpen),expression:"isOpen"}],staticClass:"autocomplete-results"},[_vm._l((_vm.results),function(result,i){return (_vm.loading === false)?_c('li',{key:i,staticClass:"autocomplete-result",class:{ 'is-active': i === _vm.arrowCounter },on:{"click":function($event){_vm.setResult(result)}}},[_vm._v("\n                "+_vm._s(result)+"\n            ")]):_vm._e()}),_vm._v(" "),(_vm.results.length === 0 && _vm.tagging && _vm.loading === false)?_c('li',{staticClass:"autocomplete-result",on:{"click":_vm.createItem}},[_vm._v("\n                Create this "+_vm._s(_vm.fieldConfig.label)+"\n            ")]):_vm._e(),_vm._v(" "),(_vm.loading === true)?_c('li',[_vm._v("Loading... "),_c('fa-icon',{attrs:{"icon":"spinner","spin":true}})],1):_vm._e()],2),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()]),_vm._v(" "),(_vm.hasHelpText)?_c('div',[_c('span',{domProps:{"innerHTML":_vm._s(_vm.fieldConfig.field_extra.helpText)}})]):_vm._e()])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue__);
 /* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5f379358_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFile_vue__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_408f7e26_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFile_vue__ = __webpack_require__(57);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -19576,7 +20791,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFile_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5f379358_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFile_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_408f7e26_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFile_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -19587,25 +20802,25 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 40 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"existing-files row"},[_vm._l((_vm.files),function(file){return _c('div',{staticClass:"file"},[_c('div',{staticClass:"file-icon"},[(_vm.previewIcon(file))?_c('div',{staticClass:"thumbnail"},[_c('img',{attrs:{"src":_vm.previewIcon(file),"width":"100px"}})]):_c('span',{staticClass:"thumbnail fa fa-file-o fa-4x"})]),_vm._v(" "),_c('div',{staticClass:"action-row"},[_c('span',{staticClass:"fa fa-download",on:{"click":function($event){_vm.downloadFile(file)}}}),_vm._v(" "),_c('span',{staticClass:"fa fa-close",on:{"click":function($event){_vm.selectForDeletion(file)}}})]),_vm._v(" "),_c('div',{staticClass:"file-name"},[_vm._v("\n            "+_vm._s(file.original_filename)+"\n        ")])])}),_vm._v(" "),(_vm.showFileDeleteModal)?_c('modal',{attrs:{"isConfirm":true,"confirmText":"Confirm Delete","modalWidth":"300px"},on:{"close":function($event){_vm.showFileDeleteModal = false},"confirmed":_vm.deleteSelectedFile}},[_c('span',{attrs:{"slot":"header"},slot:"header"},[_vm._v("Delete File")]),_vm._v(" "),_c('div',{attrs:{"slot":"body","id":"measure-delete-dialog-text"},slot:"body"},[_vm._v("Are you sure you want to delete this file?")])]):_vm._e()],2)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"existing-files row"},[_vm._l((_vm.files),function(file){return _c('div',{staticClass:"file"},[_c('div',{staticClass:"file-icon"},[(_vm.previewIcon(file))?_c('div',{staticClass:"thumbnail"},[_c('img',{attrs:{"src":_vm.previewIcon(file),"width":"100px"}})]):_c('span',{staticClass:"thumbnail fa fa-file-o fa-4x"})]),_vm._v(" "),_c('div',{staticClass:"action-row"},[_c('span',{staticClass:"fa fa-download",on:{"click":function($event){_vm.downloadFile(file)}}}),_vm._v(" "),(_vm.disabled === 0)?_c('span',{staticClass:"fa fa-close",on:{"click":function($event){_vm.selectForDeletion(file)}}}):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"file-name"},[_vm._v("\n            "+_vm._s(file.original_filename)+"\n        ")])])}),_vm._v(" "),(_vm.showFileDeleteModal)?_c('modal',{attrs:{"isConfirm":true,"confirmText":"Confirm Delete","modalWidth":"300px"},on:{"close":function($event){_vm.showFileDeleteModal = false},"confirmed":_vm.deleteSelectedFile}},[_c('span',{attrs:{"slot":"header"},slot:"header"},[_vm._v("Delete File")]),_vm._v(" "),_c('div',{attrs:{"slot":"body","id":"measure-delete-dialog-text"},slot:"body"},[_vm._v("Are you sure you want to delete this file?")])]):_vm._e()],2)}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 41 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFileUpload_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFileUpload_vue__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFileUpload_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFileUpload_vue__);
 /* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFileUpload_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FormFileUpload_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_474ab20e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFileUpload_vue__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_474ab20e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FormFileUpload_vue__ = __webpack_require__(60);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -19633,13 +20848,13 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 42 */
+/* 59 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_42__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_59__;
 
 /***/ }),
-/* 43 */
+/* 60 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19649,31 +20864,31 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 44 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group form-file-upload-container",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-text-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+" "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e()]),_vm._v(" "),_c('div',[_c('form-file',{attrs:{"files":_vm.files},on:{"deletedFile":_vm.deleteFile}}),_vm._v(" "),(_vm.showUploadContainer)?_c('form-file-upload',{attrs:{"type":_vm.fieldConfig.fileable_type,"type-id":_vm.fieldConfig.fileable_id,"meta-type":_vm.fieldConfig.fieldName,"max-files":_vm.fieldConfig.maxFiles},on:{"addFile":_vm.addFile}}):_vm._e(),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()],1)])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group form-file-upload-container",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-text-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+" "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e()]),_vm._v(" "),_c('div',[_c('form-file',{attrs:{"files":_vm.value,"disabled":_vm.fieldConfig.disabled},on:{"deletedFile":_vm.deleteFile}}),_vm._v(" "),(_vm.showUploadContainer)?_c('form-file-upload',{attrs:{"type":_vm.fieldConfig.fileable_type,"type-id":_vm.fieldConfig.fileable_id,"meta-type":_vm.fieldConfig.fieldName,"max-files":_vm.fieldConfig.maxFiles},on:{"addFile":_vm.addFile}}):_vm._e(),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()],1)])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 45 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-textarea-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+" "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e()]),_vm._v(" "),_c('div',[_c('textarea',{staticClass:"form-control",attrs:{"name":_vm.fieldConfig.fieldName,"disabled":_vm.fieldConfig.disabled === 1,"rows":_vm.fieldConfig.rows,"cols":_vm.fieldConfig.cols},domProps:{"value":_vm.value},on:{"input":function($event){_vm.updateValue($event.target.value)}}}),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()])])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{ 'has-error': _vm.form.errors.has(this.fieldConfig.value_field) },attrs:{"id":_vm.fieldName + '-textarea-field'}},[_c('label',{staticClass:"form-control-label"},[_vm._v(_vm._s(_vm.fieldConfig.label)+"\n        "),(_vm.fieldConfig.field_extra.required)?_c('span',{staticClass:"required"},[_vm._v("  (*)")]):_vm._e(),_vm._v(" "),(_vm.withHelpIcon)?_c('span',{class:_vm.fieldConfig.field_extra.withIcon,attrs:{"title":_vm.fieldConfig.field_extra.helpText}}):_vm._e()]),_vm._v(" "),_c('div',[_c('textarea',{staticClass:"form-control",attrs:{"name":_vm.fieldConfig.fieldName,"disabled":_vm.fieldConfig.disabled === 1,"rows":_vm.fieldConfig.rows,"cols":_vm.fieldConfig.cols},domProps:{"value":_vm.value},on:{"input":function($event){_vm.updateValue($event.target.value)}}}),_vm._v(" "),(_vm.form.errors.has(this.fieldConfig.value_field))?_c('span',{staticClass:"help-block"},[_vm._v("\n            "+_vm._s(_vm.form.errors.get(this.fieldConfig.value_field, true))+"\n        ")]):_vm._e()]),_vm._v(" "),(_vm.hasHelpText)?_c('div',[_c('span',{domProps:{"innerHTML":_vm._s(_vm.fieldConfig.field_extra.helpText)}})]):_vm._e()])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 46 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-form"},[(_vm.showCloseIcon)?_c('div',{staticClass:"text-right"},[_c('span',{staticClass:"close-icon fa fa-times",on:{"click":_vm.close}})]):_vm._e(),_vm._v(" "),_c('form',{on:{"submit":function($event){$event.preventDefault();}}},[_vm._l((_vm.formConfig.fields),function(field){return (field.visible)?_c(_vm.getFormFieldComponent(field.widget),{key:field.id,tag:"component",attrs:{"field-name":field.name,"value":_vm.getFieldValue(_vm.form, field)},on:{"input":function (newVal) { _vm.updateFormValue(field, newVal) }}}):_vm._e()}),_vm._v(" "),(_vm.disabled === false)?_c('div',{staticClass:"controls-row"},[_c('button',{staticClass:"inputbutton1",on:{"click":function($event){$event.preventDefault();return _vm.submitForm($event)}}},[_vm._v("Save")]),_vm._v(" "),_c('button',{staticClass:"inputbutton1",on:{"click":function($event){$event.preventDefault();return _vm.cancel($event)}}},[_vm._v("Cancel")]),_vm._v(" "),_c('button',{staticClass:"inputbutton1",on:{"click":function($event){$event.preventDefault();return _vm.resetForm($event)}}},[_vm._v("Reset")])]):_vm._e()],2)])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-form"},[(_vm.showCloseIcon)?_c('div',{staticClass:"text-right"},[_c('span',{staticClass:"close-icon fa fa-times",on:{"click":_vm.close}})]):_vm._e(),_vm._v(" "),_c('form',{on:{"submit":function($event){$event.preventDefault();}}},[_c('div',{class:{ 'flex' : (_vm.columnCount > 1) }},_vm._l((_vm.fields),function(field){return (field.visible)?_c(_vm.getFormFieldComponent(field.widget),{directives:[{name:"show",rawName:"v-show",value:(_vm.conditionValues[field.name]),expression:"conditionValues[field.name]"}],key:field.id,tag:"component",class:_vm.columnWidth + ' ' + 'm-2',attrs:{"field-name":field.name,"value":_vm.getFieldValue(_vm.form, field),"children":field.children || null},on:{"input":function (newVal) { return _vm.updateValueAndConditionals(newVal, field); },"options-updated":function (newOptions) { return _vm.updateOptionsForField(newOptions, field); }}}):_vm._e()})),_vm._v(" "),(_vm.disabled === false)?_c('div',{staticClass:"controls-row"},[_c('button',{staticClass:"inputbutton1",on:{"click":function($event){$event.preventDefault();return _vm.submitForm($event)}}},[_vm._v("Save")]),_vm._v(" "),_c('button',{staticClass:"inputbutton1",on:{"click":function($event){$event.preventDefault();return _vm.cancel($event)}}},[_vm._v("Cancel")]),_vm._v(" "),_c('button',{staticClass:"inputbutton1",on:{"click":function($event){$event.preventDefault();return _vm.resetForm($event)}}},[_vm._v("Reset")])]):_vm._e()])])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);

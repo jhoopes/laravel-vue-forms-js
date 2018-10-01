@@ -2,6 +2,7 @@ import jQuery from 'jquery';
 import { Form } from './Form';
 import { byString} from "./utilities/utils";
 import VueForm from './Form.vue';
+import FormColumn from './FormComponents/FormColumn.vue';
 import FormAutocomplete from './FormComponents/FormAutocomplete.vue';
 import FormText from './FormComponents/FormText.vue';
 import FormTextarea from './FormComponents/FormTextarea.vue';
@@ -21,6 +22,7 @@ export default {
     install(Vue, options) {
 
         Vue.component(VueForm.name, VueForm);
+        Vue.component(FormColumn.name, FormColumn);
         Vue.component(FormText.name, FormText);
         Vue.component(FormTextarea.name, FormTextarea);
         Vue.component(FormSelect.name, FormSelect);
@@ -42,4 +44,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox }
+export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox }

@@ -8,6 +8,7 @@ export class Form {
         this.initialData = data;
         this.fields = [];
         this.disabled = false;
+        this.formFieldOptions = {};
 
         for (let field in data) {
             if (data.hasOwnProperty(field)) {
