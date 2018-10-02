@@ -15,6 +15,11 @@ export const byString = function(o, s) {
     var a = s.split('.');
     for (var i = 0, n = a.length; i < n; ++i) {
         var k = a[i];
+
+        if(o === null) { // if the object itself is null, there is no key to get
+            return;
+        }
+
         if (k in o) {
             o = o[k];
         } else {
@@ -38,4 +43,15 @@ export const assignOnObject = (obj, prop, value) => {
             value);
     } else
         obj[prop[0]] = value;
+}
+
+export const cloneObject = (obj) => {
+    var clone = {};
+    for(var i in obj) {
+        if(obj[i] != null &&  typeof(obj[i])=="object")
+            clone[i] = cloneObject(obj[i]);
+        else
+            clone[i] = obj[i];
+    }
+    return clone;
 }

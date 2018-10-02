@@ -43,6 +43,9 @@
     import FormCheckbox from './FormComponents/FormCheckbox.vue';
     import FormAutocomplete from './FormComponents/FormAutocomplete.vue';
     import FormFiles from './FormComponents/Files/FormFiles.vue';
+
+    import { cloneObject} from "./utilities/utils";
+
     export default {
 
         name: 'vue-form',
@@ -77,8 +80,9 @@
         created() {
 
             // TODO: Think about what cloning form data means, and if we should listen for changes for form data
-
-            var formData = Object.assign({}, this.formData);
+            // TODO: Eventually find a way for cloned objects to also clone arrays
+            //var formData = cloneObject(this.formData);
+            var formData = JSON.parse(JSON.stringify(this.formData));
 
             var data = this.defaultFields(formData);
             this.form = new Form(data, this.formConfig, this.disabled);
