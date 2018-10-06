@@ -13,6 +13,7 @@
                     :meta-type="fieldConfig.fieldName"
                     :max-files="fieldConfig.maxFiles"
                     @addFile="addFile"
+                    :upload-api-url="fieldConfig.fileApiUrl"
             ></form-file-upload>
             <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
@@ -58,6 +59,12 @@
             },
             fileableId: {
                 type: Number
+            },
+            fileApiUrl: {
+                type: String,
+                default() {
+                    return '/api/files/saveFiles'
+                }
             }
         },
 
@@ -66,12 +73,6 @@
                 showUploadContainer: true,
             }
         },
-
-//        watch: {
-//            'form.id': function (newId) {
-//                this.$set(this.fieldConfig, 'fileableId', newId);
-//            }
-//        },
 
 
         created() {
@@ -95,6 +96,12 @@
                             this.$set(this.fieldConfig, 'maxFiles', 100);
                         }
 
+                        if(fieldExtra.fileApiUrl) {
+                            this.$set(this.fieldConfig, 'fileApiUrl', fieldExtra.fileApiUrl);
+                        }else {
+                            this.$set(this.fieldConfig, 'fileApiUrl', this.fileApiUrl);
+                        }
+
                     }
                 });
 
@@ -110,31 +117,12 @@
                 this.$set(this.fieldConfig, 'fileable_type', this.fileableType);
                 this.$set(this.fieldConfig, 'fileable_id', this.fileableId);
                 this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
+                this.$set(this.fieldConfig, 'fileApiUrl', this.fileApiUrl);
             }
-
-            //this.getFiles();
 
         },
 
         methods: {
-            // getFiles() {
-            //     if(!this.fieldConfig.fileable_id) {
-            //         return;
-            //     }
-            //
-            //     var fileRequest = {
-            //         metaType: this.fieldConfig.fieldName,
-            //         fileable_type: this.fieldConfig.fileable_type,
-            //         fileable_id: this.fieldConfig.fileable_id
-            //     }
-            //
-            //     axios.post('/api/files/getFiles', fileRequest).then( response => {
-            //         this.files = response.data;
-            //         this.checkIfReachedMaxFiles();
-            //     }).catch( error => {
-            //         window.notify.apiError(error);
-            //     });
-            // },
             deleteFile(deleteFile) {
                 this.$emit('input', this.value.filter( file => {
                     return file.id !== deleteFile.id

@@ -22,7 +22,8 @@
             uploadMultiple: {
                 type: Boolean,
                 default: true,
-            }
+            },
+            uploadApiUrl: String,
         },
 
         data() {
@@ -51,7 +52,7 @@
         mounted() {
 
             this.dropzone = new Dropzone('#' + this.dropzoneId, {
-                url: '/api/files/saveFiles',
+                url: this.uploadApiUrl,
                 autoProcessQueue: this.autoProcessQueue,
                 uploadMultiple: this.uploadMultiple,
                 parallelUploads: this.maxFiles,
