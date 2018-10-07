@@ -50,6 +50,11 @@
         },
 
         mounted() {
+            var headers = null;
+            if(window.dropzoneHeaders) {
+                headers = window.dropzoneHeaders;
+            }
+            console.log(window.dropzoneHeaders);
 
             this.dropzone = new Dropzone('#' + this.dropzoneId, {
                 url: this.uploadApiUrl,
@@ -57,7 +62,8 @@
                 uploadMultiple: this.uploadMultiple,
                 parallelUploads: this.maxFiles,
                 maxFiles: this.maxFiles,
-                addRemoveLinks: true
+                addRemoveLinks: true,
+                headers: headers
             });
 
             if(this.uploadMultiple) {
