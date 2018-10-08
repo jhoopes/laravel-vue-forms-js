@@ -54,7 +54,6 @@
             if(window.dropzoneHeaders) {
                 headers = window.dropzoneHeaders;
             }
-            console.log(window.dropzoneHeaders);
 
             this.dropzone = new Dropzone('#' + this.dropzoneId, {
                 url: this.uploadApiUrl,
