@@ -22,7 +22,8 @@
             uploadMultiple: {
                 type: Boolean,
                 default: true,
-            }
+            },
+            uploadApiUrl: String,
         },
 
         data() {
@@ -49,14 +50,19 @@
         },
 
         mounted() {
+            var headers = null;
+            if(window.dropzoneHeaders) {
+                headers = window.dropzoneHeaders;
+            }
 
             this.dropzone = new Dropzone('#' + this.dropzoneId, {
-                url: '/api/files/saveFiles',
+                url: this.uploadApiUrl,
                 autoProcessQueue: this.autoProcessQueue,
                 uploadMultiple: this.uploadMultiple,
                 parallelUploads: this.maxFiles,
                 maxFiles: this.maxFiles,
-                addRemoveLinks: true
+                addRemoveLinks: true,
+                headers: headers
             });
 
             if(this.uploadMultiple) {
