@@ -95,10 +95,10 @@ export default {
 
             var selectedOption = {};
             this.fieldConfig.options.forEach(option => {
-                if(option[this.fieldConfig.optionValueField] === this.value) {
+                if(option[this.fieldConfig.optionValueField] == this.value) {
                     return selectedOption = option;
                 }
-            })
+            });
             return selectedOption;
         }
     },
