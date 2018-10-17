@@ -17,7 +17,7 @@
                            :class="columnWidth + ' ' + 'm-2'"
                 ></component>
             </div>
-            <div class="controls-row" v-if="disabled === false">
+            <div class="controls-row" v-if="disabled === false && autoSave === false">
                 <button class="inputbutton1" @click.prevent="submitForm">Save</button>
                 <button class="inputbutton1" @click.prevent="cancel">Cancel</button>
                 <button class="inputbutton1" @click.prevent="resetForm">Reset</button>
@@ -45,6 +45,7 @@
     import FormFiles from './FormComponents/Files/FormFiles.vue';
 
     import { cloneObject} from "./utilities/utils";
+    import { debounce } from 'lodash';
 
     export default {
 
@@ -86,8 +87,12 @@
 
             var data = this.defaultFields(formData);
             this.form = new Form(data, this.formConfig, this.disabled);
-
             this.generateConditionValues();
+
+
+            if(this.autoSave) {
+                this.setUpAutoSave();
+            }
         },
 
         computed: {
@@ -147,6 +152,16 @@
             });
             return provide;
         },
+
+        methods: {
+            setUpAutoSave() {
+
+                this.$watch('form', debounce(function(newForm) {
+                    this.submitForm();
+                }, this.autoSaveTimeout), {deep: true})
+
+            }
+        }
 
 
     }

@@ -15,6 +15,15 @@ export default {
         },
         submitForm() {
 
+            // If this form is a pass through form, run the save success for updated only to push data out of the form
+            // object
+            if(this.passThru) {
+                this.$nextTick(() => {
+                    this.saveSuccess(this.form.data(), 'updated');
+                });
+                return;
+            }
+
             let method = this.getSubmitHttpMethod();
             let data = this.getSubmitData();
 

@@ -23,7 +23,12 @@ export default {
         saveSuccess: {
             type: Function,
             default: function(response, actionType) {
-                this.$emit(actionType, response.data);
+
+                if(this.passThru) {
+                    this.$emit(actionType, response);
+                } else {
+                    this.$emit(actionType, response.data);
+                }
                 if(this.closeOnSave) {
                     this.close()
                 }
@@ -40,6 +45,18 @@ export default {
         showCloseIcon: {
             type: Boolean,
             default: false,
+        },
+        passThru: {
+            type: Boolean,
+            default: false,
+        },
+        autoSave: {
+            type: Boolean,
+            default: false,
+        },
+        autoSaveTimeout: {
+            type: Number,
+            default: 4000
         }
     }
 
