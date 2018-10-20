@@ -1,22 +1,20 @@
 <template>
     <div class="datepicker form-group">
         <label class="form-control-label">{{ fieldConfig.label }}
-            <span v-if="withHelpIcon()" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+            <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div>
             <div class="input-group date" :id="datePickerId" data-target-input="nearest">
-                <input type="text"
-                       class="form-control datetimepicker-input"
-                       :data-target="'#' + datePickerId"
-                       :value="value"
-                       @focus="showPicker"
-                       @blur="hidePicker"
-                       @input="updateValue($event.target.value)"
-                       @change="updateValue($event.target.value)"
-                />
-                <span class="input-group-addon" :data-target="'#' + datePickerId" data-toggle="datetimepicker">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
+                <vue-ctk-date-time-picker
+                    :label="''"
+                    formatted="MM/DD/Y"
+                    format="MM/DD/Y"
+                    :value="value"
+                    @input="updateValue"
+                    :disable-time="true"
+                    :without-header="true"
+                    :auto-close="true"
+                ></vue-ctk-date-time-picker>
             </div>
             <div v-if="hasHelpText">
                 <span v-html="fieldConfig.field_extra.helpText"></span>
@@ -27,11 +25,17 @@
 <script>
     import { guid } from './../utilities/utils';
     import FormField from '../mixins/FormField';
+    import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
+    import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.min.css';
     export default {
 
         name: 'form-datepicker',
 
         mixins: [FormField],
+
+        components: {
+            VueCtkDateTimePicker
+        },
 
         data() {
             return {
@@ -46,27 +50,20 @@
             }
         },
 
-        mounted() {
-            var vm = this;
-
-            this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker( {
-                allowInputToggle: true,
-                format: 'L',
-            });
-
-            window.jQuery('#' + this.datePickerId).on('change.datetimepicker', e => {
-                this.updateValue(e.date.format('MM/DD/YYYY'));
-            });
-        },
+        // mounted() {
+        //     var vm = this;
+        //
+        //     this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker( {
+        //         allowInputToggle: true,
+        //         format: 'L',
+        //     });
+        //
+        //     window.jQuery('#' + this.datePickerId).on('change.datetimepicker', e => {
+        //         this.updateValue(e.date.format('MM/DD/YYYY'));
+        //     });
+        // },
 
         methods: {
-
-            showPicker() {
-                window.jQuery('#' + this.datePickerId).datetimepicker('show');
-            },
-            hidePicker() {
-                window.jQuery('#' + this.datePickerId).datetimepicker('hide');
-            },
             updateValue(value) {
                 this.form.errors.clear(this.fieldConfig.value_field);
                 this.$emit('input', value);
