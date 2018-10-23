@@ -10,7 +10,7 @@
                            v-if="field.visible"
                            v-show="conditionValues[field.name]"
                            :field-name="field.name"
-                           :value="getFieldValue(form, field)"
+                           :value="getFieldValue(form.data, field)"
                            @input="(newVal) => updateValueAndConditionals(newVal, field)"
                            @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
                            :children="field.children || null"
@@ -84,8 +84,9 @@
             // TODO: Eventually find a way for cloned objects to also clone arrays
             //var formData = cloneObject(this.formData);
             var formData = JSON.parse(JSON.stringify(this.formData));
-
+            console.log(this.formData, data);
             var data = this.defaultFields(formData);
+
             this.form = new Form(data, this.formConfig, this.disabled);
             this.generateConditionValues();
 
@@ -156,7 +157,7 @@
         methods: {
             setUpAutoSave() {
 
-                this.$watch('form', debounce(function(newForm) {
+                this.$watch('form.data', debounce(function(newForm) {
                     this.submitForm();
                 }, this.autoSaveTimeout), {deep: true})
 

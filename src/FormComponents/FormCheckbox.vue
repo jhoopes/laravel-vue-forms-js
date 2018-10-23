@@ -18,7 +18,18 @@
         mixins: [FormField],
         name: 'form-checkbox',
 
-        props: ['checkboxValue'],
+        props: {
+            trueValue: {
+                default() {
+                    return true;
+                }
+            },
+            falseValue: {
+                default() {
+                    return false;
+                }
+            }
+        },
 
         data() {
             return {
@@ -57,6 +68,7 @@
 
             }else {
                 this.$set(this.fieldConfig, 'trueValue', this.trueValue);
+                this.$set(this.fieldConfig, 'falseValue', this.falseValue);
             }
 
             if(this.value) {

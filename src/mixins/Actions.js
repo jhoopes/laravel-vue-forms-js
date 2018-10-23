@@ -19,7 +19,7 @@ export default {
             // object
             if(this.passThru) {
                 this.$nextTick(() => {
-                    this.saveSuccess(this.form.data(), 'updated');
+                    this.saveSuccess(this.form.getData(), 'updated');
                 });
                 return;
             }
@@ -64,8 +64,7 @@ export default {
                 data.entityId = this.form.id;
             }
             data.formConfigurationId = this.formConfig.id;
-            data.data = this.form.data();
-
+            data.data = this.form.getData();
             return data;
         }
     }

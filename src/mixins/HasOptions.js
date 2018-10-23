@@ -80,7 +80,7 @@ export default {
             if(this.fieldConfig.optionsURL) {
                 var optionsURL = this.fieldConfig.optionsURL;
                 this.fieldsToWatch.forEach(match => {
-                    let fieldValue = get(this.form, match[1], '');
+                    let fieldValue = get(this.form.data, match[1], '');
                     optionsURL = optionsURL.replace(match[0], fieldValue);
                 })
                 return optionsURL;
