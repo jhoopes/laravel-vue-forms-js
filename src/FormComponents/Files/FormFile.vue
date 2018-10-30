@@ -5,7 +5,7 @@
                 <div v-if="previewIcon(file)" class="thumbnail">
                     <img :src="previewIcon(file)" width="100px" />
                 </div>
-                <span v-else class="thumbnail fa fa-file-o fa-4x"></span>
+                <font-awesome-icon :icon="fileIcon" size="4x"></font-awesome-icon>
             </div>
             <div class="action-row">
                 <span class="fa fa-download" @click="downloadFile(file)"></span>
@@ -30,14 +30,21 @@
 </template>
 <script>
     import axios from 'axios';
+    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+    import { faFile } from '@fortawesome/free-regular-svg-icons'
     export default {
 
         props: ['files', 'disabled'],
+
+        components: {
+            FontAwesomeIcon
+        },
 
         data() {
             return {
                 showFileDeleteModal: false,
                 deleteFile: {},
+                fileIcon: faFile
             }
         },
 
