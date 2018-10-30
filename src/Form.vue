@@ -18,9 +18,9 @@
                 ></component>
             </div>
             <div class="controls-row" v-if="disabled === false && autoSave === false">
-                <button class="inputbutton1" @click.prevent="submitForm">Save</button>
-                <button class="inputbutton1" @click.prevent="cancel">Cancel</button>
-                <button class="inputbutton1" @click.prevent="resetForm">Reset</button>
+                <button class="button" @click.prevent="submitForm">Save</button>
+                <button class="button" @click.prevent="cancel">Cancel</button>
+                <button class="button" @click.prevent="resetForm">Reset</button>
             </div>
         </form>
     </div>
@@ -84,7 +84,6 @@
             // TODO: Eventually find a way for cloned objects to also clone arrays
             //var formData = cloneObject(this.formData);
             var formData = JSON.parse(JSON.stringify(this.formData));
-            console.log(this.formData, data);
             var data = this.defaultFields(formData);
 
             this.form = new Form(data, this.formConfig, this.disabled);

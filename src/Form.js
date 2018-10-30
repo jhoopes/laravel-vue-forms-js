@@ -18,7 +18,9 @@ export class Form {
             }
         }
 
-        if(!this.id) {
+        if(data.id) {
+            this.id = data.id;
+        } else {
             this.id = null;
         }
 

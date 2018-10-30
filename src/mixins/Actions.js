@@ -31,6 +31,7 @@ export default {
 
                 if(method === 'post') { // we're creating so set the response id onto the form object
                     this.$set(this.form, 'id', response.data.id);
+                    this.$set(this.form.data, 'id', response.data.id);
                 }
                 this.$nextTick(() => {
                     var actionType = 'updated';
