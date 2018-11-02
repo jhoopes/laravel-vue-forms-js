@@ -39,7 +39,7 @@
 
         watch: {
             'checked': function() {
-                if(this.checked === this.fieldConfig.trueValue) {
+                if(this.checked == this.fieldConfig.trueValue) {
                     this.$emit('input', this.fieldConfig.trueValue);
                 }else {
                     this.$emit('input', this.fieldConfig.falseValue);
@@ -60,7 +60,7 @@
                         }
 
                         this.$set(this.fieldConfig, 'falseValue', false);
-                        if(fieldExtra.falseValue) {
+                        if(typeof fieldExtra.falseValue !== 'undefined') {
                             this.$set(this.fieldConfig, 'falseValue', fieldExtra.falseValue);
                         }
                     }
@@ -71,7 +71,7 @@
                 this.$set(this.fieldConfig, 'falseValue', this.falseValue);
             }
 
-            if(this.value) {
+            if(typeof this.value !== 'undefined' && this.value !== null) {
                 this.checked = this.value;
             } else {
                 this.checked = this.fieldConfig.falseValue;
