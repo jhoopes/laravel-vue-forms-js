@@ -19,7 +19,7 @@ export default {
             // object
             if(this.passThru) {
                 this.$nextTick(() => {
-                    this.saveSuccess(this.form.data(), 'updated');
+                    this.saveSuccess(this.form.getData(), 'updated');
                 });
                 return;
             }
@@ -31,6 +31,7 @@ export default {
 
                 if(method === 'post') { // we're creating so set the response id onto the form object
                     this.$set(this.form, 'id', response.data.id);
+                    this.$set(this.form.data, 'id', response.data.id);
                 }
                 this.$nextTick(() => {
                     var actionType = 'updated';
@@ -64,8 +65,7 @@ export default {
                 data.entityId = this.form.id;
             }
             data.formConfigurationId = this.formConfig.id;
-            data.data = this.form.data();
-
+            data.data = this.form.getData();
             return data;
         }
     }

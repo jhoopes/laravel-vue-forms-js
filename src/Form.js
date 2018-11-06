@@ -9,15 +9,18 @@ export class Form {
         this.fields = [];
         this.disabled = false;
         this.formFieldOptions = {};
+        this.data = {};
 
         for (let field in data) {
             if (data.hasOwnProperty(field)) {
-                this[field] = data[field];
+                this.data[field] = data[field];
                 this.fields.push(field);
             }
         }
 
-        if(!this.id) {
+        if(data.id) {
+            this.id = data.id;
+        } else {
             this.id = null;
         }
 
@@ -33,12 +36,12 @@ export class Form {
     }
 
     /** Get the data for the form based on initial data fields **/
-    data() {
+    getData() {
 
         let data = {};
 
         this.fields.forEach(field => {
-            data[field] = this[field];
+            data[field] = this.data[field];
         })
         return data;
 

@@ -50,17 +50,17 @@ export default {
 
             return false;
         },
-        getFieldValue(form, field) {
+        getFieldValue(data, field) {
 
             if(!field.value_field) {
                 return null;
             }
 
-            let value =  Object.getFormValueByString(form, field.value_field);
+            let value =  Object.getFormValueByString(data, field.value_field);
             return value;
         },
         updateFormValue(field, newVal) {
-            assignOnObject(this.form, field.value_field, newVal);
+            assignOnObject(this.form.data, field.value_field, newVal);
         },
         defaultFields(data) {
 

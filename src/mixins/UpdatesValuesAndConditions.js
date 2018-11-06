@@ -19,7 +19,6 @@ export default {
 
             if(fieldExtra.condition && fieldExtra.condition.fieldName && fieldExtra.condition.fieldValue) {
 
-
                 let conditionField = this.form.formConfig.fields.filter(f => {return f.name === fieldExtra.condition.fieldName})[0];
                 var conditionFieldFieldExtra = null;
                 if(conditionField) {
@@ -32,12 +31,12 @@ export default {
                         return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue
                     })[0];
 
-                    if( conditionOption && this.form[conditionField.value_field] === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
+                    if( conditionOption && this.form.data[conditionField.value_field] === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
                         this.$set(this.conditionValues, field.name, true);
                     }else {
                         this.$set(this.conditionValues, field.name, false);
                     }
-                } else if(this.form[fieldExtra.condition.fieldName] === fieldExtra.condition.fieldValue) {
+                } else if(this.form.data[fieldExtra.condition.fieldName] === fieldExtra.condition.fieldValue) {
                     this.$set(this.conditionValues, field.name, true);
                 }else {
                     this.$set(this.conditionValues, field.name, false);

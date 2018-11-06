@@ -5,7 +5,7 @@
                    v-if="field.visible"
                    v-show="conditionValues[field.name]"
                    :field-name="field.name"
-                   :value="getFieldValue(form, field)"
+                   :value="getFieldValue(form.data, field)"
                    @input="(newVal) => updateValueAndConditionals(newVal, field)"
                    @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
                    :children="field.children || null"

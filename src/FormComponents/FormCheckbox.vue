@@ -4,8 +4,8 @@
             <input class="form-check-input"
                    type="checkbox" :id="fieldConfig.fieldName + '-checkbox'"
                    v-model="checked"
-                   :true-value="fieldConfig.checkboxValue"
-                   :false-value="false"
+                   :true-value="fieldConfig.trueValue"
+                   :false-value="fieldConfig.falseValue"
             >
             <label class="form-check-label" :for="fieldConfig.fieldName + '-checkbox'">{{ fieldConfig.label }}</label>
         </div>
@@ -18,7 +18,18 @@
         mixins: [FormField],
         name: 'form-checkbox',
 
-        props: ['checkboxValue'],
+        props: {
+            trueValue: {
+                default() {
+                    return true;
+                }
+            },
+            falseValue: {
+                default() {
+                    return false;
+                }
+            }
+        },
 
         data() {
             return {
@@ -28,10 +39,10 @@
 
         watch: {
             'checked': function() {
-                if(this.checked) {
-                    this.$emit('input', this.fieldConfig.checkboxValue);
+                if(this.checked == this.fieldConfig.trueValue) {
+                    this.$emit('input', this.fieldConfig.trueValue);
                 }else {
-                    this.$emit('input', null);
+                    this.$emit('input', this.fieldConfig.falseValue);
                 }
             }
         },
@@ -43,15 +54,28 @@
                     if(field.name === this.fieldName) {
                         var fieldExtra = this.getFormFieldFieldExtra(field);
 
-                        this.$set(this.fieldConfig, 'checkboxValue', fieldExtra.checkboxValue);
+                        this.$set(this.fieldConfig, 'trueValue', true);
+                        if(fieldExtra.trueValue) {
+                            this.$set(this.fieldConfig, 'trueValue', fieldExtra.trueValue);
+                        }
+
+                        this.$set(this.fieldConfig, 'falseValue', false);
+                        if(typeof fieldExtra.falseValue !== 'undefined') {
+                            this.$set(this.fieldConfig, 'falseValue', fieldExtra.falseValue);
+                        }
                     }
                 });
 
             }else {
-                this.$set(this.fieldConfig, 'checkboxValue', this.checkboxValue);
+                this.$set(this.fieldConfig, 'trueValue', this.trueValue);
+                this.$set(this.fieldConfig, 'falseValue', this.falseValue);
             }
 
-
+            if(typeof this.value !== 'undefined' && this.value !== null) {
+                this.checked = this.value;
+            } else {
+                this.checked = this.fieldConfig.falseValue;
+            }
         }
     }
 </script>

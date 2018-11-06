@@ -10,7 +10,7 @@
                            v-if="field.visible"
                            v-show="conditionValues[field.name]"
                            :field-name="field.name"
-                           :value="getFieldValue(form, field)"
+                           :value="getFieldValue(form.data, field)"
                            @input="(newVal) => updateValueAndConditionals(newVal, field)"
                            @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
                            :children="field.children || null"
@@ -18,9 +18,9 @@
                 ></component>
             </div>
             <div class="controls-row" v-if="disabled === false && autoSave === false">
-                <button class="inputbutton1" @click.prevent="submitForm">Save</button>
-                <button class="inputbutton1" @click.prevent="cancel">Cancel</button>
-                <button class="inputbutton1" @click.prevent="resetForm">Reset</button>
+                <button class="button" @click.prevent="submitForm">Save</button>
+                <button class="button" @click.prevent="cancel">Cancel</button>
+                <button class="button" @click.prevent="resetForm">Reset</button>
             </div>
         </form>
     </div>
@@ -84,8 +84,8 @@
             // TODO: Eventually find a way for cloned objects to also clone arrays
             //var formData = cloneObject(this.formData);
             var formData = JSON.parse(JSON.stringify(this.formData));
-
             var data = this.defaultFields(formData);
+
             this.form = new Form(data, this.formConfig, this.disabled);
             this.generateConditionValues();
 
@@ -156,7 +156,7 @@
         methods: {
             setUpAutoSave() {
 
-                this.$watch('form', debounce(function(newForm) {
+                this.$watch('form.data', debounce(function(newForm) {
                     this.submitForm();
                 }, this.autoSaveTimeout), {deep: true})
 
