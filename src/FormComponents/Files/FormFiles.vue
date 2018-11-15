@@ -118,8 +118,10 @@
                 this.$set(this.fieldConfig, 'fileable_id', this.fileableId);
                 this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
                 this.$set(this.fieldConfig, 'fileApiUrl', this.fileApiUrl);
+                this.$set(this.fieldConfig, 'disabled', this.disabled);
             }
 
+            this.checkIfReachedMaxFiles();
         },
 
         methods: {

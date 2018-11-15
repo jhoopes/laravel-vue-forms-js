@@ -5,11 +5,11 @@
                 <div v-if="previewIcon(file)" class="thumbnail">
                     <img :src="previewIcon(file)" width="100px" />
                 </div>
-                <font-awesome-icon :icon="fileIcon" size="4x"></font-awesome-icon>
-            </div>
+                <font-awesome-icon v-else :icon="fileIcon" size="4x"></font-awesome-icon>
+            </div>            
             <div class="action-row">
-                <span class="fa fa-download" @click="downloadFile(file)"></span>
-                <span class="fa fa-close" @click="selectForDeletion(file)" v-if="disabled === 0"></span>
+                <fa-icon icon="download" @click="downloadFile(file)"></fa-icon>
+                <fa-icon icon="times" @click="selectForDeletion(file)" v-if="disabled === false"></fa-icon>                
             </div>
             <div class="file-name">
                 {{ file.original_filename }}
@@ -32,6 +32,7 @@
     import axios from 'axios';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import { faFile } from '@fortawesome/free-regular-svg-icons'
+    
     export default {
 
         props: ['files', 'disabled'],
@@ -65,7 +66,7 @@
             },
             deleteSelectedFile() {
 
-                if(this.disabled === 1) {
+                if(this.disabled === true) {
                     return;
                 }
 
