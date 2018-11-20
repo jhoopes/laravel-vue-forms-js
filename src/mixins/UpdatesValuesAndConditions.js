@@ -27,6 +27,15 @@ export default {
 
                 if (this.form.formFieldOptions[fieldExtra.condition.fieldName]) {
 
+                    if(!conditionFieldFieldExtra.options_config.optionLabelField) {
+                        conditionFieldFieldExtra.options_config.optionLabelField = 'name';
+                    }
+
+                    if(!conditionFieldFieldExtra.options_config.optionValueField) {
+                        conditionFieldFieldExtra.options_config.optionValueField = 'id';
+                    }
+
+
                     let conditionOption = this.form.formFieldOptions[fieldExtra.condition.fieldName].filter(option => {
                         return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue
                     })[0];

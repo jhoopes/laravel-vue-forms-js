@@ -17,6 +17,10 @@
                 @input="updateValue"
                 class="form-control"
                 :disabled="fieldConfig.disabled === 1"
+                :show-labels="showMultiselectLabels"
+                :select-label="selectLabel"
+                :deselect-label="deselectLabel"
+                :allow-empty="allowEmpty"
         ></multi-select>
         <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
             {{ form.errors.get(this.fieldConfig.value_field, true) }}
@@ -38,6 +42,25 @@
 
         components: {
             MultiSelect
+        },
+
+        props: {
+            showMultiselectLabels: {
+                type: Boolean,
+                default: true,
+            },
+            allowEmpty: {
+                type: Boolean,
+                default: true,
+            },
+            selectLabel: {
+                type: String,
+                default: 'Press enter to select',
+            },
+            deselectLabel: {
+                type: String,
+                default: 'Press enter to remove'
+            }
         },
 
         mixins: [

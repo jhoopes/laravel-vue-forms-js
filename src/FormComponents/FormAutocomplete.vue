@@ -168,7 +168,7 @@
                 return new Promise((resolve, reject) => {
                     if(this.currentOptionsUrl.length > 0) {
                         this.loading = true;
-                        axios.get(this.currentOptionsUrl).then( response => {
+                        this.apiClient.get(this.currentOptionsUrl).then( response => {
 
                             this.fieldConfig.options = response.data;
                             this.loading = false;
