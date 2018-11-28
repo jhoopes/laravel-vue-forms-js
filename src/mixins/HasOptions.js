@@ -89,7 +89,7 @@ export default {
         },
         optionValue() {
 
-            if(!this.value) {
+            if(!this.value && this.value !== 0) {
                 return '';
             }
 
