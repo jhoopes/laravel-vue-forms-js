@@ -46,7 +46,13 @@ export default {
                         return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue
                     })[0];
 
-                    if( conditionOption && this.getFieldValue(this.form.data, conditionField) === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
+                    // ensure that strings are converted to actual numbers for ID key values
+                    var value = this.getFieldValue(this.form.data, conditionField);
+                    if(!isNaN(value)) {
+                        value = Number(value);
+                    }
+
+                    if( conditionOption && value === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
                         this.$set(this.conditionValues, field.name, true);
                     }else {
                         this.$set(this.conditionValues, field.name, false);

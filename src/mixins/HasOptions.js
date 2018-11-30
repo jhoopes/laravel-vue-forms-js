@@ -145,9 +145,7 @@ export default {
 
             if(this.currentOptionsURL.length > 0) {
                 this.apiClient.get(this.currentOptionsURL).then( response => {
-
-                    this.fieldConfig.options = response.data;
-
+                    this.$set(this.fieldConfig, 'options', response.data);
                 }).catch( error => {
                     window.notify.apiError(error);
                 });
