@@ -12,6 +12,7 @@ import FormDatePicker from './FormComponents/FormDatePicker.vue';
 import FormCheckbox from './FormComponents/FormCheckbox.vue';
 import FormRadio from './FormComponents/FormRadio.vue';
 import FormFiles from './FormComponents/Files/FormFiles.vue';
+import FormWYSIWYG from './FormComponents/FormWYSIWYG.vue';
 
 import FormFieldMixin from './mixins/FormField';
 import HasOptionsMixin from './mixins/HasOptions';
@@ -32,6 +33,7 @@ export default {
         Vue.component(FormCheckbox.name, FormCheckbox);
         Vue.component(FormFiles.name, FormFiles);
         Vue.component(FormAutocomplete.name, FormAutocomplete);
+        Vue.component(FormWYSIWYG.name, FormWYSIWYG);
 
         // if (window.$ === undefined || window.jQuery === undefined) {
         //     window.$ = window.jQuery = jQuery;
@@ -44,4 +46,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox }
+export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormText, FormTextarea, FormSelect, FormDateTimePicker, FormDatePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox, FormWYSIWYG }
