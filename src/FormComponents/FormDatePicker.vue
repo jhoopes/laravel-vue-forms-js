@@ -50,19 +50,6 @@
             }
         },
 
-        // mounted() {
-        //     var vm = this;
-        //
-        //     this.datepicker = window.jQuery('#' + this.datePickerId).datetimepicker( {
-        //         allowInputToggle: true,
-        //         format: 'L',
-        //     });
-        //
-        //     window.jQuery('#' + this.datePickerId).on('change.datetimepicker', e => {
-        //         this.updateValue(e.date.format('MM/DD/YYYY'));
-        //     });
-        // },
-
         methods: {
             updateValue(value) {
                 this.form.errors.clear(this.fieldConfig.value_field);

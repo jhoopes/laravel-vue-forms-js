@@ -17,7 +17,7 @@
 </template>
 <script>
     import FormField from './../mixins/FormField';
-
+    import jquery from 'jquery';
     require('bootstrap/js/modal.js');
     require('bootstrap/js/dropdown.js');
     require('bootstrap/js/tooltip.js');
@@ -61,7 +61,7 @@
 
         mounted() {
             var vm = this;
-            this.editor = jQuery('#' + this.fieldName + '-editor').summernote(this.editorOptions);
+            this.editor = jquery('#' + this.fieldName + '-editor').summernote(this.editorOptions);
         }
     }
 </script>
