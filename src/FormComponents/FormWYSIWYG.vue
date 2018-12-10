@@ -18,10 +18,8 @@
 <script>
     import FormField from './../mixins/FormField';
     import jquery from 'jquery';
-    require('bootstrap/js/modal.js');
-    require('bootstrap/js/dropdown.js');
-    require('bootstrap/js/tooltip.js');
-    require('summernote');
+
+    require('summernote/dist/summernote-lite');
     export default {
         name: 'form-wysiwyg',
 
@@ -67,8 +65,7 @@
 </script>
 <style lang="scss" scoped>
 
-    @import "~bootstrap/dist/css/bootstrap.min.css";
-    @import "~summernote/dist/summernote.css";
+    @import "~summernote/dist/summernote-lite.css";
 
     .form-wysiwyg-editor {
         width: 97%;
