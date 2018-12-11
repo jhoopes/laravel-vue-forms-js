@@ -1,4 +1,6 @@
 import { get } from 'lodash';
+import { byString} from "../utilities/utils";
+
 export default {
 
     props: {
@@ -12,19 +14,24 @@ export default {
             type: String,
             default: null,
         },
+        vuexPath: {
+            type: String,
+            default: null,
+        },
         optionLabelField: {
             type: String,
-            default: '',
+            default: 'id',
         },
         optionValueField: {
             type: String,
-            default: ''
+            default: 'name'
         }
     },
 
     data() {
         return {
-            fieldsToWatch: []
+            fieldsToWatch: [],
+            vuexStorePath: null,
         }
     },
 
@@ -40,6 +47,11 @@ export default {
                         return;
                     }
                     this.$set(this.fieldConfig, 'options',  []);
+
+
+                   if(field.field_extra.options_config.vuex_store_path) {
+                       this.vuexStorePath = field.field_extra.options_config.vuex_store_path;
+                   }
 
                     if(field.field_extra.options_config.optionsURL) {
                         this.setUpOptionsURL(field);
@@ -72,6 +84,7 @@ export default {
             this.$set(this.fieldConfig, 'optionValueField',  this.optionValueField);
             this.$set(this.fieldConfig, 'optionLabelField',  this.optionLabelField);
             this.$set(this.fieldConfig, 'optionsURL', this.optionsUrl);
+            this.vuexStorePath = this.vuexPath;
         }
     },
 
@@ -100,6 +113,14 @@ export default {
                 }
             });
             return selectedOption;
+        },
+        vuexOptions() {
+
+            if(!this.vuexStorePath) {
+                return [];
+            }
+
+            return byString(this.$store.state, this.vuexStorePath);
         }
     },
 
@@ -111,6 +132,10 @@ export default {
             this.$set(this.fieldConfig, 'options', newOptions);
 
             this.defaultField()
+        },
+        'vuexOptions': function(newOptions) {
+            this.$set(this.fieldConfig, 'options', newOptions);
+            this.defaultField();
         },
         'fieldConfig.options': function(newOptions) {
             this.$emit('options-updated', newOptions);
