@@ -226,7 +226,6 @@
                         return item === this.search
                     })[0]
                 }
-                console.log(value);
                 return value;
             },
             createItem() {
@@ -245,7 +244,6 @@
                         this.setResult(response.data[this.fieldConfig.optionLabelField]);
                     }).catch(error => {
                         this.loading = false;
-                        console.log(error);
                     })
                 }else {
                     this.$emit('create-tag', this.search);
