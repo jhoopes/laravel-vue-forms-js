@@ -1,6 +1,6 @@
 
 import { Form } from './Form';
-import { byString} from "./utilities/utils";
+import { byString, assignOnObject } from "./utilities/utils";
 import VueForm from './Form.vue';
 import FormColumn from './FormComponents/FormColumn.vue';
 import FormAutocomplete from './FormComponents/FormAutocomplete.vue';
@@ -34,7 +34,8 @@ export default {
         Vue.component(FormWYSIWYG.name, FormWYSIWYG);
 
 
-        Object.getFormValueByString = byString
+        Object.getFormValueByString = byString;
+        Object.assignFormValueByString = assignOnObject;
     }
 
 }
