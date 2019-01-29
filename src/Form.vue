@@ -155,7 +155,6 @@
             setUpAutoSave() {
 
                 this.$watch('form.data', debounce(function(newForm) {
-                    console.log('newform:' + newForm);
                     this.submitForm();
                 }, this.autoSaveTimeout), {deep: true})
 
