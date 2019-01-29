@@ -155,11 +155,23 @@
             setUpAutoSave() {
 
                 this.$watch('form.data', debounce(function(newForm) {
+                    console.log('newform:' + newForm);
                     this.submitForm();
                 }, this.autoSaveTimeout), {deep: true})
 
             }
-        }
+        },
+
+        watch: {
+            formData: {
+                handler: function(newFormData, oldFormData) {
+                    if(JSON.stringify(newFormData) !== JSON.stringify(oldFormData)) {
+                        this.form.data = newFormData;
+                    }
+                },
+                deep: true
+            }
+        },
 
 
     }
