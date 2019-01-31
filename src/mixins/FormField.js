@@ -36,6 +36,10 @@ export default {
         required: {
             type: Boolean,
             default: false,
+        },
+        disabled: {
+            type: Number,
+            default: 0
         }
     },
 
@@ -100,6 +104,7 @@ export default {
             });
             this.$set(this.fieldConfig, 'label', this.label);
             this.$set(this.fieldConfig, 'value_field', this.fieldName);
+            this.$set(this.fieldConfig, 'disabled', this.disabled);
         }
     },
 

@@ -37,7 +37,6 @@
     import FormText from './FormComponents/FormText.vue';
     import FormTextarea from './FormComponents/FormTextarea.vue';
     import FormSelect from './FormComponents/FormSelect.vue';
-    import FormDateTimePicker from './FormComponents/FormDateTimePicker.vue';
     import FormDatePicker from './FormComponents/FormDatePicker.vue';
     import FormRadio from './FormComponents/FormRadio.vue';
     import FormCheckbox from './FormComponents/FormCheckbox.vue';
@@ -68,7 +67,6 @@
             FormRadio,
             FormCheckbox,
             FormFiles,
-            'form-datetimepicker': FormDateTimePicker
         },
 
 
