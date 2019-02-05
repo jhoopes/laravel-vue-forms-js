@@ -47,6 +47,25 @@ export class Form {
 
     }
 
+    /** Get the updated data for the form **/
+    getNewData(newFormData, force) {
+        for (let field in newFormData) {
+            if (newFormData.hasOwnProperty(field)) {
+                if(!force) {
+                    if(this.initialData[field] === this.data[field]) {
+                        this.data[field] = newFormData[field];
+                        this.initialData[field] = newFormData[field];
+                    }
+                } else {
+                    this.data[field] = newFormData[field];
+                    this.initialData[field] = newFormData[field];
+                }
+            }
+        }
+
+        return this.data;
+    }
+
 
     /** Reset the form to the initial data **/
     reset() {

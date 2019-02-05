@@ -165,7 +165,7 @@
             formData: {
                 handler: function(newFormData, oldFormData) {
                     if(JSON.stringify(newFormData) !== JSON.stringify(oldFormData)) {
-                        this.form.data = newFormData;
+                        this.form.data = this.form.getNewData(newFormData, false);
                     }
                 },
                 deep: true
