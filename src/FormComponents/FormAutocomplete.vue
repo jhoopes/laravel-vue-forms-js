@@ -134,6 +134,8 @@
                     this.isOpen = true;
                 }
 
+                this.$emit('updateValue', this.search);
+
             },
             filterResults() {
                 this.results = this.items.filter(item => item.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
