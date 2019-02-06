@@ -47,8 +47,13 @@ export class Form {
 
     }
 
-    /** Get the updated data for the form **/
-    getNewData(newFormData, force) {
+    /** Set the updated data for the form **/
+    updateData(newFormData, force) {
+
+        if(typeof force !== "boolean") {
+            force = false;
+        }
+
         for (let field in newFormData) {
             if (newFormData.hasOwnProperty(field)) {
                 if(!force) {
@@ -62,8 +67,6 @@ export class Form {
                 }
             }
         }
-
-        return this.data;
     }
 
 

@@ -78,8 +78,6 @@
 
         created() {
 
-            // TODO: Think about what cloning form data means, and if we should listen for changes for form data
-            // TODO: Eventually find a way for cloned objects to also clone arrays
             //var formData = cloneObject(this.formData);
             var formData = JSON.parse(JSON.stringify(this.formData));
             var data = this.defaultFields(formData);
@@ -164,9 +162,7 @@
         watch: {
             formData: {
                 handler: function(newFormData, oldFormData) {
-                    if(JSON.stringify(newFormData) !== JSON.stringify(oldFormData)) {
-                        this.form.data = this.form.getNewData(newFormData, false);
-                    }
+                    this.form.updateData(newFormData);
                 },
                 deep: true
             }
