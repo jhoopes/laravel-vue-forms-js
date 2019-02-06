@@ -134,6 +134,9 @@
                     this.isOpen = true;
                 }
 
+                if(this.search === '' || this.search === null) {
+                    this.$emit('input', null);
+                }
             },
             filterResults() {
                 this.results = this.items.filter(item => item.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
