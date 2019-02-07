@@ -43,8 +43,8 @@ export default {
                     }
 
                     let conditionOption = this.getConditionOptions(fieldExtra.condition.valueField).filter(option => {
-                        return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue
-                    })[0];
+                        return fieldExtra.condition.fieldValue.includes(option[conditionFieldFieldExtra.options_config.optionLabelField]);
+                    });
 
                     // ensure that strings are converted to actual numbers for ID key values
                     var value = this.getFieldValue(this.form.data, conditionField);
@@ -52,7 +52,9 @@ export default {
                         value = Number(value);
                     }
 
-                    if( conditionOption && value === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
+                    let conditionValue = this.checkValueExistsInArray(conditionOption, conditionFieldFieldExtra.options_config.optionValueField, value);
+
+                    if( conditionOption && conditionValue) {
                         this.$set(this.conditionValues, field.name, true);
                     }else {
                         this.$set(this.conditionValues, field.name, false);
@@ -85,5 +87,14 @@ export default {
             assignOnObject(this.form.formFieldOptions, field.value_field, newOptions);
             this.generateConditionValues();
         },
+        checkValueExistsInArray(conditionArray, key, value) {
+            for(var i = 0; i < conditionArray.length; i++) {
+                if(conditionArray[i][key] === value) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
