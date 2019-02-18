@@ -166,7 +166,7 @@
             },
             updateOptions: debounce(function() {
                 this.getOptions()
-            }, 1000),
+            }, 200),
             getOptions() {
                 return new Promise((resolve, reject) => {
                     if(this.currentOptionsUrl.length > 0) {
