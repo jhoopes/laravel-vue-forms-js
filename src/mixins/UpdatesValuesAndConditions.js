@@ -34,17 +34,19 @@ export default {
 
                 if (this.getConditionOptions(fieldExtra.condition.valueField)) {
 
+                    // Default option label field to name, as this is the default from FormSelect
                     if(!conditionFieldFieldExtra.options_config.optionLabelField) {
                         conditionFieldFieldExtra.options_config.optionLabelField = 'name';
                     }
 
+                    // Default the option value field to id, as this is the default from FormSelect
                     if(!conditionFieldFieldExtra.options_config.optionValueField) {
                         conditionFieldFieldExtra.options_config.optionValueField = 'id';
                     }
 
-                    let conditionOption = this.getConditionOptions(fieldExtra.condition.valueField).filter(option => {
-                        return option[conditionFieldFieldExtra.options_config.optionLabelField] === fieldExtra.condition.fieldValue
-                    })[0];
+                    let validConditionOptions = this.getConditionOptions(fieldExtra.condition.valueField).filter(option => {
+                        return fieldExtra.condition.fieldValue.includes(option[conditionFieldFieldExtra.options_config.optionLabelField]);
+                    });
 
                     // ensure that strings are converted to actual numbers for ID key values
                     var value = this.getFieldValue(this.form.data, conditionField);
@@ -52,7 +54,11 @@ export default {
                         value = Number(value);
                     }
 
-                    if( conditionOption && value === conditionOption[conditionFieldFieldExtra.options_config.optionValueField]) {
+                    let conditionValueOption = validConditionOptions.find(conditionOption => {
+                        return conditionOption[conditionFieldFieldExtra.options_config.optionValueField] === value;
+                    });
+
+                    if( validConditionOptions && conditionValueOption) {
                         this.$set(this.conditionValues, field.name, true);
                     }else {
                         this.$set(this.conditionValues, field.name, false);
@@ -84,6 +90,6 @@ export default {
         updateOptionsForField(newOptions, field) {
             assignOnObject(this.form.formFieldOptions, field.value_field, newOptions);
             this.generateConditionValues();
-        },
+        }
     }
 }
