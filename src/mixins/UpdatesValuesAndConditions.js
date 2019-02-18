@@ -34,15 +34,17 @@ export default {
 
                 if (this.getConditionOptions(fieldExtra.condition.valueField)) {
 
+                    // Default option label field to name, as this is the default from FormSelect
                     if(!conditionFieldFieldExtra.options_config.optionLabelField) {
                         conditionFieldFieldExtra.options_config.optionLabelField = 'name';
                     }
 
+                    // Default the option value field to id, as this is the default from FormSelect
                     if(!conditionFieldFieldExtra.options_config.optionValueField) {
                         conditionFieldFieldExtra.options_config.optionValueField = 'id';
                     }
 
-                    let conditionOption = this.getConditionOptions(fieldExtra.condition.valueField).filter(option => {
+                    let validConditionOptions = this.getConditionOptions(fieldExtra.condition.valueField).filter(option => {
                         return fieldExtra.condition.fieldValue.includes(option[conditionFieldFieldExtra.options_config.optionLabelField]);
                     });
 
@@ -52,9 +54,11 @@ export default {
                         value = Number(value);
                     }
 
-                    let conditionValue = this.checkValueExistsInArray(conditionOption, conditionFieldFieldExtra.options_config.optionValueField, value);
+                    let conditionValueOption = validConditionOptions.find(conditionOption => {
+                        return conditionOption[conditionFieldFieldExtra.options_config.optionValueField] === value;
+                    });
 
-                    if( conditionOption && conditionValue) {
+                    if( validConditionOptions && conditionValueOption) {
                         this.$set(this.conditionValues, field.name, true);
                     }else {
                         this.$set(this.conditionValues, field.name, false);
@@ -86,15 +90,6 @@ export default {
         updateOptionsForField(newOptions, field) {
             assignOnObject(this.form.formFieldOptions, field.value_field, newOptions);
             this.generateConditionValues();
-        },
-        checkValueExistsInArray(conditionArray, key, value) {
-            for(var i = 0; i < conditionArray.length; i++) {
-                if(conditionArray[i][key] === value) {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }
