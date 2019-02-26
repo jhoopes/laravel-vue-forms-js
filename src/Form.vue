@@ -18,9 +18,7 @@
                 ></component>
             </div>
             <div class="controls-row" v-if="disabled === false && autoSave === false">
-                <button class="button" @click.prevent="submitForm">Save</button>
-                <button class="button" @click.prevent="cancel">Cancel</button>
-                <button class="button" @click.prevent="resetForm">Reset</button>
+                <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)">{{ action.label }}</button>
             </div>
         </form>
     </div>
