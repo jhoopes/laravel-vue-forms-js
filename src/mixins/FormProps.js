@@ -57,6 +57,28 @@ export default {
         autoSaveTimeout: {
             type: Number,
             default: 4000
+        },
+        actions: {
+            type: Array,
+            default() {
+                return [
+                    {
+                        name: 'submit',
+                        label: 'Submit',
+                        action: 'submitForm'
+                    },
+                    {
+                        name: 'cancel',
+                        label: 'Cancel',
+                        action: 'cancelForm'
+                    },
+                    {
+                        name: 'reset',
+                        label: 'Reset',
+                        action: 'resetForm'
+                    }
+                ]
+            }
         }
     }
 

@@ -4,7 +4,14 @@ export default {
 
 
     methods: {
-        cancel() {
+        runAction(action) {
+            if(typeof this[action] === 'function') {
+                this[action]();
+            }else {
+                this.$emit(action, this.form.getData());
+            }
+        },
+        cancelForm() {
             this.$emit('cancel-form');
         },
         close() {

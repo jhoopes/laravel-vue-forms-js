@@ -36,6 +36,9 @@ export default {
                 case 'files':
                     return 'form-files';
                     break;
+                case 'wysiwyg':
+                    return 'form-wysiwyg';
+                    break;
                 default:
                     return fieldWidget;
                     break;
