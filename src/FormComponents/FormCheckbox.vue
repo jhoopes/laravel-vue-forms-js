@@ -44,6 +44,13 @@
                 }else {
                     this.$emit('input', this.fieldConfig.falseValue);
                 }
+            },
+            'value': function() {
+                if(this.value === this.fieldConfig.trueValue) {
+                    this.checked = this.fieldConfig.trueValue;
+                } else {
+                    this.checked = this.fieldConfig.falseValue;
+                }
             }
         },
 
