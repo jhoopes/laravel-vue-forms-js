@@ -177,7 +177,6 @@ export default {
                 }).catch( error => {
                     window.notify.apiError(error);
                 });
-
             }
 
         },

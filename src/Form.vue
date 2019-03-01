@@ -163,6 +163,9 @@
                     this.form.updateData(newFormData);
                 },
                 deep: true
+            },
+            disabled(disabled) {
+                this.form.disabled = disabled;
             }
         },
 

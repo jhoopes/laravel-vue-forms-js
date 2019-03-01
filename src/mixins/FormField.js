@@ -7,6 +7,7 @@ export default {
         form: {
             default() {
                 return {
+                    disabled: false,
                     errors: new FormErrors()
                 }
             }
@@ -63,6 +64,12 @@ export default {
     		} else
     			return false;
     	}
+    },
+
+    watch: {
+        'form.disabled': function(disabled) {
+            this.fieldConfig.disabled = disabled ? 1 : 0;
+        }
     },
 
     created() {
