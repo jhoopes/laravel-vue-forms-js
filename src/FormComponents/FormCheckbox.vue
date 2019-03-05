@@ -39,15 +39,15 @@
         },
 
         watch: {
-            'checked': function() {
-                if(this.checked == this.fieldConfig.trueValue) {
+            checked(newChecked) {
+                if(newChecked == this.fieldConfig.trueValue) {
                     this.$emit('input', this.fieldConfig.trueValue);
                 }else {
                     this.$emit('input', this.fieldConfig.falseValue);
                 }
             },
-            'value': function() {
-                if(this.value === this.fieldConfig.trueValue) {
+            value(newValue) {
+                if(newValue === this.fieldConfig.trueValue) {
                     this.checked = this.fieldConfig.trueValue;
                 } else {
                     this.checked = this.fieldConfig.falseValue;
