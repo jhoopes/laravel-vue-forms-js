@@ -8,8 +8,8 @@
                 <font-awesome-icon :icon="fileIcon" size="4x"></font-awesome-icon>
             </div>
             <div class="action-row">
-                <span class="fa fa-download" @click="downloadFile(file)"></span>
-                <span class="fa fa-close" @click="selectForDeletion(file)" v-if="disabled === 0"></span>
+                <font-awesome-icon :icon="downloadIcon" @click="downloadFile(file)"></font-awesome-icon>
+                <font-awesome-icon :icon="closeIcon" @click="selectForDeletion(file)" v-if="disabled === 0"></font-awesome-icon>
             </div>
             <div class="file-name">
                 {{ file.original_filename }}
@@ -31,7 +31,7 @@
 <script>
     import axios from 'axios';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-    import { faFile } from '@fortawesome/free-regular-svg-icons'
+    import { faFile, faDownload, faTimes } from '@fortawesome/free-solid-svg-icons'
     export default {
 
         props: ['files', 'disabled'],
@@ -44,7 +44,9 @@
             return {
                 showFileDeleteModal: false,
                 deleteFile: {},
-                fileIcon: faFile
+                fileIcon: faFile,
+                downloadIcon: faDownload,
+                closeIcon: faTimes
             }
         },
 
