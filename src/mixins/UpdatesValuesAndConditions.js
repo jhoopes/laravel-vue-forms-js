@@ -28,7 +28,7 @@ export default {
                 } else {
                     // if the valueField from the condition was not found set the view to be false
                     this.$set(this.conditionValues, field.name, false);
-                    console.log('Invalid condition field.  Is your configuration correct?');
+                    console.log('Invalid condition field. [ ' + field.name + ' ] Is your configuration correct?');
                     return;
                 }
 
