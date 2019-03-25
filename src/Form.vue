@@ -162,6 +162,8 @@
             formData: {
                 handler: function(newFormData, oldFormData) {
 
+                    newFormData = JSON.parse(JSON.stringify(newFormData));
+
                     if(this.formDataWatcher) {
                         this.formDataWatcher();
                     }
