@@ -71,6 +71,7 @@
         data() {
             return {
                 form: {},
+                formDataWatcher: null,
             }
         },
 
@@ -150,7 +151,7 @@
         methods: {
             setUpAutoSave() {
 
-                this.$watch('form.data', debounce(function(newForm) {
+                this.formDataWatcher = this.$watch('form.data', debounce(function(newForm) {
                     this.submitForm();
                 }, this.autoSaveTimeout), {deep: true})
 
@@ -160,7 +161,16 @@
         watch: {
             formData: {
                 handler: function(newFormData, oldFormData) {
+
+                    if(this.formDataWatcher) {
+                        this.formDataWatcher();
+                    }
+
                     this.form.updateData(newFormData);
+
+                    if(this.autoSave) {
+                        this.setUpAutoSave();
+                    }
                 },
                 deep: true
             },
