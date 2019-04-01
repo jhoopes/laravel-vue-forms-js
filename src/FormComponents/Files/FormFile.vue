@@ -3,9 +3,9 @@
         <div class="file" v-for="file in files">
             <div class="file-icon">
                 <div v-if="previewIcon(file)" class="thumbnail">
-                    <img :src="previewIcon(file)" width="100px" />
+                    <img :src="previewIcon(file)" width="80px" />
                 </div>
-                <font-awesome-icon :icon="fileIcon" size="4x"></font-awesome-icon>
+                <font-awesome-icon :icon="fileIcon" size="4x" v-else></font-awesome-icon>
             </div>
             <div class="action-row">
                 <font-awesome-icon :icon="downloadIcon" @click="downloadFile(file)"></font-awesome-icon>
@@ -33,6 +33,14 @@
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
     import { faFile, faDownload, faTimes } from '@fortawesome/free-solid-svg-icons'
     export default {
+
+        inject: {
+            apiClient: {
+                default() {
+                    return axios;
+                }
+            }
+        },
 
         props: ['files', 'disabled'],
 
@@ -72,7 +80,7 @@
                 }
 
                 this.showFileDeleteModal = false;
-                axios.delete('/api/files/' + this.deleteFile.id).then( response => {
+                this.apiClient.delete('/api/files/' + this.deleteFile.id).then( response => {
                     this.$emit('deletedFile', this.deleteFile);
                     this.deleteFile = {};
                     window.notify.message('Successfully deleted file', 'success');

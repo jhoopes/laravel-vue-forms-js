@@ -74,6 +74,12 @@
             }
         },
 
+        watch: {
+            value(newValue) {
+                this.checkIfReachedMaxFiles();
+            }
+        },
+
 
         created() {
 
