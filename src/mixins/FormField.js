@@ -7,6 +7,7 @@ export default {
         form: {
             default() {
                 return {
+                    disabled: false,
                     errors: new FormErrors()
                 }
             }
@@ -65,6 +66,15 @@ export default {
     	}
     },
 
+    watch: {
+        'form.disabled': function(disabled) {
+            this.fieldConfig.disabled = disabled ? 1 : 0;
+        },
+        disabled: function(disabled) {
+            this.fieldConfig.disabled = disabled ? 1 : 0;
+        }
+    },
+
     created() {
 
         if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
@@ -104,7 +114,7 @@ export default {
             });
             this.$set(this.fieldConfig, 'label', this.label);
             this.$set(this.fieldConfig, 'value_field', this.fieldName);
-            this.$set(this.fieldConfig, 'disabled', this.disabled);
+            this.$set(this.fieldConfig, 'disabled', this.disabled ? 1 : 0);
         }
     },
 

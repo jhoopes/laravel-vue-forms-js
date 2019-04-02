@@ -6,6 +6,7 @@
                    v-model="checked"
                    :true-value="fieldConfig.trueValue"
                    :false-value="fieldConfig.falseValue"
+                   :disabled="fieldConfig.disabled === 1"
             >
             <label class="form-check-label" :for="fieldConfig.fieldName + '-checkbox'">{{ fieldConfig.label }}</label>
         </div>
@@ -38,11 +39,18 @@
         },
 
         watch: {
-            'checked': function() {
-                if(this.checked == this.fieldConfig.trueValue) {
+            checked(newChecked) {
+                if(newChecked == this.fieldConfig.trueValue) {
                     this.$emit('input', this.fieldConfig.trueValue);
                 }else {
                     this.$emit('input', this.fieldConfig.falseValue);
+                }
+            },
+            value(newValue) {
+                if(newValue === this.fieldConfig.trueValue) {
+                    this.checked = this.fieldConfig.trueValue;
+                } else {
+                    this.checked = this.fieldConfig.falseValue;
                 }
             }
         },

@@ -74,6 +74,12 @@
             }
         },
 
+        watch: {
+            value(newValue) {
+                this.checkIfReachedMaxFiles();
+            }
+        },
+
 
         created() {
 
@@ -120,6 +126,8 @@
                 this.$set(this.fieldConfig, 'fileApiUrl', this.fileApiUrl);
             }
 
+
+            this.checkIfReachedMaxFiles();
         },
 
         methods: {

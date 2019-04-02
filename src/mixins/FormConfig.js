@@ -30,6 +30,9 @@ export default {
                 case 'datepicker':
                     return 'form-datepicker';
                     break;
+                case 'timepicker':
+                    return 'form-timepicker';
+                    break;;
                 case 'datetimepicker':
                     return 'form-datetimepicker';
                     break;

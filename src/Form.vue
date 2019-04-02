@@ -7,8 +7,7 @@
             <div :class="{ 'flex' : (columnCount > 1) }">
                 <component v-for="field in fields" :key="field.id"
                            :is="getFormFieldComponent(field.widget)"
-                           v-if="field.visible"
-                           v-show="conditionValues[field.name]"
+                           v-show="field.visible && conditionValues[field.name]"
                            :field-name="field.name"
                            :value="getFieldValue(form.data, field)"
                            @input="(newVal) => updateValueAndConditionals(newVal, field)"
@@ -71,6 +70,7 @@
         data() {
             return {
                 form: {},
+                formDataWatcher: null,
             }
         },
 
@@ -150,7 +150,7 @@
         methods: {
             setUpAutoSave() {
 
-                this.$watch('form.data', debounce(function(newForm) {
+                this.formDataWatcher = this.$watch('form.data', debounce(function(newForm) {
                     this.submitForm();
                 }, this.autoSaveTimeout), {deep: true})
 
@@ -160,9 +160,23 @@
         watch: {
             formData: {
                 handler: function(newFormData, oldFormData) {
+
+                    newFormData = JSON.parse(JSON.stringify(newFormData));
+
+                    if(this.formDataWatcher) {
+                        this.formDataWatcher();
+                    }
+
                     this.form.updateData(newFormData);
+
+                    if(this.autoSave) {
+                        this.setUpAutoSave();
+                    }
                 },
                 deep: true
+            },
+            disabled(disabled) {
+                this.form.disabled = disabled;
             }
         },
 

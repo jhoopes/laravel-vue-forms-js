@@ -177,19 +177,25 @@ export default {
                 }).catch( error => {
                     window.notify.apiError(error);
                 });
-
             }
 
         },
         defaultField() {
 
             try {
-
-                if(!this.optionValue && this.fieldConfig.default) {
+                var defaultField = false;
+                if(!this.optionValue) {
+                    defaultField = true;
+                }else if (typeof this.optionValue === 'object' && Object.keys(this.optionValue).length === 0) {
+                    defaultField = true;
+                }else if (this.optionValue === this.fieldConfig.default) {
+                    defaultField = true;
+                }
+                if(defaultField && this.fieldConfig.default) {
                     this.fieldConfig.options.forEach(option => {
+
                         if(option[this.fieldConfig.optionLabelField] === this.fieldConfig.default) {
                             this.updateValue(option);
-                        }else {
                         }
                     })
                 }
