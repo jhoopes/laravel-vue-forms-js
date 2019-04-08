@@ -15,6 +15,7 @@
                     :disable-date="true"
                     :no-header="true"
                     :minute-interval="timePickerInterval"
+                    :disabled="disabled"
                 ></vue-ctk-date-time-picker>
             </div>
             <div v-if="hasHelpText">
