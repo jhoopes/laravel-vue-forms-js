@@ -12,6 +12,7 @@
                     :value="value"
                     @input="updateValue"
                     :disable-time="true"
+                    :disabled="fieldConfig.disabled === 1"
                     :without-header="true"
                     :auto-close="true"
                 ></vue-ctk-date-time-picker>

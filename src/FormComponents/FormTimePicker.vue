@@ -13,6 +13,7 @@
                     :value="value"
                     @input="updateValue"
                     :disable-date="true"
+                    :disabled="fieldConfig.disabled === 1"
                     :no-header="true"
                     :minute-interval="timePickerInterval"
                 ></vue-ctk-date-time-picker>
