@@ -16,8 +16,11 @@
                            :class="columnWidth + ' ' + 'm-2'"
                 ></component>
             </div>
-            <div class="controls-row" v-if="autoSave === false">
+            <div class="controls-row" v-if="disabled === false && autoSave === false">
                 <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)">{{ action.label }}</button>
+            </div>
+            <div class="controls-row" v-else-if="disabled && autoSave === false">
+                <button class="button" @click.prevent="runAction('close')">Close</button>
             </div>
         </form>
     </div>
