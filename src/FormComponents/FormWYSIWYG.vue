@@ -25,9 +25,31 @@
 
         mixins: [FormField],
 
+        props: {
+            editorOptions: {
+                type: Object,
+                default: function() {return {};},
+            }
+        },
+
         data() {
             return {
                 editor: null,
+            }
+        },
+
+        created() {
+            if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+                this.form.formConfig.fields.forEach(field => {
+                    if(field.name === this.fieldName) {
+                        this.$set(this.fieldConfig, 'editorOptions',  {});
+                        if(field.field_extra.editorOptions) {
+                            this.fieldConfig.editorOptions = field.field_extra.editorOptions;
+                        }
+                    }
+                });
+            }else {
+                this.$set(this.fieldConfig, 'editorOptions', this.editorOptions);
             }
         },
 
