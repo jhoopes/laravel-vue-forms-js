@@ -5,7 +5,7 @@
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="form-wysiwyg-editor">
-            <textarea :id="fieldName + '-editor'" :value="value"></textarea>
+            <textarea :id="fieldName + '-editor-' + randomId" :value="value"></textarea>
             <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
@@ -17,6 +17,7 @@
 </template>
 <script>
     import FormField from './../mixins/FormField';
+    import { guid } from './../utilities/utils';
     import jquery from 'jquery';
 
     require('summernote/dist/summernote-lite');
@@ -27,6 +28,7 @@
 
         data() {
             return {
+                randomId: guid(),
                 editor: null,
             }
         },
@@ -59,7 +61,7 @@
 
         mounted() {
             var vm = this;
-            this.editor = jquery('#' + this.fieldName + '-editor').summernote(this.editorOptions);
+            this.editor = jquery('#' + this.fieldName + '-editor-' + this.randomId).summernote(this.editorOptions);
         }
     }
 </script>
