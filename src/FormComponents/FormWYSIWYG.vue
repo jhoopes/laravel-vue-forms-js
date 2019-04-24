@@ -27,7 +27,7 @@
         mixins: [FormField],
 
         props: {
-            editorOptions: {
+            initialEditorOptions: {
                 type: Object,
                 default: function() {return {};},
             }
@@ -51,7 +51,7 @@
                     }
                 });
             }else {
-                this.$set(this.fieldConfig, 'editorOptions', this.editorOptions);
+                this.$set(this.fieldConfig, 'editorOptions', this.initialEditorOptions);
             }
         },
 
