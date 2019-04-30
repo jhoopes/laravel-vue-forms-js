@@ -1,6 +1,6 @@
 <template>
     <div class="timepicker form-group">
-        <label class="form-control-label">{{ fieldConfig.label }}
+        <label class="form-control-label"><span v-html="fieldConfig.label"></span>
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div>
@@ -15,6 +15,7 @@
                     :disable-date="true"
                     :no-header="true"
                     :minute-interval="timePickerInterval"
+                    :disabled="disabled === 1"
                 ></vue-ctk-date-time-picker>
             </div>
             <div v-if="hasHelpText">

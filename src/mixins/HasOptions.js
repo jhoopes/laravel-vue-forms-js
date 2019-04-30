@@ -32,6 +32,7 @@ export default {
         return {
             fieldsToWatch: [],
             vuexStorePath: null,
+            vuexGetterPath: null,
         }
     },
 
@@ -48,10 +49,18 @@ export default {
                     }
                     this.$set(this.fieldConfig, 'options',  []);
 
+                    if (field.field_extra.options_config.vuex_store_path && field.field_extra.options_config.vuex_getter_path) {
+                        window.notify.message('Can not specify both vuex_store_path and vuex_getter_path in configuration.');
+                        return;
+                    }
 
                    if(field.field_extra.options_config.vuex_store_path) {
                        this.vuexStorePath = field.field_extra.options_config.vuex_store_path;
                    }
+
+                    if(field.field_extra.options_config.vuex_getter_path) {
+                        this.vuexGetterPath = field.field_extra.options_config.vuex_getter_path;
+                    }
 
                     if(field.field_extra.options_config.optionsURL) {
                         this.setUpOptionsURL(field);
@@ -85,6 +94,7 @@ export default {
             this.$set(this.fieldConfig, 'optionLabelField',  this.optionLabelField);
             this.$set(this.fieldConfig, 'optionsURL', this.optionsUrl);
             this.vuexStorePath = this.vuexPath;
+            this.vuexGetterPath = this.vuexPath;
         }
     },
 
@@ -119,11 +129,15 @@ export default {
         },
         vuexOptions() {
 
-            if(!this.vuexStorePath) {
-                return [];
+            if (this.vuexStorePath) {
+                return byString(this.$store.state, this.vuexStorePath);
             }
 
-            return byString(this.$store.state, this.vuexStorePath);
+            if(this.vuexGetterPath) {
+                return this.$store.getters[this.vuexGetterPath];
+            }
+
+            return [];
         }
     },
 

@@ -8,7 +8,7 @@
                    :false-value="fieldConfig.falseValue"
                    :disabled="fieldConfig.disabled === 1"
             >
-            <label class="form-check-label" :for="fieldConfig.fieldName + '-checkbox'">{{ fieldConfig.label }}</label>
+            <label class="form-check-label" :for="fieldConfig.fieldName + '-checkbox'"><span v-html="fieldConfig.label"></span></label>
         </div>
     </div>
 </template>

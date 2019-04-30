@@ -1,6 +1,6 @@
 <template>
     <div class="datepicker form-group">
-        <label class="form-control-label">{{ fieldConfig.label }}
+        <label class="form-control-label"><span v-html="fieldConfig.label"></span>
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div>
