@@ -9,6 +9,12 @@ export default {
                 case 'column':
                     return 'form-column';
                     break;
+                case 'tab':
+                    return 'form-tab';
+                    break;
+                case 'static':
+                    return 'form-static';
+                    break;
                 case 'text':
                     return 'form-text';
                     break;

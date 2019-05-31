@@ -108,6 +108,21 @@
 
                 return topLevelFields;
             },
+            layoutType() {
+
+                let tabField = this.fields.find(field => {
+                    if(field.widget === 'tab') {
+                        return true;
+                    }
+                    return false;
+                });
+
+                if(tabField) {
+                    return 'tabs';
+                }
+
+
+            },
             columnCount() {
                 var columnCount = 0;
                 this.fields.forEach(field => {
