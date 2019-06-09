@@ -104,7 +104,13 @@
                         let fieldValue = get(this.form, match[1], '');
                         optionsURL = optionsURL.replace(match[0], fieldValue);
                     });
-                    optionsURL += '?q=' + this.search;
+
+                    var params = JSON.parse(JSON.stringify(this.fieldConfig.optionsUrlParams));
+                    params.q = this.search;
+
+                    let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+
+                    optionsURL += '?' + queryString;
                     return optionsURL;
                 }
                 return '';
