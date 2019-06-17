@@ -1,21 +1,26 @@
 <template>
-    <section v-show="isActive"
+    <section
              :aria-hidden="! isActive"
              class="tabs-component-panel"
              :id="hash"
              role="tabpanel"
     >
-        <component
-            v-for="field in children" :key="field.id"
-           :is="getFormFieldComponent(field.widget)"
-           v-if="field.visible"
-           v-show="conditionValues[field.name]"
-           :field-name="field.name"
-           :value="getFieldValue(form.data, field)"
-           @input="(newVal) => updateValueAndConditionals(newVal, field)"
-           @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
-           :children="field.children || null"
-        ></component>
+        <div v-show="isActive">
+            <component
+                v-for="field in children" :key="field.id"
+                :is="getFormFieldComponent(field.widget)"
+                v-if="field.visible"
+                v-show="conditionValues[field.name]"
+                :field-name="field.name"
+                :value="getFieldValue(form.data, field)"
+                @input="(newVal) => updateValueAndConditionals(newVal, field)"
+                @options-updated="(newOptions) => updateOptionsForField(newOptions, field)"
+                :children="field.children || null"
+            ></component>
+            <div class="controls-row" v-if="disabled === false && autoSave === false">
+                <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)">{{ action.label }}</button>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -27,6 +32,7 @@
 
 
         mixins: [FormField, FormConfig, UpdatesValuesAndConditions],
+
         name: 'form-tab',
 
         props: {
@@ -42,12 +48,24 @@
             name: {
                 required: true
             },
+            value: {
+                required: false,
+            },
             prefix: {
                 default: ''
             },
             suffix: {
                 default: ''
             },
+            disabled: {
+                required: true,
+            },
+            autoSave: {
+                required: true,
+            },
+            actions: {
+                required: true,
+            }
         },
 
         created() {
@@ -82,5 +100,11 @@
                     '#' + this.name.toLowerCase().replace(/ /g, '-');
             },
         },
+
+        methods: {
+            runAction(action) {
+                this.$emit('runAction', action);
+            }
+        }
     };
 </script>

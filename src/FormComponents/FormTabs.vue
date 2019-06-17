@@ -28,6 +28,8 @@
 
     export default {
 
+        name: 'form-tabs',
+
         data: () => ({
             tabs: [],
             activeTabHash: '',
