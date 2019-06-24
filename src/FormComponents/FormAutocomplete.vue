@@ -108,6 +108,10 @@
                     var params = JSON.parse(JSON.stringify(this.fieldConfig.optionsUrlParams));
                     params.q = this.search;
 
+                    if(!this.search && this.value) {
+                        params.q = this.value;
+                    }
+
                     let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
 
                     optionsURL += '?' + queryString;
