@@ -11,7 +11,8 @@
                     format="MM/DD/Y"
                     :value="value"
                     @input="updateValue"
-                    :disable-time="true"
+                    :only-date="true"
+                    :no-header="true"
                     :without-header="true"
                     :auto-close="true"
                 ></vue-ctk-date-time-picker>
@@ -26,7 +27,6 @@
     import { guid } from './../utilities/utils';
     import FormField from '../mixins/FormField';
     import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
-    import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.min.css';
     export default {
 
         name: 'form-datepicker',
