@@ -20,6 +20,7 @@ import FormWYSIWYG from './FormComponents/FormWYSIWYG.vue';
 import FormFieldMixin from './mixins/FormField';
 import HasOptionsMixin from './mixins/HasOptions';
 
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 
 export default {
 

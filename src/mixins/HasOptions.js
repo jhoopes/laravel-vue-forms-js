@@ -14,6 +14,12 @@ export default {
             type: String,
             default: null,
         },
+        optionsUrlParams: {
+            type: Object,
+            default() {
+                return {}
+            }
+        },
         vuexPath: {
             type: String,
             default: null,
@@ -48,6 +54,7 @@ export default {
                         return;
                     }
                     this.$set(this.fieldConfig, 'options',  []);
+                    this.$set(this.fieldConfig, 'optionsUrlParams', {});
 
                     if (field.field_extra.options_config.vuex_store_path && field.field_extra.options_config.vuex_getter_path) {
                         window.notify.message('Can not specify both vuex_store_path and vuex_getter_path in configuration.');
@@ -64,6 +71,10 @@ export default {
 
                     if(field.field_extra.options_config.optionsURL) {
                         this.setUpOptionsURL(field);
+                    }
+
+                    if(field.field_extra.options_config.optionsUrlParams) {
+                        this.$set(this.fieldConfig, 'optionsUrlParams', field.field_extra.options_config.optionsUrlParams);
                     }
 
                     if(field.field_extra.options_config.options) {
@@ -93,6 +104,7 @@ export default {
             this.$set(this.fieldConfig, 'optionValueField',  this.optionValueField);
             this.$set(this.fieldConfig, 'optionLabelField',  this.optionLabelField);
             this.$set(this.fieldConfig, 'optionsURL', this.optionsUrl);
+            this.$set(this.fieldConfig, 'optionsUrlParams', this.optionsUrlParams);
             this.vuexStorePath = this.vuexPath;
             this.vuexGetterPath = this.vuexPath;
         }
@@ -108,7 +120,15 @@ export default {
                         fieldValue = '';
                     }
                     optionsURL = optionsURL.replace(match[0], fieldValue);
-                })
+                });
+
+
+                if(!this.paramsAreEmpty(this.fieldConfig.optionsUrlParams)) {
+                    let queryString = Object.keys(this.fieldConfig.optionsUrlParams).map(key => key + '=' + params[key]).join('&');
+
+                    optionsURL += '?' + queryString;
+                }
+
                 return optionsURL;
             }
             return '';
@@ -217,6 +237,15 @@ export default {
             }catch (error) {
                 //console.trace(error);
             }
+        },
+        paramsAreEmpty(params) {
+
+            for(var key in params) {
+                if(params.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
+
         }
 
     }

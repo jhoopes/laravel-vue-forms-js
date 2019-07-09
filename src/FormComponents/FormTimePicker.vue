@@ -12,7 +12,7 @@
                     :time-format="timeFormat"
                     :value="value"
                     @input="updateValue"
-                    :disable-date="true"
+                    :only-time="true"
                     :no-header="true"
                     :minute-interval="timePickerInterval"
                     :disabled="disabled === 1"
@@ -28,7 +28,6 @@
     import { guid } from './../utilities/utils';
     import FormField from '../mixins/FormField';
     import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
-    import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.min.css';
     export default {
 
         name: 'form-timepicker',
@@ -101,6 +100,7 @@
                     return parseInt(this.fieldConfig.minuteInterval)
                 }
 
+                return 10;
             }
         },
 
