@@ -147,7 +147,7 @@
             },
 
             checkIfReachedMaxFiles() {
-                if((this.value.length == this.fieldConfig.maxFiles) || this.fieldConfig.disabled === 1) {
+                if(this.value && ((this.value.length == this.fieldConfig.maxFiles) || this.fieldConfig.disabled === 1)) {
                     this.showUploadContainer = false;
                 }else {
                     this.showUploadContainer = true;
