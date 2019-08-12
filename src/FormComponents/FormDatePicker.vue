@@ -15,6 +15,7 @@
                     :no-header="true"
                     :without-header="true"
                     :auto-close="true"
+                    :disabled="fieldConfig.disabled == 1 ? true : false"
                 ></vue-ctk-date-time-picker>
             </div>
             <div v-if="hasHelpText">
