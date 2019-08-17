@@ -3,7 +3,10 @@
          :id="fieldName + '-text-field'"
          :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
     >
-        <label class="form-control-label">{{ fieldConfig.label }} <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span></label>
+        <label class="form-control-label"><span v-html="fieldConfig.label"></span>
+            <span class="required" v-if="fieldConfig.field_extra.required">&nbsp;&nbsp;(*)</span>
+            <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
+        </label>
         <div>
             <form-file :files="value" :disabled="fieldConfig.disabled" @deletedFile="deleteFile"></form-file>
             <form-file-upload
@@ -18,6 +21,9 @@
             <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
+        </div>
+        <div v-if="hasHelpText">
+            <span v-html="fieldConfig.field_extra.helpText"></span>
         </div>
     </div>
 </template>
