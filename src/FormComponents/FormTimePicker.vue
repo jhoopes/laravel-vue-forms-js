@@ -15,7 +15,7 @@
                     :only-time="true"
                     :no-header="true"
                     :minute-interval="timePickerInterval"
-                    :disabled="disabled === 1"
+                    :disabled="fieldConfig.disabled == 1 ? true : false"
                 ></vue-ctk-date-time-picker>
             </div>
             <div v-if="hasHelpText">
