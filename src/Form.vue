@@ -208,6 +208,12 @@
             },
             disabled(disabled) {
                 this.form.disabled = disabled;
+            },
+            'form.data': {
+                handler: function(updated) {
+                    this.$emit('changed', updated);
+                },
+                deep: true,
             }
         },
 
