@@ -120,7 +120,7 @@
                 this.$watch('form.id', {
                     handler: function(newFormId, oldFormId) {
                         if(newFormId !== oldFormId) {
-                            this.$set(this.fieldConfig, 'fileableId', newFormId);
+                            this.$set(this.fieldConfig, 'fileable_id', newFormId);
                         }
                     },
                     deep:true
@@ -146,6 +146,11 @@
             },
             addFile(file) {
                 var newFiles = this.value;
+
+                if(!newFiles) {
+                    newFiles = [];
+                }
+
                 newFiles.push(file);
                 this.$emit('input', newFiles);
 

@@ -46,6 +46,7 @@
         watch: {
             typeId(newId) {
                 this.dropzone.processQueue();
+                this.autoProcessQueue = true;
             }
         },
 

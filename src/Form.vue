@@ -4,7 +4,23 @@
             <span class="close-icon fa fa-times" @click="close"></span>
         </div>
         <form @submit.prevent="">
-            <div :class="{ 'flex' : (columnCount > 1) }">
+            <div v-if="layoutType === 'tabs'" class="form-tabs">
+                <form-tabs>
+                    <component v-for="field in fields" :key="field.id"
+                       :name="field.field_extra ? field.field_extra.name : field.name "
+                       :is="getFormFieldComponent(field.widget)"
+                       :field-name="field.name"
+                       :disabled="disabled"
+                       :auto-save="autoSave"
+                       :actions="actions"
+                       @runAction="runAction"
+                       v-show="field.visible && conditionValues[field.name]"
+                       :children="field.children || null"
+                       :class="columnWidth + ' ' + 'm-2'"
+                    ></component>
+                </form-tabs>
+            </div>
+            <div :class="{ 'flex' : (columnCount > 1) }" v-else>
                 <component v-for="field in fields" :key="field.id"
                            :is="getFormFieldComponent(field.widget)"
                            v-show="field.visible && conditionValues[field.name]"
@@ -16,7 +32,7 @@
                            :class="columnWidth + ' ' + 'm-2'"
                 ></component>
             </div>
-            <div class="controls-row" v-if="disabled === false && autoSave === false">
+            <div class="controls-row" v-if="disabled === false && autoSave === false && layoutType !== 'tabs'">
                 <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)">{{ action.label }}</button>
             </div>
         </form>
@@ -108,6 +124,21 @@
 
                 return topLevelFields;
             },
+            layoutType() {
+
+                let tabField = this.fields.find(field => {
+                    if(field.widget === 'tab') {
+                        return true;
+                    }
+                    return false;
+                });
+
+                if(tabField) {
+                    return 'tabs';
+                }
+
+
+            },
             columnCount() {
                 var columnCount = 0;
                 this.fields.forEach(field => {
@@ -177,6 +208,12 @@
             },
             disabled(disabled) {
                 this.form.disabled = disabled;
+            },
+            'form.data': {
+                handler: function(updated) {
+                    this.$emit('changed', updated);
+                },
+                deep: true,
             }
         },
 
