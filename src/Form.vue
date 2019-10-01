@@ -99,10 +99,13 @@
             this.form = new Form(data, this.formConfig, this.disabled);
             this.generateConditionValues();
 
-
             if(this.autoSave) {
                 this.setUpAutoSave();
             }
+
+            this.$watch('form.data', (updated) => {
+                    this.$emit('changed', updated);
+                }, {deep: true})
         },
 
         computed: {
@@ -208,12 +211,6 @@
             },
             disabled(disabled) {
                 this.form.disabled = disabled;
-            },
-            'form.data': {
-                handler: function(updated) {
-                    this.$emit('changed', updated);
-                },
-                deep: true,
             }
         },
 
