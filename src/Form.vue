@@ -32,7 +32,7 @@
                            :class="columnWidth + ' ' + 'm-2'"
                 ></component>
             </div>
-            <div class="controls-row" v-if="disabled === false && autoSave === false && layoutType !== 'tabs'">
+            <div class="controls-row flex-center" v-if="disabled === false && autoSave === false && layoutType !== 'tabs'">
                 <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)">{{ action.label }}</button>
             </div>
         </form>
