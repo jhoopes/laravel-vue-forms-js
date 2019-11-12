@@ -5,7 +5,7 @@
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="form-wysiwyg-editor">
-            <textarea :id="fieldName + '-editor-' + randomId" :value="value"></textarea>
+            <textarea :id="fieldName + '-editor-' + randomId" :value="value" :disabled="fieldConfig.disabled === 1"></textarea>
             <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
@@ -84,6 +84,17 @@
         mounted() {
             var vm = this;
             this.editor = jquery('#' + this.fieldName + '-editor-' + this.randomId).summernote(this.editorOptions);
+        },
+
+        watch: {
+            'fieldConfig.disabled': function(disabled) {
+                if(disabled) {
+                    jquery('#' + this.fieldName + '-editor-' + this.randomId).summernote('disable');
+                } else {
+                    jquery('#' + this.fieldName + '-editor-' + this.randomId).summernote('enable');
+                }
+
+            }
         }
     }
 </script>

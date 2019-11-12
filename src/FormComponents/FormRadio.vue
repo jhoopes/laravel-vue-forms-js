@@ -12,7 +12,7 @@
                        :id="fieldConfig.fieldName + '-' + option[fieldConfig.optionValueField]"
                        :value="option[fieldConfig.optionValueField]"
                         @click="updateValue(option[fieldConfig.optionValueField])"
-                       :checked="value === option[fieldConfig.optionValueField]"
+                       :checked="value == option[fieldConfig.optionValueField]"
                        :disabled="fieldConfig.disabled === 1"
                 >
                 {{ option[fieldConfig.optionLabelField] }}
