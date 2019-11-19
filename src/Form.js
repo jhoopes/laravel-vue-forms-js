@@ -1,5 +1,7 @@
 import {FormErrors} from "./FormErrors"
 
+import {assignOnObject, byString} from "./utilities/utils";
+
 export class Form {
 
 
@@ -54,19 +56,28 @@ export class Form {
             force = false;
         }
 
-        for (let field in newFormData) {
-            if (newFormData.hasOwnProperty(field)) {
-                if(!force) {
-                    if(this.initialData[field] === this.data[field]) {
-                        this.data[field] = newFormData[field];
-                        this.initialData[field] = newFormData[field];
-                    }
-                } else {
-                    this.data[field] = newFormData[field];
-                    this.initialData[field] = newFormData[field];
-                }
+        this.formConfig.fields.forEach(formField => {
+
+            let newFormDataValue = byString(newFormData, formField.value_field);
+            if(!newFormDataValue) {
+                return;
             }
-        }
+
+            if(!force) {
+
+                let initialDataValue = byString(this.initialData, formField.value_field);
+                let currentDataValue = byString(this.data, formField.value_field);
+
+                if( initialDataValue == currentDataValue) {
+                    assignOnObject(this.data, formField.value_field, newFormDataValue);
+                    assignOnObject(this.initialData, formField.value_field, newFormDataValue);
+                }
+            }else if(force) {
+                assignOnObject(this.data, formField.value_field, newFormDataValue);
+                assignOnObject(this.initialData, formField.value_field, newFormDataValue);
+            }
+
+        });
     }
 
 
