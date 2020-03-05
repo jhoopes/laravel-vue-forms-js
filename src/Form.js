@@ -78,6 +78,11 @@ export class Form {
             }
 
         });
+
+        if(this.id === null && newFormData.id) {
+            this.id = newFormData.id;
+            this.data.id = newFormData.id;
+        }
     }
 
 
