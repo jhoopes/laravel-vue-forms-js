@@ -5,7 +5,12 @@
   "repository": "https://github.com/jhoopes/laravel-vue-forms-js",
   "main": "src/index.js",
   "scripts": {
-    "build": "rm -rf dist && NODE_ENV=production webpack"
+    "build": "rm -rf dist && NODE_ENV=production webpack",
+    "dev": "npm run development",
+    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js --disableHostCheck=true",
+    "prod": "npm run production",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "keywords": [
     "Vue",
@@ -21,30 +26,30 @@
     "@fortawesome/free-regular-svg-icons": "^5.2.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/vue-fontawesome": "^0.1.1",
-    "axios": "^0.16.2",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "axios": "^0.18",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.7",
     "dropzone": "^5.2.0",
     "lodash": "^4.17.4",
+    "moment": "^2.24.0",
     "sass-loader": "^7.0.1",
     "summernote": "^0.8.11",
     "tempusdominus-bootstrap-3": "^5.0.0-alpha9",
-    "vue": "^2.5.13",
+    "vue": "^2.6.11",
     "vue-ctk-date-time-picker": "^2.1.0",
-    "vue-loader": "^13.6.2",
-    "vue-multiselect": "^2.0.8",
-    "vue-template-compiler": "^2.5.13",
-    "webpack": "^3.10.0",
-    "webpack-merge": "^4.1.1"
+    "vue-multiselect": "^2.1",
+    "vue-template-compiler": "2.6.*"
   },
   "devDependencies": {
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-loader": "^8.0.6",
     "codemirror": "^5.42.0",
-    "node-sass": "^4.10.0"
+    "cross-env": "^7.0.0",
+    "laravel-mix": "^5.0.1",
+    "node-sass": "^4.10.0",
+    "toastr": "^2.1.4",
+    "vue-loader": "^15.8.3",
+    "vuex": "^3.1.2"
   }
 }
