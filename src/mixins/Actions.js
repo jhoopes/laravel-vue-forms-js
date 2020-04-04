@@ -33,6 +33,7 @@ export default {
 
             let method = this.getSubmitHttpMethod();
             let data = this.getSubmitData();
+            this.saving = true;
 
             this.apiClient[method](this.formSubmitUrl, data).then(response => {
 
@@ -47,9 +48,11 @@ export default {
                     }
 
                     this.saveSuccess(response, actionType);
+                    this.saving = false;
                 });
 
             }).catch( error => {
+                this.saving = false;
                 if(error.response && error.response.status === 422) {
                     this.form.errors.setErrors(error.response.data)
                 }else {

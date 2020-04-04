@@ -58,6 +58,7 @@ export default {
             type: Number,
             default: 4000
         },
+        // ability to define custom actions, custom actions will emit the action if the function does not exist on the form
         actions: {
             type: Array,
             default() {
@@ -79,6 +80,21 @@ export default {
                     }
                 ]
             }
+        },
+        // whether or not to show the saving functionality
+        showSaving: {
+            type: Boolean,
+            default: true,
+        },
+        // allows parent components to define if its saving
+        isSaving: {
+            type: Boolean,
+            default: false,
+        },
+        // text to show with the spinner if it's saving
+        savingText: {
+            type: String,
+            default: 'Saving...'
         }
     }
 

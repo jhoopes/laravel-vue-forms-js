@@ -34,24 +34,20 @@
 
         data() {
             return {
+                watcher: null,
                 checked: false,
             }
         },
 
         watch: {
-            checked(newChecked) {
-                if(newChecked == this.fieldConfig.trueValue) {
-                    this.$emit('input', this.fieldConfig.trueValue);
-                }else {
-                    this.$emit('input', this.fieldConfig.falseValue);
-                }
-            },
             value(newValue) {
+                this.watcher();
                 if(newValue === this.fieldConfig.trueValue) {
                     this.checked = this.fieldConfig.trueValue;
                 } else {
                     this.checked = this.fieldConfig.falseValue;
                 }
+                this.setupWatcher();
             }
         },
 
@@ -83,6 +79,22 @@
                 this.checked = this.value;
             } else {
                 this.checked = this.fieldConfig.falseValue;
+                this.$emit('input', this.fieldConfig.falseValue);
+            }
+
+            this.setupWatcher();
+        },
+
+
+        methods: {
+            setupWatcher() {
+                this.watcher = this.$watch('checked', (newChecked) => {
+                    if(newChecked == this.fieldConfig.trueValue) {
+                        this.$emit('input', this.fieldConfig.trueValue);
+                    }else {
+                        this.$emit('input', this.fieldConfig.falseValue);
+                    }
+                })
             }
         }
     }

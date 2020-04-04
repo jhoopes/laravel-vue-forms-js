@@ -13,6 +13,9 @@
                        :disabled="disabled"
                        :auto-save="autoSave"
                        :actions="actions"
+                       :saving="saving"
+                       :show-saving="showSaving"
+                       :saving-text="savingText"
                        @runAction="runAction"
                        v-show="field.visible && conditionValues[field.name]"
                        :children="field.children || null"
@@ -33,7 +36,11 @@
                 ></component>
             </div>
             <div class="controls-row" v-if="disabled === false && autoSave === false && layoutType !== 'tabs'">
-                <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)">{{ action.label }}</button>
+                <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)" v-html="action.label" :disabled="showSaving && saving"></button>
+                <span v-if="saving && showSaving"><font-awesome-icon :icon="spinner" :spin="true"></font-awesome-icon>{{ savingText }}</span>
+            </div>
+            <div class="controls-row" v-if="showSaving && saving && autoSave === true">
+                <font-awesome-icon :icon="spinner" :spin="true"></font-awesome-icon>{{ savingText }}
             </div>
         </form>
     </div>
@@ -59,6 +66,12 @@
     import { cloneObject} from "./utilities/utils";
     import { debounce } from 'lodash';
 
+    import {
+        faSpinner,
+    } from "@fortawesome/free-solid-svg-icons";
+
+    import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+
     export default {
 
         name: 'vue-form',
@@ -80,6 +93,7 @@
             FormRadio,
             FormCheckbox,
             FormFiles,
+            FontAwesomeIcon
         },
 
 
@@ -87,6 +101,8 @@
             return {
                 form: {},
                 formDataWatcher: null,
+                saving: false,
+                spinner: faSpinner
             }
         },
 
@@ -211,6 +227,12 @@
             },
             disabled(disabled) {
                 this.form.disabled = disabled;
+            },
+            // watcher to watch if outside component is directing to show saving
+            isSaving(newIsSaving) {
+                if(newIsSaving) {
+                    this.saving = true;
+                }
             }
         },
 
