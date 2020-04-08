@@ -232,6 +232,8 @@
             isSaving(newIsSaving) {
                 if(newIsSaving) {
                     this.saving = true;
+                } else {
+                    this.saving = false;
                 }
             }
         },
