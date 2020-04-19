@@ -11,6 +11,6 @@ window.axios.defaults.headers.common = {
 };
 
 
-indow.moment = require('moment');
+window.moment = require('moment');
 window.moment.locale('en');
 window.notify = new Notifications();

@@ -9,3 +9,11 @@ export const getFormConfigById = state => {
         });
     }
 }
+
+export const getFormConfigByName = state => {
+    return (name) => {
+        return state.form_configurations.find(fconfig => {
+            return fconfig.name === name;
+        })
+    }
+}

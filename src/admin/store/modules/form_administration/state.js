@@ -2,7 +2,7 @@ export default {
 
     mainView: 'form-admin-search',
 
-    form_configurations: null,
+    form_configurations: [],
 
 
 
