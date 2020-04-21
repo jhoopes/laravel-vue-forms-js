@@ -43,6 +43,7 @@
     "vue-template-compiler": "2.6.*"
   },
   "devDependencies": {
+    "ace-builds": "^1.4.11",
     "babel-loader": "^8.0.6",
     "codemirror": "^5.42.0",
     "cross-env": "^7.0.0",

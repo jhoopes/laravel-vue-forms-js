@@ -16,6 +16,7 @@ import FormCheckbox from './FormComponents/FormCheckbox.vue';
 import FormRadio from './FormComponents/FormRadio.vue';
 import FormFiles from './FormComponents/Files/FormFiles.vue';
 import FormWYSIWYG from './FormComponents/FormWYSIWYG.vue';
+import FormCode from './FormComponents/FormCode.vue';
 
 import FormFieldMixin from './mixins/FormField';
 import HasOptionsMixin from './mixins/HasOptions';
@@ -41,6 +42,7 @@ export default {
         Vue.component(FormFiles.name, FormFiles);
         Vue.component(FormAutocomplete.name, FormAutocomplete);
         Vue.component(FormWYSIWYG.name, FormWYSIWYG);
+        Vue.component(FormCode.name, FormCode);
 
 
         Object.getFormValueByString = byString;
@@ -49,4 +51,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormTabs, FormTab, FormStatic, FormText, FormTextarea, FormSelect, FormDatePicker, FormTimePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox, FormWYSIWYG }
+export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormTabs, FormTab, FormStatic, FormText, FormTextarea, FormSelect, FormDatePicker, FormTimePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox, FormWYSIWYG, FormCode }

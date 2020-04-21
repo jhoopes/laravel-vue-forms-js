@@ -48,6 +48,8 @@ export default {
                 case 'wysiwyg':
                     return 'form-wysiwyg';
                     break;
+                case 'code':
+                    return 'form-code';
                 default:
                     return fieldWidget;
                     break;

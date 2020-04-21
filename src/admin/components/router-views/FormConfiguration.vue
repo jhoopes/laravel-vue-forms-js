@@ -1,8 +1,5 @@
 <template>
     <div>
-        Form Config Parent
-        <div>
-            <router-view></router-view>
-        </div>
+        <router-view></router-view>
     </div>
 </template>
