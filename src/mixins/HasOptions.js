@@ -1,5 +1,6 @@
 import { get } from 'lodash';
 import { byString} from "../utilities/utils";
+import Parser from './../admin/classes/jsonapi_parser';
 
 export default {
 
@@ -45,7 +46,12 @@ export default {
 
     created() {
 
-        if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+        if(this.form && this.form.formConfig &&
+            (
+                Array.isArray(this.form.formConfig.fields) ||
+                typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
+            )
+        ) {
             this.form.formConfig.fields.forEach(field => {
                 if(field.name === this.fieldName) {
 
@@ -207,9 +213,18 @@ export default {
 
             if(this.currentOptionsURL.length > 0) {
                 this.apiClient.get(this.currentOptionsURL).then( response => {
-                    this.$set(this.fieldConfig, 'options', response.data);
+
+                    var options = response.data;
+                    if(this.jsonApi) { // parse the response and get the array of models
+                        options = Parser.parseJSONAPIResponse(response.data).getModels();
+                    }
+
+                    this.$set(this.fieldConfig, 'options', options);
                 }).catch( error => {
-                    window.notify.apiError(error);
+                    console.error(error);
+                    if(window.notify && typeof window.notify.apiError === 'function') {
+                        window.notify.apiError(error);
+                    }
                 });
             }
 

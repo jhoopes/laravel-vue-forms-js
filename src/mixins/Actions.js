@@ -35,7 +35,15 @@ export default {
             let data = this.getSubmitData();
             this.saving = true;
 
-            this.apiClient[method](this.formSubmitUrl, data).then(response => {
+            var options = {};
+            if(this.useJsonApi) {
+                options.headers = {
+                    Accept: 'application/vnd.api+json'
+                }
+            }
+
+
+            this.apiClient[method](this.formSubmitUrl, data, options).then(response => {
 
                 if(method === 'post') { // we're creating so set the response id onto the form object
                     this.$set(this.form, 'id', response.data.id);
@@ -53,11 +61,14 @@ export default {
 
             }).catch( error => {
                 this.saving = false;
-                if(error.response && error.response.status === 422) {
-                    this.form.errors.setErrors(error.response.data)
-                }else {
-                    window.notify.apiError(error);
-                }
+
+                this.errorHandler(error);
+
+                // if(error.response && error.response.status === 422) {
+                //     this.form.errors.setErrors(error.response.data)
+                // }else {
+                //     window.notify.apiError(error);
+                // }
             });
         },
 

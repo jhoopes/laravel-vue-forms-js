@@ -17,6 +17,14 @@
 }
 
 
+.has-error {
+  @apply border-red-600 border-2 rounded p-2;
+}
+
+.errors {
+  @apply  text-red-600;
+}
+
 .multiselect {
 
   input {

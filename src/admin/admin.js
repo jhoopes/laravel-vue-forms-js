@@ -22,5 +22,22 @@ new Vue({
         FormAdmin
     },
 
+    provide() {
+        let provide = {};
+
+        Object.defineProperty(provide, 'useJsonApi', {
+            enumerable: true,
+            get: () => window.formAdmin.useJsonApi
+        });
+
+        return provide;
+    },
+
+    created() {
+
+        this.$store.commit('form_admin/setUseJsonApi', window.formAdmin.useJsonApi);
+
+    }
+
 
 }).$mount('#admin');

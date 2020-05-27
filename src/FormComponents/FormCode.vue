@@ -9,7 +9,7 @@
         </label>
         <div class="">
             <pre class="m-0" :style="'height: ' + height" :id="'code-' + randomId"></pre>
-            <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
+            <span class="errors" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
         </div>
@@ -23,12 +23,13 @@
     import FormField from "../mixins/FormField";
 
     import Ace from 'ace-builds';
-    import 'ace-builds/webpack-resolver';
     import 'ace-builds/src-min-noconflict/ext-emmet'
     import 'ace-builds/src-min-noconflict/ext-language_tools';
     import 'ace-builds/src-min-noconflict/ext-beautify'
     import {guid} from "../utilities/utils";
     var themeMonokai = require('ace-builds/src-noconflict/theme-monokai');
+
+    const CDN = 'https://cdn.jsdelivr.net/npm/ace-builds@1.3.3/src-min-noconflict';
 
     export default {
         mixins: [FormField],
@@ -43,7 +44,12 @@
 
 
         created() {
-            if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+            if(this.form && this.form.formConfig &&
+                (
+                    Array.isArray(this.form.formConfig.fields) ||
+                    typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
+                )
+            ) {
                 this.form.formConfig.fields.forEach(field => {
                     if(field.name === this.fieldName) {
                         this.$set(this.fieldConfig, 'editorOptions',  {});
@@ -55,6 +61,11 @@
             }else {
                 this.$set(this.fieldConfig, 'editorOptions', this.initialEditorOptions);
             }
+
+            Ace.config.set('basePath', CDN);
+            Ace.config.set('modePath', CDN);
+            Ace.config.set('themePath', CDN);
+            Ace.config.set('workerPath', CDN);
         },
 
         mounted() {
@@ -66,7 +77,17 @@
                 this.editor.setValue(this.value);
             }
             this.editor.session.on('change', delta => {
-                this.updateValue(this.editor.session.getValue());
+
+                var value = this.editor.session.getValue();
+                if(this.mode === 'json') {
+                    try {
+                        value = JSON.stringify(JSON.parse(this.editor.session.getValue()));
+                    } catch {
+                        value = '';
+                    }
+                }
+
+                this.updateValue(value);
             })
         },
 

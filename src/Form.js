@@ -58,6 +58,11 @@ export class Form {
 
         this.formConfig.fields.forEach(formField => {
 
+
+            if(!formField.value_field) {
+                return;
+            }
+
             let newFormDataValue = byString(newFormData, formField.value_field);
             if(!newFormDataValue) {
                 return;

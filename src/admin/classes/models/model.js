@@ -1,8 +1,7 @@
 import Vue from 'vue';
 
-import {store}           from 'app/store/csi';
-import Base            from 'csi/classes/base';
-import Collection      from 'csi/classes/collections/collection';
+import Base            from './../base';
+import Collection      from './../collection';
 
 
 import moment          from 'moment';
@@ -121,6 +120,32 @@ class Model extends Base {
 
     routes() {
         return {};
+    }
+
+
+    /**
+     * Add Iterating support
+     *
+     * @returns {Collection}
+     */
+    [Symbol.iterator]() {
+        this._current = 0;
+        return this;
+    }
+
+    next() {
+        if(Object.keys(this._attributes).length === 0 || this._current >= Object.keys(this._attributes).length) {
+            return { done: true }
+        }
+
+        let key = Object.keys(this._attributes)[this._current];
+
+        let value = this._attributes[key];
+        this._current++;
+        return {
+            done: false,
+            value
+        }
     }
 
 
@@ -324,8 +349,6 @@ class Model extends Base {
 
         if(this.hasRelationship(attribute)) {
             return this.setRelationship(attribute, value);
-        } else if(attribute === 'abilities') {
-            console.log(this.relationships(), attribute, value);
         }
 
         let defined = this.has(attribute);

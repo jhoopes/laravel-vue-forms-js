@@ -1,9 +1,12 @@
+import Vue from 'vue';
+
 export class FormErrors {
     /**
      * Create a new Errors instance.
      */
     constructor() {
-        this.errors = {};
+        this.fieldErrors = {};
+        this.message = null;
     }
 
 
@@ -13,7 +16,7 @@ export class FormErrors {
      * @param {string} field
      */
     has(field) {
-        return this.errors.hasOwnProperty(field);
+        return this.fieldErrors.hasOwnProperty(field);
     }
 
 
@@ -21,7 +24,7 @@ export class FormErrors {
      * Determine if we have any errors.
      */
     any() {
-        return Object.keys(this.errors).length > 0;
+        return Object.keys(this.fieldErrors).length > 0;
     }
 
 
@@ -31,12 +34,25 @@ export class FormErrors {
      * @param {string} field
      */
     get(field, first) {
-        if (this.errors[field]) {
+        if (this.fieldErrors[field]) {
             if(first) {
-                return this.errors[field][0];
+                return this.fieldErrors[field][0];
             }
-            return this.errors[field];
+            return this.fieldErrors[field];
         }
+    }
+
+    hasGeneralMessage() {
+        return this.message !== null;
+    }
+
+
+    getGeneralMessageType() {
+        return this.message.type;
+    }
+
+    getGeneralMessage() {
+        return this.message.message;
     }
 
 
@@ -49,11 +65,49 @@ export class FormErrors {
 
         // check for Laravel 5.5 validation errors message
         if(errors.hasOwnProperty('errors')) {
-            this.errors = errors.errors;
+            this.fieldErrors = errors.errors;
         } else {
-            this.errors = errors;
+            this.fieldErrors = errors;
         }
     }
+
+
+
+    report(error) {
+
+        if(error.response && parseInt(error.response.status) === 422) {
+
+            // determine if we have json api response or not
+            if(
+                Array.isArray(error.response.data.errors) &&
+                error.response.data.errors[0].id &&
+                error.response.data.errors[0].title &&
+                error.response.data.errors[0].detail &&
+                typeof error.response.data.errors[0].source === 'object'
+            ) {
+                error.response.data.errors.forEach((error) => {
+                    Vue.set(this.fieldErrors, error.source.field, error.source.messages);
+                });
+            } else {
+                this.setErrors(error.response.data);
+            }
+
+            return;
+        } else if(error.response && parseInt(error.response.status) === 403) {
+            // authorization error
+            this.message = {
+                message: 'This action is unauthorized',
+                type: 'error'
+            };
+            return;
+        }
+
+
+        // handle general error
+
+
+    }
+
 
 
     /**
@@ -63,11 +117,12 @@ export class FormErrors {
      */
     clear(field) {
         if (field) {
-            delete this.errors[field];
-
+            delete this.fieldErrors[field];
+            this.message = null;
             return;
         }
 
-        this.errors = {};
+        this.fieldErrors = {};
+        this.message = null;
     }
 }

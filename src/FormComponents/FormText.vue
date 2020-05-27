@@ -8,11 +8,16 @@
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="">
-            <input type="text" class="form-control" :name="fieldConfig.fieldName" ref="formText" :value="value"
-                   @input="updateValue($event.target.value)"
-                   :disabled="fieldConfig.disabled === 1"
+            <input
+                type="text"
+                class="form-control"
+                :name="fieldConfig.fieldName"
+                ref="formText"
+                :value="value"
+                @input="updateValue($event.target.value)"
+                :disabled="fieldConfig.disabled === 1"
             >
-            <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
+            <span class="errors" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
         </div>

@@ -16,6 +16,9 @@ export default {
             default() {
                 return axios;
             }
+        },
+        formHasJsonApi: {
+            default:false
         }
     },
 
@@ -41,6 +44,10 @@ export default {
         disabled: {
             type: Number,
             default: 0
+        },
+        useJsonApi: { // allow for single component use with jsonApi
+            type: Boolean,
+            default: false,
         }
     },
 
@@ -63,7 +70,14 @@ export default {
     			return true;
     		} else
     			return false;
-    	}
+    	},
+        jsonApi() {
+    	    if(this.formHasJsonApi || this.useJsonApi) {
+    	        return true;
+            }
+
+    	    return false;
+        }
     },
 
     watch: {
@@ -77,7 +91,12 @@ export default {
 
     created() {
 
-        if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+        if(this.form && this.form.formConfig &&
+            (
+                Array.isArray(this.form.formConfig.fields) ||
+                typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
+            )
+        ) {
             this.form.formConfig.fields.forEach(field => {
                 if(field.name === this.fieldName) {
                     this.$set(this.fieldConfig, 'fieldName', this.fieldName);

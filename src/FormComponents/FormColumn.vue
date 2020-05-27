@@ -23,7 +23,6 @@
 
         props: {
             children: {
-                type: Array,
                 default() {
                     return [];
                 }

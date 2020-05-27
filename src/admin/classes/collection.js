@@ -29,6 +29,7 @@ import set             from 'lodash/set'
 import size            from 'lodash/size'
 import sortBy          from 'lodash/sortBy'
 import sumBy           from 'lodash/sumBy'
+import toSafeInteger   from 'lodash/toSafeInteger'
 import unset           from 'lodash/unset'
 import values          from 'lodash/values'
 
@@ -66,6 +67,8 @@ class Collection extends Base {
         Vue.set(this, 'models', []);      // Model store.
         Vue.set(this, '_attributes', {}); // Property store.
         Vue.set(this, '_registry', {});   // Model registry.
+        Vue.set(this, '_id_registry', {});
+        Vue.set(this, '_current', 0);
         Vue.set(this, '_isPaginating', false);
         Vue.set(this, '_page', null);
         Vue.set(this, '_from', null);
@@ -82,11 +85,46 @@ class Collection extends Base {
         // Add all given models (if any) to this collection. We explicitly ask
         // for the values here as it's common for some sources to be objects.
         if(models && this.dataIsPaginated(models)) {
-            this.applyPagination(models);
+            this.setPagination(models);
+            this.add(models.data);
+        }else if(models && this.attributesIsPaginated(attributes) ) {
+            this.setPagination(attributes);
+            this.add(values(models));
         }else if (models) {
             this.add(values(models));
         }
+
+        Object.defineProperty(this, 'length', {
+            get: ()      => this.models.length,
+            set: (value) => value
+        });
+
     }
+
+
+    /**
+     * Add Iterating support
+     *
+     * @returns {Collection}
+     */
+    [Symbol.iterator]() {
+        this._current = 0;
+        return this;
+    }
+
+    next() {
+        if(this.length === 0 || this._current >= this.length) {
+            return { done: true }
+        }
+
+        let value = this.models[this._current];
+        this._current++;
+        return {
+            done: false,
+            value
+        }
+    }
+
 
     /**
      * Creates a copy of this collection. Model references are preserved so
@@ -139,6 +177,13 @@ class Collection extends Base {
     }
 
     /**
+     * @return {Object}
+     */
+    getAttributes() {
+        return this._attributes;
+    }
+
+    /**
      * @return {Model[]}
      */
     getModels() {
@@ -155,7 +200,24 @@ class Collection extends Base {
 
             // The class/constructor for this collection's model type.
             model: Model,
+
         });
+    }
+
+    /**
+     * @returns {Object} Parameters to use for replacement in route patterns.
+     */
+    getRouteParameters() {
+        return merge({}, super.getRouteParameters(), this._attributes, {
+            page: this._page,
+        });
+    }
+
+    /**
+     * Removes all errors from the models in this collection.
+     */
+    clearErrors() {
+        each(this.models, method('clearErrors'));
     }
 
     /**
@@ -238,6 +300,17 @@ class Collection extends Base {
     }
 
     /**
+     * @returns {Promise}
+     */
+    validate() {
+        let validations = this.models.map((model) => model.validate());
+
+        return Promise.all(validations).then((errors) => {
+            return every(errors, isEmpty) ? [] : errors;
+        });
+    }
+
+    /**
      * Create a new model of this collection's model type.
      *
      * @param {Object} attributes
@@ -255,13 +328,26 @@ class Collection extends Base {
      */
     removeModelFromRegistry(model) {
         unset(this._registry, model._uid);
+        if(model.id) {
+            unset(this._id_registry, model.id);
+        }
     }
 
     /**
      * @return {Boolean} true if this collection has the model in its registry.
      */
     hasModelInRegistry(model) {
-        return has(this._registry, model._uid);
+        let hasInRegistry = has(this._registry, model._uid);
+        var hasInIdRegistry = false;
+        if(model.id) {
+            hasInIdRegistry = has(this._id_registry, model.id);
+        }
+
+        if(hasInRegistry || hasInIdRegistry) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -271,6 +357,9 @@ class Collection extends Base {
      */
     addModelToRegistry(model) {
         Vue.set(this._registry, model._uid, 1);
+        if(model.id) {
+            Vue.set(this._id_registry, model.id, 1);
+        }
     }
 
     /**
@@ -525,6 +614,10 @@ class Collection extends Base {
         return each(this.models, callback);
     }
 
+    forEach(callback) {
+        return this.each(callback);
+    }
+
     /**
      * Reduces this collection to a value which is the accumulated result of
      * running each model through `iteratee`, where each successive invocation
@@ -652,6 +745,15 @@ class Collection extends Base {
         return data.current_page !== null && typeof data.current_page !== 'undefined';
     }
 
+    attributesIsPaginated(attributes) {
+
+        if(!attributes) {
+            return false;
+        }
+
+        return attributes.current_page !== null && typeof attributes.current_page !== 'undefined';
+    }
+
     /**
      * @returns {integer|null} The page that this collection is on.
      */
@@ -671,21 +773,18 @@ class Collection extends Base {
      * Responsible for adjusting the page and appending of models that were
      * received by a paginated fetch request.
      *
-     * @param {Model[]} models
+     * @param {[]} data
      */
-    applyPagination(models) {
+    setPagination(data) {
 
         Vue.set(this, '_isPaginating', true);
 
-        Vue.set(this, '_page', models.current_page);
-        Vue.set(this, '_from', models.from);
-        Vue.set(this, '_to', models.to);
-        Vue.set(this, '_per_page', models.per_page);
-        Vue.set(this, '_last_page', models.last_page);
-        Vue.set(this, '_total', models.total);
-        if(!isEmpty(models.data)) {
-            this.add(models.data);
-        }
+        this.set( 'page', data.current_page);
+        this.set('from', data.from);
+        this.set('to', data.to);
+        this.set('per_page', data.per_page);
+        this.set('last_page', data.last_page);
+        this.set('total', data.total);
     }
 
     /**
@@ -719,13 +818,13 @@ class Collection extends Base {
         }
 
         return {
-            current_page: this._page,
+            current_page: this.get('page'),
             data: this.models,
-            from: this._from,
-            to: this._to,
-            per_page: this._per_page,
-            last_page: this._last_page,
-            total: this._total
+            from: this.get('from'),
+            to: this.get('to'),
+            per_page: this.get('per_page'),
+            last_page: this.get('las_page'),
+            total: this.get('total')
         }
     }
 }

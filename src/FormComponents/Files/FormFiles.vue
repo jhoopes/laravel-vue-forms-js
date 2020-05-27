@@ -17,6 +17,7 @@
                     :max-files="fieldConfig.maxFiles"
                     @addFile="addFile"
                     :upload-api-url="fieldConfig.fileApiUrl"
+                    :upload-params="fieldConfig.uploadParams"
             ></form-file-upload>
             <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
@@ -48,6 +49,12 @@
             stepId: {
                 type: Number,
                 default: null,
+            },
+            uploadParams: {
+                type: Object,
+                default() {
+                    return {}
+                }
             },
             metaType: {
                 type: String,
@@ -83,6 +90,12 @@
         watch: {
             value(newValue) {
                 this.checkIfReachedMaxFiles();
+            },
+            uploadParams: {
+                handler(newParams) {
+                    this.$set(this.fieldConfig, 'uploadParams', newParams)
+                },
+                deep: true,
             }
         },
 
@@ -114,6 +127,11 @@
                             this.$set(this.fieldConfig, 'fileApiUrl', this.fileApiUrl);
                         }
 
+                        if(fieldExtra.uploadParams) {
+                            this.$set(this.fieldConfig, 'uploadParams', fieldExtra.uploadParams);
+                        } else {
+                            this.$set(this.fieldConfig, 'uploadParams', {});
+                        }
                     }
                 });
 
@@ -130,6 +148,7 @@
                 this.$set(this.fieldConfig, 'fileable_id', this.fileableId);
                 this.$set(this.fieldConfig, 'maxFiles', this.maxFiles);
                 this.$set(this.fieldConfig, 'fileApiUrl', this.fileApiUrl);
+                this.$set(this.fieldConfig, 'uploadParams', this.uploadParams);
             }
 
 

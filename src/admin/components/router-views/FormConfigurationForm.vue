@@ -4,12 +4,18 @@
             v-if="formConfigForm"
             :form-config="formConfigForm"
             :form-data="{}"
+            :use-json-api="useJsonApi"
         ></vue-form>
     </div>
 </template>
 <script>
     export default {
 
+        inject: {
+            useJsonApi: {
+                default: false,
+            }
+        },
 
         props: {
             id: {
@@ -19,7 +25,7 @@
 
         created() {
             if(!this.formConfigForm) {
-                this.$store.dispatch('form_admin/getFormConfigurationByName', 'form_configuration_form');
+                this.$store.dispatch('form_admin/getFormConfigurationByName', { formConfigName: 'form_configuration_form'});
             }
         },
 

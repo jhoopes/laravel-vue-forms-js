@@ -3,6 +3,15 @@
         <div class="text-right" v-if="showCloseIcon">
             <span class="close-icon fa fa-times" @click="close"></span>
         </div>
+        <div v-if="form.errors.hasGeneralMessage()">
+            <div class="m-4 p-4 flex items-center" :class="{
+                'bg-red-300': form.errors.getGeneralMessageType() === 'error',
+                'bg-blue-300': form.errors.getGeneralMessageType() === 'info'}">
+                <font-awesome-icon :icon="warningIcon" v-if="form.errors.getGeneralMessageType() === 'error'"></font-awesome-icon>
+                <font-awesome-icon :icon="infoIcon" v-if="form.errors.getGeneralMessageType() === 'info'"></font-awesome-icon>
+                <span class="mx-4">{{ form.errors.getGeneralMessage() }}</span>
+            </div>
+        </div>
         <form @submit.prevent="">
             <div v-if="layoutType === 'tabs'" class="form-tabs">
                 <form-tabs>
@@ -37,10 +46,10 @@
             </div>
             <div class="controls-row" v-if="disabled === false && autoSave === false && layoutType !== 'tabs'">
                 <button class="button" v-for="action in actions" @click.prevent="runAction(action.action)" v-html="action.label" :disabled="showSaving && saving"></button>
-                <span v-if="saving && showSaving"><font-awesome-icon :icon="spinner" :spin="true"></font-awesome-icon>{{ savingText }}</span>
+                <span v-if="saving && showSaving"><font-awesome-icon :icon="spinnerIcon" :spin="true"></font-awesome-icon>{{ savingText }}</span>
             </div>
             <div class="controls-row" v-if="showSaving && saving && autoSave === true">
-                <font-awesome-icon :icon="spinner" :spin="true"></font-awesome-icon>{{ savingText }}
+                <font-awesome-icon :icon="spinnerIcon" :spin="true"></font-awesome-icon>{{ savingText }}
             </div>
         </form>
     </div>
@@ -68,6 +77,8 @@
 
     import {
         faSpinner,
+        faExclamationTriangle,
+        faInfoCircle,
     } from "@fortawesome/free-solid-svg-icons";
 
     import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
@@ -102,7 +113,9 @@
                 form: {},
                 formDataWatcher: null,
                 saving: false,
-                spinner: faSpinner
+                spinnerIcon: faSpinner,
+                warningIcon: faExclamationTriangle,
+                infoIcon: faInfoCircle,
             }
         },
 
@@ -193,6 +206,11 @@
             Object.defineProperty(provide, 'apiClient', {
                 enumerable: true,
                 get: () => this.apiClient
+            });
+
+            Object.defineProperty(provide, 'formHasJsonApi', {
+                enumerable: true,
+                get: () => this.useJsonApi
             });
             return provide;
         },

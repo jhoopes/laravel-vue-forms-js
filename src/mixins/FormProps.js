@@ -34,6 +34,12 @@ export default {
                 }
             }
         },
+        errorHandler: {
+            type: Function,
+            default: function(error) {
+                this.form.errors.report(error);
+            }
+        },
         disabled: {
             type: Boolean,
             default: false,
@@ -95,6 +101,10 @@ export default {
         savingText: {
             type: String,
             default: 'Saving...'
+        },
+        useJsonApi: {
+            type: Boolean,
+            default: false
         }
     }
 

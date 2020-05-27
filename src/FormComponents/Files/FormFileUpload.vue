@@ -24,6 +24,12 @@
                 default: true,
             },
             uploadApiUrl: String,
+            uploadParams: {
+                type: Object,
+                default: function() {
+                    return {};
+                }
+            }
         },
 
         data() {
@@ -85,6 +91,15 @@
                 if(this.stepId) {
                     formData.append('step_id', this.stepId);
                 }
+
+                for(var key in this.uploadParams) {
+                    if(!this.uploadParams.hasOwnProperty(key)) {
+                        continue;
+                    }
+
+                    formData.append(key, this.uploadParams[key]);
+                }
+
                 formData.append('meta_type', this.metaType);
             },
             handleSuccess(file, response) {
