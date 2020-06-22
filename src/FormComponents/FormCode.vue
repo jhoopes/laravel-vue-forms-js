@@ -21,6 +21,7 @@
 <script>
 
     import FormField from "../mixins/FormField";
+    import { debounce } from 'lodash';
 
     import Ace from 'ace-builds';
     import 'ace-builds/src-min-noconflict/ext-emmet'
@@ -35,6 +36,19 @@
         mixins: [FormField],
         name: 'form-code',
 
+        props: {
+            initialEditorOptions: {
+                  type: Object,
+                  default() {
+                      return {
+                          height: '400px',
+                          mode: 'json',
+                          ace_options: []
+                      }
+                  }
+              }
+        },
+
         data() {
             return {
                 randomId: guid(),
@@ -44,7 +58,7 @@
 
 
         created() {
-            if(this.form && this.form.formConfig &&
+            if(this.findInForm && this.form && this.form.formConfig &&
                 (
                     Array.isArray(this.form.formConfig.fields) ||
                     typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
@@ -73,22 +87,16 @@
             this.editor.setTheme(themeMonokai);
             this.editor.session.setMode('ace/mode/' + this.mode);
             this.editor.setOptions(this.aceOptions);
-            if(this.value) {
-                this.editor.setValue(this.value);
-            }
-            this.editor.session.on('change', delta => {
+            this.setValueOnEditor();
+            this.editor.session.on('change', this.updateValue)
+        },
 
-                var value = this.editor.session.getValue();
-                if(this.mode === 'json') {
-                    try {
-                        value = JSON.stringify(JSON.parse(this.editor.session.getValue()));
-                    } catch {
-                        value = '';
-                    }
-                }
-
-                this.updateValue(value);
-            })
+        watch: {
+            // value: {
+            //     handler() {
+            //         this.setValueOnEditor();
+            //     },
+            // }
         },
 
         computed: {
@@ -126,9 +134,43 @@
 
 
         methods: {
-            updateValue(value) {
+            // updateValue(value) {
+            //     this.form.errors.clear(this.fieldConfig.value_field);
+            //     this.$emit('input', value);
+            // },
+            updateValue: debounce(function(delta) {
+
+
+                var value = this.editor.session.getValue();
+                if(this.mode === 'json') {
+                    try {
+                        value = JSON.parse(this.editor.session.getValue());
+                    } catch {
+                        return;
+                    }
+                }
+
                 this.form.errors.clear(this.fieldConfig.value_field);
+                console.log(value, delta, this.editor.session.getValue());
                 this.$emit('input', value);
+            }, 1000),
+            setValueOnEditor() {
+                var beautify = Ace.require('ace/ext/beautify');
+
+                if(this.mode === 'json' && typeof this.value === 'object') {
+                    this.editor.session.setValue(JSON.stringify(this.value));
+                    beautify.beautify(this.editor.session);
+                    return;
+                }
+
+                if(typeof this.value !== 'string') {
+                    console.log(this.value);
+                    console.error('Invalid value for code form field');
+                }
+
+                this.editor.session.setValue(this.value);
+
+                beautify.beautify(this.editor.session);
             }
         }
     }

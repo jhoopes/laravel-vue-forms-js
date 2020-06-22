@@ -127,7 +127,7 @@ class Base {
     /**
      * @returns {Object} This instance's default options.
      */
-    options() {
+    instanceOptions() {
         return {}
     }
 
@@ -151,7 +151,7 @@ class Base {
         Vue.set(this, '_options', defaultsDeep(
             {},
             ...options,                 // Given options
-            this.options(),             // Instance defaults
+            this.instanceOptions(),     // Instance defaults
             this.getDefaultOptions()    // Class defaults
         ));
     }

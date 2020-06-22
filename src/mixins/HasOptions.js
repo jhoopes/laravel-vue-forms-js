@@ -27,11 +27,11 @@ export default {
         },
         optionLabelField: {
             type: String,
-            default: 'id',
+            default: 'name',
         },
         optionValueField: {
             type: String,
-            default: 'name'
+            default: 'id'
         }
     },
 
@@ -46,7 +46,7 @@ export default {
 
     created() {
 
-        if(this.form && this.form.formConfig &&
+        if(this.findInForm && this.form && this.form.formConfig &&
             (
                 Array.isArray(this.form.formConfig.fields) ||
                 typeof this.form.formConfig.fields[Symbol.iterator] === 'function'

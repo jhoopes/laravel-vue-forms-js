@@ -22,12 +22,12 @@ export default {
         },
         saveSuccess: {
             type: Function,
-            default: function(response, actionType) {
+            default: function(record, actionType) {
 
                 if(this.passThru) {
-                    this.$emit(actionType, response);
+                    this.$emit(actionType, record);
                 } else {
-                    this.$emit(actionType, response.data);
+                    this.$emit(actionType, record);
                 }
                 if(this.closeOnSave) {
                     this.close()
@@ -105,6 +105,10 @@ export default {
         useJsonApi: {
             type: Boolean,
             default: false
+        },
+        forceUpdate: {
+            type: Boolean,
+            default: false,
         }
     }
 

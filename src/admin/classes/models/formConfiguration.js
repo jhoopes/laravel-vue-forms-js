@@ -1,5 +1,6 @@
 import Model from './model';
 import moment from 'moment';
+import FormField from './formField';
 
 class FormConfiguration extends Model {
 
@@ -22,6 +23,12 @@ class FormConfiguration extends Model {
         return {
             created_at: this.parseDate,
             updated_at: this.parseDate
+        }
+    }
+
+    relationships() {
+        return {
+            fields: FormField
         }
     }
 

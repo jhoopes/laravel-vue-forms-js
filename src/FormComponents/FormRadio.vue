@@ -13,7 +13,7 @@
                        :value="option[fieldConfig.optionValueField]"
                         @click="updateValue(option[fieldConfig.optionValueField])"
                        :checked="value == option[fieldConfig.optionValueField]"
-                       :disabled="fieldConfig.disabled === 1"
+                       :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
                 >
                 {{ option[fieldConfig.optionLabelField] }}
             </label>

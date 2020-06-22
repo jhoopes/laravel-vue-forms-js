@@ -13,7 +13,7 @@
                       :name="fieldConfig.fieldName"
                       :value="value"
                       @input="updateValue($event.target.value)"
-                      :disabled="fieldConfig.disabled === 1"
+                      :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
                       :rows="fieldConfig.rows"
                       :cols="fieldConfig.cols"
             ></textarea>
@@ -47,7 +47,12 @@
 
         created() {
 
-            if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+            if(this.findInForm && this.form && this.form.formConfig &&
+                (
+                    Array.isArray(this.form.formConfig.fields) ||
+                    typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
+                )
+            ) {
                 this.form.formConfig.fields.forEach(field => {
                     if (field.name === this.fieldName) {
 

@@ -15,7 +15,7 @@
                 ref="formText"
                 :value="value"
                 @input="updateValue($event.target.value)"
-                :disabled="fieldConfig.disabled === 1"
+                :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
             >
             <span class="errors" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}

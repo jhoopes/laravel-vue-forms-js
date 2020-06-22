@@ -94,14 +94,14 @@ export class Form {
     /** Reset the form to the initial data **/
     reset() {
 
-        this.fields.forEach(field => {
+        this.formConfig.fields.forEach(field => {
             this[field] = this.initialData[field];
         });
     }
 
     clearFields() {
-        this.fields.forEach(field => {
-            this[field] = '';
+        this.formConfig.fields.forEach(field => {
+            this.data[field.value_field] = null;
         });
     }
 

@@ -45,6 +45,10 @@ export default {
             type: Number,
             default: 0
         },
+        findInForm: {
+            type: Boolean,
+            default: true
+        },
         useJsonApi: { // allow for single component use with jsonApi
             type: Boolean,
             default: false,
@@ -91,7 +95,7 @@ export default {
 
     created() {
 
-        if(this.form && this.form.formConfig &&
+        if(this.findInForm && this.form && this.form.formConfig &&
             (
                 Array.isArray(this.form.formConfig.fields) ||
                 typeof this.form.formConfig.fields[Symbol.iterator] === 'function'

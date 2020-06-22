@@ -1,3 +1,4 @@
+import Parser from './../admin/classes/jsonapi_parser';
 
 export default {
 
@@ -45,9 +46,15 @@ export default {
 
             this.apiClient[method](this.formSubmitUrl, data, options).then(response => {
 
+                var record = response.data;
+                if(this.useJsonApi) {
+                    record = Parser.parseJSONAPIResponse(response.data);
+                }
+
+
                 if(method === 'post') { // we're creating so set the response id onto the form object
-                    this.$set(this.form, 'id', response.data.id);
-                    this.$set(this.form.data, 'id', response.data.id);
+                    this.$set(this.form, 'id', record.id);
+                    this.$set(this.form.data, 'id', record.id);
                 }
                 this.$nextTick(() => {
                     var actionType = 'updated';
@@ -55,7 +62,7 @@ export default {
                         actionType = 'created';
                     }
 
-                    this.saveSuccess(response, actionType);
+                    this.saveSuccess(record, actionType);
                     this.saving = false;
                 });
 

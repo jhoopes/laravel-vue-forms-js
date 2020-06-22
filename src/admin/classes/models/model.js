@@ -199,6 +199,19 @@ class Model extends Base {
     }
 
     /**
+     * Determines whether a given value is an instance of a model.
+     *
+     * @param  {*} candidate A model candidate
+     *
+     * @return {boolean} `true` if the given `model` is an instance of Model.
+     */
+    isModel(candidate) {
+        return isObject(candidate)
+            && has(candidate, '_attributes')
+            && has(candidate, '_uid');
+    }
+
+    /**
      * Assigns all given model data to the model's attributes and reference.
      * This will also fill any gaps using the model's default attributes.
      *
@@ -207,6 +220,11 @@ class Model extends Base {
      * @returns {Object} The attributes that were assigned to the model.
      */
     assign(attributes) {
+
+        if(this.isModel(attributes)) {
+            attributes = attributes._attributes;
+        }
+
         this.set(defaults({}, attributes, cloneDeep(this.defaults())));
         this.sync();
     }
@@ -502,6 +520,33 @@ class Model extends Base {
 
     parseDate(value) {
         return moment(value).format(this.dateFormat());
+    }
+
+    ensureRelationshipIsSet(relationship) {
+
+        if(!this[relationship] || !this[relationship]._uid) {
+
+            var relationshipModel = this.relationships()[relationship];
+
+            if(!relationshipModel) {
+                throw new Error('Invalid relationship');
+                return;
+            }
+
+            var relationshipCollection;
+            if (Array.isArray(this[relationship])) {
+                relationshipCollection = new Collection(this[relationship], {
+                    model: relationshipModel
+                });
+            } else {
+                relationshipCollection = new Collection([], {
+                    model: relationshipModel
+                });
+            }
+
+            this.set(relationship, relationshipCollection);
+        }
+
     }
 
 }

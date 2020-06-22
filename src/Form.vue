@@ -243,6 +243,25 @@
                 },
                 deep: true
             },
+            forceUpdate(force) {
+
+                if(force) {
+                    var newFormData = JSON.parse(JSON.stringify(this.formData));
+
+                    if(this.formDataWatcher) {
+                        this.formDataWatcher();
+                    }
+
+                    this.form.clearFields();
+                    this.form.updateData(newFormData, true);
+
+                    if(this.autoSave) {
+                        this.setUpAutoSave();
+                    }
+                }
+
+                this.$emit('update:forceUpdate', false);
+            },
             disabled(disabled) {
                 this.form.disabled = disabled;
             },

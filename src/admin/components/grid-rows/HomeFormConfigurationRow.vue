@@ -22,7 +22,7 @@
         <td class="px-4 py-2">
             {{ updated }}
         </td>
-        <td class="px-4 py2 cursor-pointer" @click="$router.go()">
+        <td class="px-4 py2 cursor-pointer" @click="$router.push({name: 'formAdmin.form_configurations.edit', params: {id: record.id}})">
             <font-awesome-icon :icon="editIcon"></font-awesome-icon>
         </td>
     </tr>

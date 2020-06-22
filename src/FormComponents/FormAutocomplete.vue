@@ -23,7 +23,7 @@
             />
             <ul
                 v-show="isOpen"
-                class="autocomplete-results"
+                class="autocomplete-results mt-20"
             >
                 <li
                     v-for="(result, i) in results"
@@ -56,6 +56,7 @@
     import FormField from './../mixins/FormField'
     import HasOptions from './../mixins/HasOptions'
     import {debounce} from 'lodash';
+    import Parser from "../admin/classes/jsonapi_parser";
     export default {
         name: 'form-autocomplete',
 
@@ -183,12 +184,17 @@
                         this.loading = true;
                         this.apiClient.get(this.currentOptionsUrl).then( response => {
 
-                            this.fieldConfig.options = response.data;
+                            var options = response.data;
+                            if(this.jsonApi) { // parse the response and get the array of models
+                                options = Parser.parseJSONAPIResponse(response.data).getModels();
+                            }
+
+                            this.fieldConfig.options = options;
                             this.loading = false;
 
                             this.setItems();
                             this.filterResults();
-                            resolve(response.data);
+                            resolve(options);
 
                         }).catch( error => {
                             window.notify.apiError(error);

@@ -16,7 +16,7 @@
                 :placeholder="fieldConfig.label"
                 @input="updateValue"
                 class="form-control"
-                :disabled="fieldConfig.disabled === 1"
+                :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
                 :show-labels="showMultiselectLabels"
                 :select-label="selectLabel"
                 :deselect-label="deselectLabel"

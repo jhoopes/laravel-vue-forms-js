@@ -6,7 +6,7 @@
                    v-model="checked"
                    :true-value="fieldConfig.trueValue"
                    :false-value="fieldConfig.falseValue"
-                   :disabled="fieldConfig.disabled === 1"
+                   :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
             >
             <label class="form-check-label" :for="fieldConfig.fieldName + '-checkbox'"><span v-html="fieldConfig.label"></span></label>
         </div>
@@ -53,7 +53,12 @@
 
         created() {
 
-            if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+            if(this.findInForm && this.form && this.form.formConfig &&
+                (
+                    Array.isArray(this.form.formConfig.fields) ||
+                    typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
+                )
+            ) {
                 this.form.formConfig.fields.forEach(field => {
                     if(field.name === this.fieldName) {
                         var fieldExtra = this.getFormFieldFieldExtra(field);

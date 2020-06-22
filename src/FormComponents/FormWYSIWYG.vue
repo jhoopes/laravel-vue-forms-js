@@ -5,7 +5,7 @@
             <span v-if="withHelpIcon" :class="fieldConfig.field_extra.withIcon" :title="fieldConfig.field_extra.helpText"></span>
         </label>
         <div class="form-wysiwyg-editor">
-            <textarea :id="fieldName + '-editor-' + randomId" :value="value" :disabled="fieldConfig.disabled === 1"></textarea>
+            <textarea :id="fieldName + '-editor-' + randomId" :value="value" :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"></textarea>
             <span class="help-block" v-if="form.errors.has(this.fieldConfig.value_field)">
                 {{ form.errors.get(this.fieldConfig.value_field, true) }}
             </span>
@@ -41,7 +41,12 @@
         },
 
         created() {
-            if(this.form && this.form.formConfig && Array.isArray(this.form.formConfig.fields)) {
+            if(this.findInForm && this.form && this.form.formConfig &&
+                (
+                    Array.isArray(this.form.formConfig.fields) ||
+                    typeof this.form.formConfig.fields[Symbol.iterator] === 'function'
+                )
+            ) {
                 this.form.formConfig.fields.forEach(field => {
                     if(field.name === this.fieldName) {
                         this.$set(this.fieldConfig, 'editorOptions',  {});
