@@ -150,7 +150,18 @@
                 }
             },
             filterResults() {
-                this.results = this.items.filter(item => item.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
+
+                if(!this.search) {
+                    return this.items;
+                }
+
+                this.results = this.items.filter(item => {
+                    if(!item) {
+                        return false;
+                    }
+
+                    return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                });
             },
             setResult(result) {
 
@@ -259,8 +270,15 @@
                     data[this.fieldConfig.fieldName] = this.search;
                     axios.post(this.fieldConfig.optionsURL, data).then(response => {
                         this.loading = false;
+
+                        var option = response.data;
+                        if(this.jsonApi) {
+                            // parse the response and then only pull the attributes out of the model generated
+                            option = Parser.parseJSONAPIResponse(response.data).toJSON();
+                        }
+
                         this.fieldConfig.options.push(response.data);
-                        this.setResult(response.data[this.fieldConfig.optionLabelField]);
+                        this.setResult(option[this.fieldConfig.optionLabelField]);
                     }).catch(error => {
                         this.loading = false;
                     })

@@ -243,6 +243,14 @@
                 },
                 deep: true
             },
+            formErrors: {
+                handler (newFormErrors) {
+                    if(newFormErrors && newFormErrors.fieldErrors) {
+                        this.form.errors = newFormErrors;
+                    }
+                },
+                deep: true,
+            },
             forceUpdate(force) {
 
                 if(force) {

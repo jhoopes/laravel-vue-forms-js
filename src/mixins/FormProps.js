@@ -40,6 +40,10 @@ export default {
                 this.form.errors.report(error);
             }
         },
+        formErrors: {
+            type: Object,
+            default: null,
+        },
         disabled: {
             type: Boolean,
             default: false,

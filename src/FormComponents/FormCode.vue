@@ -91,13 +91,6 @@
             this.editor.session.on('change', this.updateValue)
         },
 
-        watch: {
-            // value: {
-            //     handler() {
-            //         this.setValueOnEditor();
-            //     },
-            // }
-        },
 
         computed: {
             aceOptions() {
@@ -134,32 +127,27 @@
 
 
         methods: {
-            // updateValue(value) {
-            //     this.form.errors.clear(this.fieldConfig.value_field);
-            //     this.$emit('input', value);
-            // },
             updateValue: debounce(function(delta) {
-
-
                 var value = this.editor.session.getValue();
                 if(this.mode === 'json') {
                     try {
-                        value = JSON.parse(this.editor.session.getValue());
+                        value = JSON.stringify(JSON.parse(this.editor.session.getValue()));
                     } catch {
                         return;
                     }
                 }
 
                 this.form.errors.clear(this.fieldConfig.value_field);
-                console.log(value, delta, this.editor.session.getValue());
                 this.$emit('input', value);
             }, 1000),
             setValueOnEditor() {
                 var beautify = Ace.require('ace/ext/beautify');
 
                 if(this.mode === 'json' && typeof this.value === 'object') {
-                    this.editor.session.setValue(JSON.stringify(this.value));
+                    let jsonString = JSON.stringify(this.value)
+                    this.editor.session.setValue(jsonString);
                     beautify.beautify(this.editor.session);
+                    this.$emit('input', jsonString)
                     return;
                 }
 

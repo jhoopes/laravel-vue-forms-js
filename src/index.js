@@ -1,5 +1,6 @@
 
 import { Form } from './Form';
+import { FormErrors } from "./FormErrors";
 import { byString, assignOnObject } from "./utilities/utils";
 import VueForm from './Form.vue';
 import FormColumn from './FormComponents/FormColumn.vue';
@@ -8,6 +9,7 @@ import FormTab from './FormComponents/FormTab.vue';
 import FormStatic from './FormComponents/FormStatic.vue';
 import FormAutocomplete from './FormComponents/FormAutocomplete.vue';
 import FormText from './FormComponents/FormText.vue';
+import FormPassword from "./FormComponents/FormPassword";
 import FormTextarea from './FormComponents/FormTextarea.vue';
 import FormSelect from './FormComponents/FormSelect.vue';
 import FormDatePicker from './FormComponents/FormDatePicker.vue';
@@ -33,6 +35,7 @@ export default {
         Vue.component(FormTab.name, FormTab);
         Vue.component(FormStatic.name, FormStatic);
         Vue.component(FormText.name, FormText);
+        Vue.component(FormPassword.name, FormPassword);
         Vue.component(FormTextarea.name, FormTextarea);
         Vue.component(FormSelect.name, FormSelect);
         Vue.component(FormDatePicker.name, FormDatePicker);
@@ -51,4 +54,4 @@ export default {
 
 }
 
-export { Form, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormTabs, FormTab, FormStatic, FormText, FormTextarea, FormSelect, FormDatePicker, FormTimePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox, FormWYSIWYG, FormCode }
+export { Form, FormErrors, VueForm, FormFieldMixin, HasOptionsMixin, FormColumn, FormTabs, FormTab, FormStatic, FormText, FormPassword, FormTextarea, FormSelect, FormDatePicker, FormTimePicker, FormRadio, FormFiles, FormAutocomplete, FormCheckbox, FormWYSIWYG, FormCode }
