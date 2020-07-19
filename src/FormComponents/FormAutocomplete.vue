@@ -277,7 +277,7 @@
                             option = Parser.parseJSONAPIResponse(response.data).toJSON();
                         }
 
-                        this.fieldConfig.options.push(response.data);
+                        this.fieldConfig.options.push(option);
                         this.setResult(option[this.fieldConfig.optionLabelField]);
                     }).catch(error => {
                         this.loading = false;
