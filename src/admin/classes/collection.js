@@ -32,6 +32,7 @@ import sumBy           from 'lodash/sumBy'
 import toSafeInteger   from 'lodash/toSafeInteger'
 import unset           from 'lodash/unset'
 import values          from 'lodash/values'
+import at              from 'lodash/at';
 
 /**
  * Used as a marker to indicate that pagination is not enabled.
@@ -575,6 +576,13 @@ class Collection extends Base {
         return result;
     }
 
+    whereIn(key, itemsIn) {
+        let result = this.clone();
+
+        result.models = at(keyBy(result.models, key), itemsIn);
+        return result;
+    }
+
     /**
      * Returns the models for which the given predicate returns `true` for,
      * or models that match attributes in an object.
@@ -823,7 +831,7 @@ class Collection extends Base {
             from: this.get('from'),
             to: this.get('to'),
             per_page: this.get('per_page'),
-            last_page: this.get('las_page'),
+            last_page: this.get('last_page'),
             total: this.get('total')
         }
     }

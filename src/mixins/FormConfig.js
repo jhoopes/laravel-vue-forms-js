@@ -27,6 +27,9 @@ export default {
                 case 'dropdown':
                     return 'form-select';
                     break;
+                case 'multidropdown':
+                    return 'form-multi-select';
+                    break;
                 case 'checkbox':
                     return 'form-checkbox';
                     break;
