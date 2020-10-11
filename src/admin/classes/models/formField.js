@@ -1,9 +1,6 @@
-import Model from './model';
-import moment from "moment";
+import Model from "@/classes/model";
 
 class FormField extends Model {
-
-
     defaults() {
         return {
             id: null,
@@ -16,19 +13,25 @@ class FormField extends Model {
             is_eav: 0,
             parent_id: null,
             cast_to: null,
-            field_extra: {},
-            created_at: moment.now(),
-            updated_at: moment.now()
-        }
+            field_extra: {
+                required: false,
+                validation_rules: []
+            },
+            created_at: Date.now(),
+            updated_at: Date.now()
+        };
+    }
+
+    boot() {
+        super.boot();
     }
 
     casts() {
         return {
             created_at: this.parseDate,
             updated_at: this.parseDate
-        }
+        };
     }
-
 }
 
 export default FormField;

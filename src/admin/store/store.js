@@ -1,10 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-
-import form_admin from './modules/form_administration/module';
+import form_admin from "./modules/form_administration/module";
 
 export const store = new Vuex.Store({
     modules: {

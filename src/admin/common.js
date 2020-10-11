@@ -1,16 +1,14 @@
-import Vue from 'vue';
-import axios from 'axios';
-import Notifications from "./classes/notifications";
+import axios from "axios";
 
 window.axios = axios;
 
 window.axios.defaults.headers.common = {
-    'X-CSRF-TOKEN': window.csrfToken,
-    'X-Requested-With': 'XMLHttpRequest',
-    'Accept': 'application/json'
+    "X-CSRF-TOKEN": window.csrfToken,
+    "X-Requested-With": "XMLHttpRequest",
+    Accept: "application/json"
 };
 
+import { config } from "@/admin/classes/configuration";
+window.formConfig = config;
 
-window.moment = require('moment');
-window.moment.locale('en');
-window.notify = new Notifications();
+// window.notify = new Notifications();

@@ -1,53 +1,52 @@
-import FormAdminHome from './../components/router-views/FormAdminHome';
-import FormConfiguration from './../components/router-views/FormConfiguration';
-import FormConfigurationForm from './../components/router-views/FormConfigurationForm';
+import { config } from "@/admin/classes/configuration";
 
 export default {
-
     generate() {
+        let adminPrefix = config.webAdminPrefix;
 
-        let adminPrefix = window.formAdmin.webAdminPrefix;
-
-        return [{
-            path: adminPrefix + '/',
-            component: FormAdminHome,
-            name: 'formAdmin.home'
-        }, {
-            path: adminPrefix + '/form_configurations',
-            component: FormConfiguration,
-            meta: {
-                title: 'Form Configuration Form'
+        return [
+            {
+                path: adminPrefix + "/",
+                component: () => import("@/admin/views/Home.vue"),
+                name: "formAdmin.home"
             },
-            children: [
-                {
-                    path: 'create',
-                    component: FormConfigurationForm,
-                    name: 'formAdmin.form_configurations.create',
-                    props: (route) => {
-                        return {
-                            id: null
-                        }
-                    },
-                    meta: {
-                        title: 'Create Form Configuration'
-                    }
+            {
+                path: adminPrefix + "/form_configurations",
+                component: () => import("@/admin/views/FormConfiguration.vue"),
+                meta: {
+                    title: "Form Configuration Form"
                 },
-                {
-                    path: ':id',
-                    component: FormConfigurationForm,
-                    name: 'formAdmin.form_configurations.edit',
-                    props: (route) => {
-                        return {
-                            id: parseInt(route.params.id)
+                children: [
+                    {
+                        path: "create",
+                        component: () =>
+                            import("@/admin/views/FormConfigurationForm.vue"),
+                        name: "formAdmin.form_configurations.create",
+                        props: () => {
+                            return {
+                                id: null
+                            };
+                        },
+                        meta: {
+                            title: "Create Form Configuration"
                         }
                     },
-                    meta: {
-                        title: 'Update Form Configuration'
+                    {
+                        path: ":id",
+                        component: () =>
+                            import("@/admin/views/FormConfigurationForm.vue"),
+                        name: "formAdmin.form_configurations.edit",
+                        props: route => {
+                            return {
+                                id: parseInt(route.params.id)
+                            };
+                        },
+                        meta: {
+                            title: "Update Form Configuration"
+                        }
                     }
-                }
-            ]
-        }]
-
+                ]
+            }
+        ];
     }
-
-}
+};

@@ -1,37 +1,34 @@
-import Model from './model';
-import moment from 'moment';
-import FormField from './formField';
+import uniqueId from "lodash/uniqueId";
+import Model from "@/classes/model";
+import FormField from "@/admin/classes/models/formField";
 
 class FormConfiguration extends Model {
-
-
     defaults() {
         return {
-            id: null,
+            id: uniqueId("formConfiguration-"),
             name: null,
             type: null,
             active: null,
             entity_name: null,
             entity_model: null,
             options: {},
-            created_at: moment.now(),
-            updated_at: moment.now()
-        }
+            created_at: Date.now(),
+            updated_at: Date.now()
+        };
     }
 
     casts() {
         return {
             created_at: this.parseDate,
             updated_at: this.parseDate
-        }
+        };
     }
 
     relationships() {
         return {
             fields: FormField
-        }
+        };
     }
-
 }
 
 export default FormConfiguration;
