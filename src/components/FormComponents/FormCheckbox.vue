@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
+import FormField from "../../mixins/FormField";
 export default {
   mixins: [FormField],
   name: "form-checkbox",

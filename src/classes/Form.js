@@ -1,5 +1,5 @@
-import { FormErrors } from "@/classes/FormErrors";
-import { assignOnObject, byString } from "@/utilities/utils";
+import { FormErrors } from "./FormErrors";
+import { assignOnObject, byString } from "./../utilities/utils";
 
 export class Form {
     constructor(data, config, disabled) {

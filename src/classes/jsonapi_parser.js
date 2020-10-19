@@ -1,7 +1,7 @@
-import Collection from "@/classes/collection";
-import Generic from "@/classes/models/generic";
-import FormConfiguration from "@/admin/classes/models/formConfiguration";
-import FormField from "@/admin/classes/models/formField";
+import Collection from "./collection";
+import Generic from "./models/generic";
+import FormConfiguration from "./../admin/classes/models/formConfiguration";
+import FormField from "./../admin/classes/models/formField";
 
 class Parser {
     constructor() {

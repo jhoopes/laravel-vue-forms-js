@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import FormField from "@/mixins/FormField";
-import FormConfig from "@/mixins/FormConfig";
-import UpdatesValuesAndConditions from "@/mixins/UpdatesValuesAndConditions";
+import FormField from "../../mixins/FormField";
+import FormConfig from "../../mixins/FormConfig";
+import UpdatesValuesAndConditions from "../../mixins/UpdatesValuesAndConditions";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 

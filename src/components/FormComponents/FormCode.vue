@@ -31,14 +31,14 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
+import FormField from "../../mixins/FormField";
 import { debounce } from "lodash";
 
 import Ace from "ace-builds";
 import "ace-builds/src-min-noconflict/ext-emmet";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-min-noconflict/ext-beautify";
-import { guid } from "@/utilities/utils";
+import { guid } from "../../utilities/utils";
 var themeMonokai = require("ace-builds/src-noconflict/theme-monokai");
 
 const CDN = "https://cdn.jsdelivr.net/npm/ace-builds@1.3.3/src-min-noconflict";

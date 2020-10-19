@@ -1,4 +1,4 @@
-import Model from "@/classes/model";
+import Model from "./../model";
 
 class Generic extends Model {
     defaults() {

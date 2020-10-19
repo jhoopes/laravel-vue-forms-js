@@ -1,6 +1,6 @@
 import uniqueId from "lodash/uniqueId";
-import Model from "@/classes/model";
-import FormField from "@/admin/classes/models/formField";
+import Model from "../../../classes/model";
+import FormField from "./formField";
 
 class FormConfiguration extends Model {
     defaults() {

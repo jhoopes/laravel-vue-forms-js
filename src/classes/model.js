@@ -1,7 +1,7 @@
 import Vue from "vue";
 
-import Base from "@/classes/base";
-import Collection from "@/classes/collection";
+import Base from "./base";
+import Collection from "./collection";
 import castArray from "lodash/castArray";
 import cloneDeep from "lodash/cloneDeep";
 import defaults from "lodash/defaults";

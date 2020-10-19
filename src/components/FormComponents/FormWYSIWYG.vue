@@ -30,8 +30,8 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
-import { guid } from "@/utilities/utils";
+import FormField from "../../mixins/FormField";
+import { guid } from "../../utilities/utils";
 import jquery from "jquery";
 
 require("summernote/dist/summernote-lite");

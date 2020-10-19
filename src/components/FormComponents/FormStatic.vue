@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
+import FormField from "../../mixins/FormField";
 export default {
   props: {
     staticText: {

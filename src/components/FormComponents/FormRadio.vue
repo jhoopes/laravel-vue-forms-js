@@ -39,8 +39,8 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
-import HasOptions from "@/mixins/HasOptions";
+import FormField from "../../mixins/FormField";
+import HasOptions from "../../mixins/HasOptions";
 export default {
   name: "form-radio",
 

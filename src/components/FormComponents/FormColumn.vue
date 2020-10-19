@@ -14,9 +14,9 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
-import FormConfig from "@/mixins/FormConfig";
-import UpdatesValuesAndConditions from "@/mixins/UpdatesValuesAndConditions";
+import FormField from "../../mixins/FormField";
+import FormConfig from "../../mixins/FormConfig";
+import UpdatesValuesAndConditions from "../../mixins/UpdatesValuesAndConditions";
 export default {
   mixins: [FormField, FormConfig, UpdatesValuesAndConditions],
   name: "form-column",

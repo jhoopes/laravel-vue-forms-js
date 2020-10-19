@@ -1,4 +1,4 @@
-import { assignOnObject } from "@/utilities/utils";
+import { assignOnObject } from "../utilities/utils";
 
 export default {
     methods: {

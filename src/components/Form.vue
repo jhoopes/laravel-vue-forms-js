@@ -91,20 +91,20 @@
   </div>
 </template>
 <script>
-import FormProps from "@/mixins/FormProps";
-import FormConfig from "@/mixins/FormConfig";
-import Actions from "@/mixins/Actions";
-import UpdatesValuesAndConditions from "@/mixins/UpdatesValuesAndConditions";
-import { Form } from "@/classes/Form";
-import FormColumn from "@/components/FormComponents/FormColumn";
-import FormText from "@/components/FormComponents/FormText.vue";
-import FormTextarea from "@/components/FormComponents/FormTextarea.vue";
-import FormSelect from "@/components/FormComponents/FormSelect.vue";
-import FormDatePicker from "@/components/FormComponents/FormDatePicker.vue";
-import FormRadio from "@/components/FormComponents/FormRadio.vue";
-import FormCheckbox from "@/components/FormComponents/FormCheckbox.vue";
-import FormAutocomplete from "@/components/FormComponents/FormAutocomplete.vue";
-import FormFiles from "@/components/FormComponents/Files/FormFiles.vue";
+import FormProps from "../mixins/FormProps";
+import FormConfig from "../mixins/FormConfig";
+import Actions from "../mixins/Actions";
+import UpdatesValuesAndConditions from "../mixins/UpdatesValuesAndConditions";
+import { Form } from "../classes/Form";
+import FormColumn from "./FormComponents/FormColumn";
+import FormText from "./FormComponents/FormText.vue";
+import FormTextarea from "./FormComponents/FormTextarea.vue";
+import FormSelect from "./FormComponents/FormSelect.vue";
+import FormDatePicker from "./FormComponents/FormDatePicker.vue";
+import FormRadio from "./FormComponents/FormRadio.vue";
+import FormCheckbox from "./FormComponents/FormCheckbox.vue";
+import FormAutocomplete from "./FormComponents/FormAutocomplete.vue";
+import FormFiles from "./FormComponents/Files/FormFiles.vue";
 import { debounce } from "lodash";
 
 import {

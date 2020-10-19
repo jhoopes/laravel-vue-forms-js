@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "main": "dist/laravel-vue-forms.common.js",
+  "module": "src/plugin.js",
   "scripts": {
     "serve": "vue-cli-service serve src/admin/admin.js",
     "build": "vue-cli-service build src/admin/admin.js",

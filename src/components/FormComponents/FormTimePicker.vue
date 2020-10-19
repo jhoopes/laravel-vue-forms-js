@@ -36,8 +36,8 @@
   </div>
 </template>
 <script>
-import { guid } from "@/utilities/utils";
-import FormField from "@/mixins/FormField";
+import { guid } from "../../utilities/utils";
+import FormField from "../../mixins/FormField";
 import VueCtkDateTimePicker from "vue-ctk-date-time-picker";
 export default {
   name: "form-timepicker",

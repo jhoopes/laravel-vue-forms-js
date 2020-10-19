@@ -1,6 +1,6 @@
 import { get } from "lodash";
-import { byString } from "@/utilities/utils";
-import Parser from "@/classes/jsonapi_parser";
+import { byString } from "../utilities/utils";
+import Parser from "../classes/jsonapi_parser";
 
 export default {
     props: {

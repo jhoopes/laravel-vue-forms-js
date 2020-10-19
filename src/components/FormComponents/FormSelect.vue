@@ -43,8 +43,8 @@
 </template>
 <script>
 import MultiSelect from "vue-multiselect";
-import FormField from "@/mixins/FormField";
-import HasOptions from "@/mixins/HasOptions";
+import FormField from "../../mixins/FormField";
+import HasOptions from "../../mixins/HasOptions";
 export default {
   name: "form-select",
 

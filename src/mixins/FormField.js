@@ -1,4 +1,4 @@
-import { FormErrors } from "@/classes/FormErrors";
+import { FormErrors } from "../classes/FormErrors";
 import axios from "axios";
 
 export default {

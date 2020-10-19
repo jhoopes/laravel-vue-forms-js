@@ -1,4 +1,4 @@
-import { assignOnObject, byString } from "@/utilities/utils";
+import { assignOnObject, byString } from "../utilities/utils";
 
 export default {
     data() {

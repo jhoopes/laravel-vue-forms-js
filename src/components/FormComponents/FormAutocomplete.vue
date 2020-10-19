@@ -62,10 +62,10 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
-import HasOptions from "@/mixins/HasOptions";
+import FormField from "../../mixins/FormField";
+import HasOptions from "../../mixins/HasOptions";
 import { debounce, get } from "lodash";
-import Parser from "@/classes/jsonapi_parser";
+import Parser from "../../classes/jsonapi_parser";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 export default {
   name: "form-autocomplete",

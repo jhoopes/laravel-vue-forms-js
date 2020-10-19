@@ -1,4 +1,4 @@
-import Model from "@/classes/model";
+import Model from "../../../classes/model";
 
 class FormField extends Model {
     defaults() {

@@ -44,9 +44,9 @@
   </div>
 </template>
 <script>
-import FormField from "@/mixins/FormField";
-import FormFile from "@/components/FormComponents/Files/FormFile.vue";
-import FormFileUpload from "@/components/FormComponents/Files/FormFileUpload.vue";
+import FormField from "../../../mixins/FormField";
+import FormFile from "./FormFile.vue";
+import FormFileUpload from "./FormFileUpload.vue";
 export default {
   name: "form-files",
 
