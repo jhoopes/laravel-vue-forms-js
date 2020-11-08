@@ -124,11 +124,3 @@ export default {
   }
 };
 </script>
-<style lang="css" scoped>
-@import "~summernote/dist/summernote-lite.css";
-
-.form-wysiwyg-editor {
-  width: 97%;
-  margin: auto;
-}
-</style>

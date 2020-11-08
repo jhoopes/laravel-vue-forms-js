@@ -308,13 +308,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.flex {
-  display: flex;
-}
-
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-</style>

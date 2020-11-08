@@ -173,9 +173,3 @@ export default {
   }
 };
 </script>
-<style>
-#code {
-  position: absolute;
-  width: 94%;
-}
-</style>

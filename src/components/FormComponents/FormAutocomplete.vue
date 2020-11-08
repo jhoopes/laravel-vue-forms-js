@@ -311,35 +311,3 @@ export default {
   }
 };
 </script>
-<style>
-.autocomplete {
-  position: relative;
-}
-
-.autocomplete-results {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5px;
-  margin-top: 3rem;
-  border: 1px solid #a5a5a5;
-  background: white;
-  min-width: 100%;
-  height: 120px;
-  overflow: auto;
-  z-index: 999;
-}
-
-.autocomplete-result {
-  list-style: none;
-  text-align: left;
-  padding: 4px 2px;
-  cursor: pointer;
-}
-
-.autocomplete-result:hover,
-.autocomplete-result.is-active {
-  background-color: #4aae9b;
-  color: white;
-}
-</style>

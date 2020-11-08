@@ -23,6 +23,11 @@ import FormCode from "./components/FormComponents/FormCode.vue";
 import FormFieldMixin from "./mixins/FormField";
 import HasOptionsMixin from "./mixins/HasOptions";
 
+import Collection from "./classes/collection";
+import Model from "./classes/model";
+import Generic from "./classes/models/generic";
+import Parser from './classes/jsonapi_parser';
+
 import "vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css";
 
 export default {
@@ -52,11 +57,20 @@ export default {
 };
 
 export {
+    // Export Base Form Library
     Form,
     FormErrors,
     VueForm,
     FormFieldMixin,
     HasOptionsMixin,
+
+    // Export Generic JSONAPI related items
+    Parser,
+    Collection,
+    Model,
+    Generic,
+
+    // Export form fields if needing to override or register yourself
     FormColumn,
     FormTabs,
     FormTab,
@@ -73,5 +87,9 @@ export {
     FormAutocomplete,
     FormCheckbox,
     FormWYSIWYG,
-    FormCode
+    FormCode,
+
+    // export utilities
+    byString,
+    assignOnObject,
 };
