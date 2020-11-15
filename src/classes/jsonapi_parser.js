@@ -163,4 +163,5 @@ class Parser {
     }
 }
 
+export const ParserClass = Parser;
 export default new Parser();
