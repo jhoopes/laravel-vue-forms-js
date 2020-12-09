@@ -1,7 +1,14 @@
 <template>
-  <div class="datepicker form-group">
-    <label class="form-control-label"
-      ><span v-html="fieldConfig.label"></span>
+  <div
+    class="datepicker form-group"
+    :id="fieldName + '-date-field'"
+    :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
+  >
+    <label class="form-control-label">
+      <span v-html="fieldConfig.label"></span>
+      <span class="required" v-if="fieldConfig.field_extra.required">
+        &nbsp;&nbsp;(*)
+      </span>
       <span
         v-if="withHelpIcon"
         :class="fieldConfig.field_extra.withIcon"
@@ -28,6 +35,12 @@
             fieldConfig.disabled === 1 || fieldConfig.disabled === true
           "
         ></vue-ctk-date-time-picker>
+        <span
+          class="errors"
+          v-if="form.errors.has(this.fieldConfig.value_field)"
+        >
+          {{ form.errors.get(this.fieldConfig.value_field, true) }}
+        </span>
       </div>
       <div v-if="hasHelpText">
         <span v-html="fieldConfig.field_extra.helpText"></span>

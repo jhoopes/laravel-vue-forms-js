@@ -4,11 +4,11 @@
     :id="fieldName + '-text-field'"
     :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
   >
-    <label class="form-control-label"
-      ><span v-html="fieldConfig.label"></span>
-      <span class="required" v-if="fieldConfig.field_extra.required"
-        >&nbsp;&nbsp;(*)</span
-      >
+    <label class="form-control-label">
+      <span v-html="fieldConfig.label"></span>
+      <span class="required" v-if="fieldConfig.field_extra.required">
+        &nbsp;&nbsp;(*)
+      </span>
       <span
         v-if="withHelpIcon"
         :class="fieldConfig.field_extra.withIcon"

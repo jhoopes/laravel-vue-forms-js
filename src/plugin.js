@@ -26,7 +26,7 @@ import HasOptionsMixin from "./mixins/HasOptions";
 import Collection from "./classes/collection";
 import Model from "./classes/model";
 import Generic from "./classes/models/generic";
-import Parser from './classes/jsonapi_parser';
+import Parser from "./classes/jsonapi_parser";
 
 import "vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css";
 
@@ -63,13 +63,11 @@ export {
     VueForm,
     FormFieldMixin,
     HasOptionsMixin,
-
     // Export Generic JSONAPI related items
     Parser,
     Collection,
     Model,
     Generic,
-
     // Export form fields if needing to override or register yourself
     FormColumn,
     FormTabs,
@@ -88,8 +86,7 @@ export {
     FormCheckbox,
     FormWYSIWYG,
     FormCode,
-
     // export utilities
     byString,
-    assignOnObject,
+    assignOnObject
 };
