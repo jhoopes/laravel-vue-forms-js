@@ -2,6 +2,7 @@
   "name": "laravel-vue-forms",
   "version": "0.1.0",
   "private": false,
+  "license": "MIT",
   "main": "dist/laravel-vue-forms.common.js",
   "module": "src/plugin.js",
   "scripts": {
