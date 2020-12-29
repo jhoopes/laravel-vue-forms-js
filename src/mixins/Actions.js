@@ -1,32 +1,29 @@
+import Parser from "./../classes/jsonapi_parser";
 
 export default {
-
-
-
     methods: {
         runAction(action) {
-            if(typeof this[action] === 'function') {
+            if (typeof this[action] === "function") {
                 this[action]();
-            }else {
+            } else {
                 this.$emit(action, this.form.getData());
             }
         },
         cancelForm() {
-            this.$emit('cancel-form');
+            this.$emit("cancel-form");
         },
         close() {
-            this.$emit('close-form');
+            this.$emit("close-form");
         },
         resetForm() {
             this.form.reset();
         },
         submitForm() {
-
             // If this form is a pass through form, run the save success for updated only to push data out of the form
             // object
-            if(this.passThru) {
+            if (this.passThru) {
                 this.$nextTick(() => {
-                    this.saveSuccess(this.form.getData(), 'updated');
+                    this.saveSuccess(this.form.getData(), "updated");
                 });
                 return;
             }
@@ -35,43 +32,59 @@ export default {
             let data = this.getSubmitData();
             this.saving = true;
 
-            this.apiClient[method](this.formSubmitUrl, data).then(response => {
+            var options = {};
+            if (this.useJsonApi) {
+                options.headers = {
+                    Accept: "application/vnd.api+json"
+                };
+            }
 
-                if(method === 'post') { // we're creating so set the response id onto the form object
-                    this.$set(this.form, 'id', response.data.id);
-                    this.$set(this.form.data, 'id', response.data.id);
-                }
-                this.$nextTick(() => {
-                    var actionType = 'updated';
-                    if(method === 'post') {
-                        actionType = 'created';
+            this.apiClient[method](this.formSubmitUrl, data, options)
+                .then(response => {
+                    var record = response.data;
+                    if (this.useJsonApi) {
+                        record = Parser.parseJSONAPIResponse(response.data);
                     }
 
-                    this.saveSuccess(response, actionType);
-                    this.saving = false;
-                });
+                    if (method === "post") {
+                        // we're creating so set the response id onto the form object
+                        this.$set(this.form, "id", record.id);
+                        this.$set(this.form.data, "id", record.id);
+                    }
+                    this.$nextTick(() => {
+                        var actionType = "updated";
+                        if (method === "post") {
+                            actionType = "created";
+                        }
 
-            }).catch( error => {
-                this.saving = false;
-                if(error.response && error.response.status === 422) {
-                    this.form.errors.setErrors(error.response.data)
-                }else {
-                    window.notify.apiError(error);
-                }
-            });
+                        this.saveSuccess(record, actionType);
+                        this.saving = false;
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+
+                    this.saving = false;
+                    this.errorHandler(error);
+
+                    // if(error.response && error.response.status === 422) {
+                    //     this.form.errors.setErrors(error.response.data)
+                    // }else {
+                    //     window.notify.apiError(error);
+                    // }
+                });
         },
 
         getSubmitHttpMethod() {
-
-            if(this.form.id) {
-                return 'patch';
+            if (this.form.id) {
+                return "patch";
             }
 
-            return 'post';
+            return "post";
         },
         getSubmitData() {
             var data = {};
-            if(this.form.id) {
+            if (this.form.id) {
                 data.entityId = this.form.id;
             }
             data.formConfigurationId = this.formConfig.id;
@@ -79,5 +92,4 @@ export default {
             return data;
         }
     }
-
-}
+};

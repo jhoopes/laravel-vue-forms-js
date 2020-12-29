@@ -1,21 +1,29 @@
-# Laravel Vue Forms
+# laravel-vue-forms
 
-**These package sets are still in very early alpha/beta stages**
+## Project setup
+```
+yarn install
+```
 
-Laravel Vue Forms is a form builder that can also have its parts be used separately as needed.
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
 
-This repository is the JS package for the Laravel Vue forms.  A PHP composer package will also be coming to manage the laravel side, which handles the form configuration.
+### Compiles and minifies for production
+```
+yarn build
+```
 
-## Installation
+### Run your unit tests
+```
+yarn test:unit
+```
 
-Todo
+### Lints and fixes files
+```
+yarn lint
+```
 
-## Usage
-
-Todo
-
-## Roadmap
-
- - Build out initial packages
- - Documentation
- - Tests
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

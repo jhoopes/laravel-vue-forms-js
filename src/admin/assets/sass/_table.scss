@@ -1,0 +1,50 @@
+
+
+.table {
+
+  @apply border-collapse w-full;
+
+  td,th {
+    @apply p-2 align-middle;
+  }
+
+  td button svg {
+    @apply text-gray-800;
+  }
+
+  thead th {
+    @apply align-bottom bg-gray-800 text-white;
+  }
+
+  tbody {
+    @apply border-t-2 text-gray-800;
+  }
+
+  tr:nth-child(even) {
+    @apply bg-gray-200;
+  }
+
+  tr:last-child {
+    @apply border-b border-gray-900;
+  }
+
+}
+
+
+.pagination {
+  @apply m-4;
+
+  ul {
+
+    li {
+      @apply shadow px-4 py-2;
+    }
+
+    li.selected {
+      @apply bg-gray-400 shadow-inner text-white;
+    }
+
+  }
+
+
+}

@@ -1,8 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 export default {
-
     props: {
-
         formConfig: {
             required: true,
             type: Object
@@ -13,46 +11,55 @@ export default {
         },
         formSubmitUrl: {
             type: String,
-            default: '/api/forms/submit'
+            default: "/api/forms/submit"
         },
         apiClient: {
             default() {
                 return axios;
-            },
+            }
         },
         saveSuccess: {
             type: Function,
-            default: function(response, actionType) {
-
-                if(this.passThru) {
-                    this.$emit(actionType, response);
+            default: function(record, actionType) {
+                if (this.passThru) {
+                    this.$emit(actionType, record);
                 } else {
-                    this.$emit(actionType, response.data);
+                    this.$emit(actionType, record);
                 }
-                if(this.closeOnSave) {
-                    this.close()
+                if (this.closeOnSave) {
+                    this.close();
                 }
             }
         },
+        errorHandler: {
+            type: Function,
+            default: function(error) {
+                this.form.errors.report(error);
+            }
+        },
+        formErrors: {
+            type: Object,
+            default: null
+        },
         disabled: {
             type: Boolean,
-            default: false,
+            default: false
         },
         closeOnSave: {
             type: Boolean,
-            default: false,
+            default: false
         },
         showCloseIcon: {
             type: Boolean,
-            default: false,
+            default: false
         },
         passThru: {
             type: Boolean,
-            default: false,
+            default: false
         },
         autoSave: {
             type: Boolean,
-            default: false,
+            default: false
         },
         autoSaveTimeout: {
             type: Number,
@@ -64,38 +71,45 @@ export default {
             default() {
                 return [
                     {
-                        name: 'submit',
-                        label: 'Submit',
-                        action: 'submitForm'
+                        name: "submit",
+                        label: "Submit",
+                        action: "submitForm"
                     },
                     {
-                        name: 'cancel',
-                        label: 'Cancel',
-                        action: 'cancelForm'
-                    },
-                    {
-                        name: 'reset',
-                        label: 'Reset',
-                        action: 'resetForm'
+                        name: "cancel",
+                        label: "Cancel",
+                        action: "cancelForm"
                     }
-                ]
+                    // {  // Left as comment for legacy purposes, but, you can still pass in these same actions and add the string to call an internal function
+                    //     name: "reset",
+                    //     label: "Reset",
+                    //     action: "resetForm"
+                    // }
+                ];
             }
         },
         // whether or not to show the saving functionality
         showSaving: {
             type: Boolean,
-            default: true,
+            default: true
         },
         // allows parent components to define if its saving
         isSaving: {
             type: Boolean,
-            default: false,
+            default: false
         },
         // text to show with the spinner if it's saving
         savingText: {
             type: String,
-            default: 'Saving...'
+            default: "Saving..."
+        },
+        useJsonApi: {
+            type: Boolean,
+            default: false
+        },
+        forceUpdate: {
+            type: Boolean,
+            default: false
         }
     }
-
-}
+};
