@@ -32,7 +32,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "^1.0.3",
     "ace-builds": "^1.4.12",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "dropzone": "^5.7.2",
     "eslint": "^6.7.2",
