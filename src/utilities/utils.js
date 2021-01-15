@@ -27,7 +27,7 @@ export const byString = function(o, s) {
     for (var i = 0, n = a.length; i < n; ++i) {
         var k = a[i];
 
-        if (o === null) {
+        if (o === null || typeof o === "undefined") {
             // if the object itself is null, there is no key to get
             return;
         }

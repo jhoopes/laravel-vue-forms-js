@@ -1,13 +1,10 @@
-@tailwind base;
-
-@tailwind components;
-
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 
-
-@import "~vue-multiselect/dist/vue-multiselect.min.css";
-@import "@/admin/assets/sass/_table";
+@import "vue-multiselect/dist/vue-multiselect.min.css";
+@import "./_table";
 
 .form-control-label {
   @apply block m-1;

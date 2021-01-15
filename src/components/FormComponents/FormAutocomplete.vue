@@ -20,6 +20,7 @@
     </label>
     <div class="">
       <input
+        :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
         class="form-control"
         type="text"
         v-model="search"

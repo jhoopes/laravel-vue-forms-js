@@ -15,6 +15,22 @@
                   Dashboard
                 </router-link>
                 <router-link
+                  :to="{ name: 'formAdmin.custom_entities' }"
+                  class="px-3 py-2 rounded-md text-sm font-medium text-white focus:outline-none focus:text-white focus:bg-gray-700"
+                  active-class="bg-gray-900"
+                  exact
+                >
+                  Entities
+                </router-link>
+                <router-link
+                  :to="{ name: 'formAdmin.custom_entity_types' }"
+                  class="px-3 py-2 rounded-md text-sm font-medium text-white focus:outline-none focus:text-white focus:bg-gray-700"
+                  active-class="bg-gray-900"
+                  exact
+                >
+                  EntityTypes
+                </router-link>
+                <router-link
                   :to="{ name: 'formAdmin.form_configurations.create' }"
                   class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
                   active-class="bg-gray-900"

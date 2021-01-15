@@ -11,6 +11,16 @@ export default {
                 name: "formAdmin.home"
             },
             {
+                path: adminPrefix + '/custom_entity_types',
+                component: () => import('@/admin/views/CustomEntityTypes.vue'),
+                name: "formAdmin.custom_entity_types"
+            },
+            {
+                path: adminPrefix + "/custom_entities",
+                component: () => import("@/admin/views/CustomEntities.vue"),
+                name: "formAdmin.custom_entities"
+            },
+            {
                 path: adminPrefix + "/form_configurations",
                 component: () => import("@/admin/views/FormConfiguration.vue"),
                 meta: {
@@ -46,7 +56,12 @@ export default {
                         }
                     }
                 ]
-            }
+            },
+            { // catch all route that shows a demo of the form components
+                path: "*",
+                component: () => import("@/admin/views/Examples.vue"),
+                name: "formAdmin.examples"
+            },
         ];
     }
 };

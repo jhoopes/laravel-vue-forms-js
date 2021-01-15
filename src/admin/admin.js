@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VGrid from "v-grid";
 import LaravelVueForms from "@/plugin";
-import "@/admin/assets/sass/admin.scss";
+import "@/admin/assets/sass/admin.css";
 
 Vue.use(LaravelVueForms);
 Vue.use(VGrid);
