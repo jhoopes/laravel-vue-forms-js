@@ -34,7 +34,7 @@
       :deselect-label="deselectLabel"
       :allow-empty="allowEmpty"
     >
-      <template slot="tag" slot-scope="props">
+      <template v-slot:tag="props">
         <span
           class="inline-block px-1 py-2 mr-2 mb-2 bg-grey-lighter rounded cursor-pointer"
         >

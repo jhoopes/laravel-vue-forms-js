@@ -7,7 +7,7 @@
         :form-data="formConfigFormData"
         :use-json-api="useJsonApi"
         @created="commitAndGo"
-        :force-update.sync="forceUpdate"
+        v-model:force-update="forceUpdate"
         :api-client="$apiClient"
       ></vue-form>
 

@@ -1,10 +1,8 @@
 <template>
-    <div>
-        Custom Entities List
-    </div>
+  <div>
+    Custom Entities List
+  </div>
 </template>
 <script>
-export default {
-
-}
+export default {};
 </script>

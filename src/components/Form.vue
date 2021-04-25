@@ -26,7 +26,7 @@
       <div v-if="layoutType === 'tabs'" class="form-tabs">
         <form-tabs>
           <component
-            v-for="field in fields"
+            v-for="field in topFields"
             :key="field.id"
             :name="field.field_extra ? field.field_extra.name : field.name"
             :is="getFormFieldComponent(field.widget)"
@@ -46,18 +46,18 @@
       </div>
       <div :class="{ flex: columnCount > 1 }" v-else>
         <component
-          v-for="field in fields"
+          v-for="field in topFields"
           :key="field.id"
           :is="getFormFieldComponent(field.widget)"
-          v-show="field.visible && conditionValues[field.name]"
+          v-show="field.visible && form.fieldMeetsConditions[field.name]"
           :field-name="field.name"
-          :value="getFieldValue(form.data, field)"
-          @input="newVal => updateValueAndConditionals(newVal, field)"
+          :modelValue="form.getFieldValue(field)"
+          @update:modelValue="newVal => form.updateValueAndConditionals(newVal, field)"
           @options-updated="
-            newOptions => updateOptionsForField(newOptions, field)
+            newOptions => form.updateOptionsForField(newOptions, field)
           "
-          :children="field.children || null"
           :class="columnWidth + ' ' + 'm-2'"
+          :find-in-form="true"
         ></component>
       </div>
       <div
@@ -90,221 +90,249 @@
     </form>
   </div>
 </template>
-<script>
-import FormProps from "../mixins/FormProps";
-import FormConfig from "../mixins/FormConfig";
-import Actions from "../mixins/Actions";
-import UpdatesValuesAndConditions from "../mixins/UpdatesValuesAndConditions";
-import { Form } from "../classes/Form";
-import FormColumn from "./FormComponents/FormColumn";
+<script lang="ts">
+
+import {defineComponent, toRefs, reactive, SetupContext, provide} from "vue";
+import { Form } from "./../classes/Form";
 import FormText from "./FormComponents/FormText.vue";
-import FormTextarea from "./FormComponents/FormTextarea.vue";
-import FormSelect from "./FormComponents/FormSelect.vue";
-import FormDatePicker from "./FormComponents/FormDatePicker.vue";
-import FormRadio from "./FormComponents/FormRadio.vue";
-import FormCheckbox from "./FormComponents/FormCheckbox.vue";
-import FormAutocomplete from "./FormComponents/FormAutocomplete.vue";
-import FormFiles from "./FormComponents/Files/FormFiles.vue";
-import { debounce } from "lodash";
 
 import {
-  faSpinner,
-  faExclamationTriangle,
-  faInfoCircle
+    faSpinner,
+    faExclamationTriangle,
+    faInfoCircle
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import apiClient from "./../classes/apiClient";
+import {FormConfiguration} from "./../classes/models/formConfiguration";
+import {
+    defaultFields,
+    submitForm,
+    saveSuccess as saveSuccessDefault,
+    setupComputed, setupWatchers
+} from "./../composition/vueForm";
+import {IApiClient, ISubmitFormElements, IVueFormData, SaveSuccessFunction} from "./../types/index";
+import ApiError from "./../classes/ApiError";
 
-export default {
+export default defineComponent({
   name: "vue-form",
 
-  mixins: [FormProps, FormConfig, Actions, UpdatesValuesAndConditions],
-
   components: {
-    FormColumn,
     FormText,
-    FormAutocomplete,
-    FormTextarea,
-    FormSelect,
-    FormDatePicker,
-    FormRadio,
-    FormCheckbox,
-    FormFiles,
     FontAwesomeIcon
   },
 
-  data() {
-    return {
-      form: {},
-      formDataWatcher: null,
-      saving: false,
-      spinnerIcon: faSpinner,
-      warningIcon: faExclamationTriangle,
-      infoIcon: faInfoCircle
-    };
-  },
 
-  created() {
-    //var formData = cloneObject(this.formData);
-    var formData = JSON.parse(JSON.stringify(this.formData));
-    var data = this.defaultFields(formData);
 
-    this.form = new Form(data, this.formConfig, this.disabled);
-    this.generateConditionValues();
+    setup(props, context: SetupContext) {
 
-    if (this.autoSave) {
-      this.setUpAutoSave();
-    }
 
-    this.$watch(
-      "form.data",
-      updated => {
-        this.$emit("changed", updated);
-      },
-      { deep: true }
-    );
-  },
+        let formData = defaultFields(props.formData, props.formConfig)
+        let formObj = new Form(formData, props.formConfig)
 
-  computed: {
-    fields() {
-      let topLevelFields = this.formConfig.fields.filter(field => {
-        if (field.parent_id) {
-          return false;
+        let {
+            topFields,
+            layoutType,
+            columnCount,
+            columnWidth
+        } = setupComputed(formObj)
+
+        let vueFormData = reactive({
+            form: formObj,
+            formDataWatcher: null,
+            saving: false,
+            spinnerIcon: faSpinner,
+            warningIcon: faExclamationTriangle,
+            infoIcon: faInfoCircle,
+            topFields,
+            layoutType,
+            columnCount,
+            columnWidth,
+        }) as unknown as IVueFormData;
+
+
+        const submitFormFunc = () => {
+            vueFormData.saving = true;
+
+            let saveSuccess: SaveSuccessFunction = props.saveSuccess as SaveSuccessFunction;
+            if(!props.saveSuccess) {
+                saveSuccess = saveSuccessDefault
+            }
+            try {
+                submitForm(formObj, {
+                    passThru: props.passThru,
+                    saveSuccess,
+                    useJsonApi: props.useJsonApi,
+                    apiClient: props.apiClient as IApiClient,
+                    formSubmitUrl: props.formSubmitUrl,
+                    context,
+                    closeOnSave: props.closeOnSave
+                } as ISubmitFormElements)
+                vueFormData.saving = false;
+            }catch(err) {
+                console.log(err);
+                vueFormData.saving = false;
+                props.errorHandler(err, formObj);
+            }
         }
-        return true;
-      });
 
-      topLevelFields.forEach(topLevelField => {
-        topLevelField.children = this.formConfig.fields.filter(field => {
-          return field.parent_id === topLevelField.id;
-        });
-      });
 
-      return topLevelFields;
+
+        provide('form', vueFormData.form);
+        provide('apiClient', props.apiClient);
+        provide('formHasJsonApi', props.useJsonApi);
+
+        vueFormData.form.generateConditionValues();
+
+
+
+        setupWatchers(vueFormData, submitFormFunc, props, context);
+
+
+
+        return toRefs(vueFormData);
     },
-    layoutType() {
-      let tabField = this.fields.find(field => {
-        if (field.widget === "tab") {
-          return true;
+
+
+
+
+
+    props: {
+        formConfig: {
+            required: true,
+            type: FormConfiguration
+        },
+        formData: {
+            required: true,
+            type: Object
+        },
+        formSubmitUrl: {
+            type: String,
+            default: "/api/forms/submit"
+        },
+        apiClient: {
+            default: apiClient
+        },
+        saveSuccess: {
+            type: Function,
+        },
+        errorHandler: {
+            type: Function,
+            default: (error: ApiError, form: Form) => {
+                form.errors.report(error);
+            }
+        },
+        formErrors: {
+            type: Object,
+            default: null
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        },
+        closeOnSave: {
+            type: Boolean,
+            default: false
+        },
+        showCloseIcon: {
+            type: Boolean,
+            default: false
+        },
+        passThru: {
+            type: Boolean,
+            default: false
+        },
+        autoSave: {
+            type: Boolean,
+            default: false
+        },
+        autoSaveTimeout: {
+            type: Number,
+            default: 4000
+        },
+        // ability to define custom actions, custom actions will emit the action if the function does not exist on the form
+        actions: {
+            type: Array,
+            default: [
+                {
+                    name: "submit",
+                    label: "Submit",
+                    action: "submitForm"
+                },
+                {
+                    name: "cancel",
+                    label: "Cancel",
+                    action: "cancelForm"
+                }
+            ]
+        },
+        // whether or not to show the saving functionality
+        showSaving: {
+            type: Boolean,
+            default: true
+        },
+        // allows parent components to define if its saving
+        isSaving: {
+            type: Boolean,
+            default: false
+        },
+        // text to show with the spinner if it's saving
+        savingText: {
+            type: String,
+            default: "Saving..."
+        },
+        useJsonApi: {
+            type: Boolean,
+            default: false
+        },
+        forceUpdate: {
+            type: Boolean,
+            default: false
         }
-        return false;
-      });
-
-      if (tabField) {
-        return "tabs";
-      }
-
-      return "normal";
     },
-    columnCount() {
-      var columnCount = 0;
-      this.fields.forEach(field => {
-        if (field.widget === "column") {
-          columnCount++;
-        }
-      });
 
-      if (columnCount === 0) {
-        columnCount = 1;
-      }
 
-      return columnCount;
-    },
-    columnWidth() {
-      if (this.columnCount === 0) {
-        return null;
-      }
-
-      return "w-1/" + this.columnCount;
-    }
-  },
-
-  provide() {
-    let provide = {};
-
-    Object.defineProperty(provide, "form", {
-      enumerable: true,
-      get: () => this.form
-    });
-
-    Object.defineProperty(provide, "apiClient", {
-      enumerable: true,
-      get: () => this.apiClient
-    });
-
-    Object.defineProperty(provide, "formHasJsonApi", {
-      enumerable: true,
-      get: () => this.useJsonApi
-    });
-    return provide;
-  },
 
   methods: {
-    setUpAutoSave() {
-      this.formDataWatcher = this.$watch(
-        "form.data",
-        debounce(function() {
-          this.submitForm();
-        }, this.autoSaveTimeout),
-        { deep: true }
-      );
-    }
-  },
-
-  watch: {
-    formData: {
-      handler: function(newFormData) {
-        newFormData = JSON.parse(JSON.stringify(newFormData));
-
-        if (this.formDataWatcher) {
-          this.formDataWatcher();
-        }
-
-        this.form.updateData(newFormData);
-
-        if (this.autoSave) {
-          this.setUpAutoSave();
-        }
-      },
-      deep: true
-    },
-    formErrors: {
-      handler(newFormErrors) {
-        if (newFormErrors && newFormErrors.fieldErrors) {
-          this.form.errors = newFormErrors;
-        }
-      },
-      deep: true
-    },
-    forceUpdate(force) {
-      if (force) {
-        var newFormData = JSON.parse(JSON.stringify(this.formData));
-
-        if (this.formDataWatcher) {
-          this.formDataWatcher();
-        }
-
-        this.form.clearFields();
-        this.form.updateData(newFormData, true);
-
-        if (this.autoSave) {
-          this.setUpAutoSave();
-        }
+    getFormFieldComponent(fieldWidget: string) {
+      switch (fieldWidget) {
+        case "column":
+          return "form-column";
+        case "tab":
+          return "form-tab";
+        case "static":
+          return "form-static";
+        case "text":
+          return "form-text";
+        case "autocomplete":
+          return "form-autocomplete";
+        case "textarea":
+          return "form-textarea";
+        case "dropdown":
+          return "form-select";
+        case "multidropdown":
+          return "form-multi-select";
+        case "checkbox":
+          return "form-checkbox";
+        case "radio":
+          return "form-radio";
+        case "datepicker":
+          return "form-datepicker";
+        case "timepicker":
+          return "form-timepicker";
+        case "datetimepicker":
+          return "form-datetimepicker";
+        case "files":
+          return "form-files";
+        case "wysiwyg":
+          return "form-wysiwyg";
+        case "code":
+          return "form-code";
+        default:
+          return fieldWidget;
       }
-
-      this.$emit("update:forceUpdate", false);
     },
-    disabled(disabled) {
-      this.form.disabled = disabled;
-    },
-    // watcher to watch if outside component is directing to show saving
-    isSaving(newIsSaving) {
-      if (newIsSaving) {
-        this.saving = true;
-      } else {
-        this.saving = false;
-      }
-    }
   }
-};
+
+});
 </script>
