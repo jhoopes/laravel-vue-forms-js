@@ -12,10 +12,12 @@
     "sourceMap": true,
     "allowJs": true,
     "baseUrl": ".",
+    "declaration": true,
     "types": [
       "webpack-env",
       "jest",
-      "luxon"
+      "luxon",
+      "lodash"
     ],
     "paths": {
       "@/*": [

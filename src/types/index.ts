@@ -164,20 +164,20 @@ export interface IFormFieldFieldConfig {
   default?: any
 }
 
-export interface FormFieldExtraCondition {
+export interface IFormFieldExtraCondition {
     fieldValue: string
     valueField: string
 }
 
-export interface FormFieldExtra {
+export interface IFormFieldExtra {
     default?: string
     required?: boolean
-    condition?: FormFieldExtraCondition
+    condition?: IFormFieldExtraCondition
     options_config: Record<string, any>
     validation_rules: string[]
 }
 
-export interface FormField {
+export interface IFormField {
     name: string
     value_field: string
     label: string
@@ -187,6 +187,6 @@ export interface FormField {
     is_eav: boolean
     parent_id: number | null
     cast_to: string | null
-    field_extra: FormFieldExtra
+    field_extra: IFormFieldExtra
 }
 
