@@ -23,7 +23,7 @@ export const saveSuccess: SaveSuccessFunction = (
     context: SetupContext,
     passThru: boolean = false,
     closeOnSave: boolean = false,
-    ) => {
+) => {
 
     if (passThru) {
         context.emit(actionType, record);
@@ -43,7 +43,8 @@ export const cancelForm = (context: SetupContext) => {
     context.emit('cancel-form');
 }
 
-export const runAction = (action: Function | string, form: Form, context: SetupContext) => {
+export const emitOrRunCustomAction = (action: Function | string, form: Form, context: SetupContext) => {
+
     if (typeof action === "function") {
         action(form);
     } else {
