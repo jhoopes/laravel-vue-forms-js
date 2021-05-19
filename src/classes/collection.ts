@@ -1,4 +1,4 @@
-import Vue, {reactive} from "vue";
+import {toRaw} from "vue";
 import Base from "./base";
 import Model from "./model";
 import Generic from "./../classes/models/generic";
@@ -53,10 +53,10 @@ export class Collection<MT extends Model> extends Base
     ) {
         super(options);
 
-        this.models = reactive([]);
-        this._attributes = reactive({});
-        this._registry = reactive({});
-        this._id_registry = reactive({});
+        this.models = [];
+        this._attributes = {};
+        this._registry = {};
+        this._id_registry = {};
         this._current = 0
         this._page = 0
         this._from = 0
@@ -182,7 +182,7 @@ export class Collection<MT extends Model> extends Base
      * @return {Model[]}
      */
     getModels(): MT[] {
-        return this.models;
+        return toRaw(this.models);
     }
 
     /**
@@ -200,7 +200,9 @@ export class Collection<MT extends Model> extends Base
      * Removes all models from this collection.
      */
     clear(): void {
-        this.models = reactive([]);
+        this.models = [];
+        this._registry = {};
+        this._id_registry = {};
     }
 
     /**
@@ -221,8 +223,10 @@ export class Collection<MT extends Model> extends Base
      * @returns {Object} A native representation of this collection that will
      *                   determine the contents of JSON.stringify(collection).
      */
-    toJSON(): MT[] {
-        return this.models;
+    toJSON(): Record<string, any>[] {
+        return this.models.map((model) => {
+            return model.toJSON();
+        });
     }
 
     /**
@@ -293,7 +297,7 @@ export class Collection<MT extends Model> extends Base
         }
 
         // Objects should be converted to model instances first, then added.
-        if (isPlainObject(model)) {
+        if (isPlainObject(model)) {;
             return this.add(this.createModel(model));
         }
 
@@ -595,11 +599,11 @@ export class Collection<MT extends Model> extends Base
         return {
             current_page: this.get('page'),
             data: this.models,
-            from: this.get('from'),
-            to: this.get('to'),
-            per_page: this.get('per_page'),
-            last_page: this.get('last_page'),
-            total: this.get('total')
+            from: this._from,
+            to: this._to,
+            per_page: this._per_page,
+            last_page: this._last_page,
+            total: this._total
         } as ILengthAwarePaginator<MT>
     }
 }

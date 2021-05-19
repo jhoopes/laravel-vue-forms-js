@@ -92,7 +92,7 @@
 </template>
 <script lang="ts">
 
-import {defineComponent, toRefs, ref, reactive, SetupContext, provide} from "vue";
+import {defineComponent, toRefs, reactive, SetupContext, provide} from "vue";
 import { Form } from "../classes/Form";
 import FormText from "./FormComponents/FormText.vue";
 

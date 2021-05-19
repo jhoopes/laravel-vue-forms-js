@@ -2,7 +2,7 @@ import {FormErrors} from "./FormErrors";
 import {assignOnObject, byString} from "./../utilities/utils";
 import {FormConfiguration} from "./models/formConfiguration";
 import {FormField} from "./models/formField";
-import {reactive, ref} from "vue";
+import {reactive} from "vue";
 
 export class Form {
     public data: Record<string, any>

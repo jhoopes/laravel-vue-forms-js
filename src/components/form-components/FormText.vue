@@ -38,8 +38,8 @@
 </template>
 <script lang="ts">
 
-import {computed, defineComponent, SetupContext, watch} from 'vue';
-import { setupFormField, helpTextComputedProperties } from "./../../composition/formField";
+import {defineComponent, SetupContext} from 'vue';
+import { setupFormField, helpTextComputedProperties, errorComputedProperties } from "./../../composition/formField";
 
 export default defineComponent({
 
@@ -49,19 +49,12 @@ export default defineComponent({
 
         let {form, fieldConfig } = setupFormField(props, context);
         let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig)
+        let { hasError, errorMessages } = errorComputedProperties(form, fieldConfig)
 
         let updateValue = (value: string) => {
             context.emit("update:modelValue", value);
             form.errors.clear(fieldConfig.valueField);
         }
-
-        let hasError = computed(() => {
-           return form.errors.has(fieldConfig.valueField)
-        });
-
-        let errorMessages = computed(() => {
-            return form.errors.get(fieldConfig.valueField, false);
-        })
 
         return {
             form,

@@ -1,8 +1,8 @@
 <template>
     <div>
         <component
-            :is="fieldConfig.staticTag"
-            v-html="fieldConfig.staticText"
+            :is="fieldConfig.options.staticTag"
+            v-html="fieldConfig.options.staticText"
         ></component>
     </div>
 </template>

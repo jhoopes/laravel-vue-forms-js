@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.form-group {
+    @apply m-2;
+}
+
+.form-control {
+    @apply rounded p-2 w-full border border-gray-300
+}

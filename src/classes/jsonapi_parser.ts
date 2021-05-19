@@ -148,11 +148,17 @@ export class Parser {
         meta?: Record<string, any>
     ): ITypedCollection<MT> {
         const models = [] as MT[];
+        let ModelType: typeof Model = this.models.generic;
         resources.forEach(resource => {
+            if (this.models[resource.type]) {
+                ModelType = this.models[resource.type];
+            }
             models.push(this.parseSingleResource<MT>(resource, included, meta));
         });
 
-        return new Collection<MT>(models, {}, meta) as ITypedCollection<MT>;
+        return new Collection<MT>(models, {
+            model: ModelType
+        }, meta) as ITypedCollection<MT>;
     }
 
     parseJSONAPIResponse<MT extends Model>(

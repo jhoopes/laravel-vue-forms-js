@@ -1,5 +1,5 @@
 import Model from "./../classes/model";
-import {SetupContext, defineEmit, watch, computed} from "vue";
+import {SetupContext, watch, computed} from "vue";
 import {assignOnObject, getFieldValue} from "./../utilities/utils";
 import {FormConfiguration} from "./../classes/models/formConfiguration";
 import {FormField} from "./../classes/models/formField";
@@ -128,7 +128,7 @@ export const submitForm = async (
 
         submitFormElements.saveSuccess(
             record,
-            "updated",
+            actionType,
             submitFormElements.context,
             submitFormElements.passThru,
             submitFormElements.closeOnSave);
@@ -242,7 +242,7 @@ export const setupWatchers = (vueFormData: IVueFormData, submitFormFunc: Functio
 
     watch(
         () => vueFormData.form.data,
-        (data, prevData) => {
+        (data) => {
             context.emit('changed', data);
         }
     )

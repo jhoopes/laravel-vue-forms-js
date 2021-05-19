@@ -96,3 +96,20 @@ export const helpTextComputedProperties = (fieldConfig: IFormFieldFieldConfig) =
         hasHelpText
     }
 }
+
+
+export const errorComputedProperties = (form: Form, fieldConfig: IFormFieldFieldConfig) => {
+
+    const hasError = computed(() => {
+        return form.errors.has(fieldConfig.valueField)
+    });
+
+    const errorMessages = computed(() => {
+        return form.errors.get(fieldConfig.valueField, false);
+    });
+
+    return {
+        hasError,
+        errorMessages
+    }
+}

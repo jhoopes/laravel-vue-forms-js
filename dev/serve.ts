@@ -4,7 +4,10 @@ import Dev from './serve.vue';
 // library as a whole, comment/remove this import and it's corresponding "app.use" call
 import LaravelVueForms from '@/entry.esm';
 
+import router from './routes/index';
+
 const app = createApp(Dev);
 app.use(LaravelVueForms);
+app.use(router);
 
 app.mount('#app');

@@ -1,0 +1,17 @@
+{
+  "name": "lvf-tailwindcss-build",
+  "version": "1.0.0",
+  "description": "separate directory for postcss8 tailwindcss because vue cli 4 doesn't support postcss8 but sfc-rollup does with rollup",
+  "scripts": {
+    "postcss:watch": "postcss ./index.css --dir ./../../public --watch",
+    "postcss:build": "postcss ./index.css --dir ./../../dist"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.15",
+    "postcss-cli": "^8.3.1",
+    "tailwindcss": "^2.1.2"
+  }
+}

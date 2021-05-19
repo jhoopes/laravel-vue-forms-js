@@ -1,100 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:npm_and_yarn" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:task" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
-    <select />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0e61d0d-0255-4ad2-8517-c735f629afb5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../code/formAdmin/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../code/formAdmin/public/css/app.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../code/formAdmin/public/js/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../code/formAdmin/public/mix-manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../code/formAdmin/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../code/formAdmin/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../code/formAdmin/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../code/formAdmin/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../code/formAdmin/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.browserslistrc" beforeDir="false" afterPath="$PROJECT_DIR$/.browserslistrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.eslintrc.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jest.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jsconfig.json" beforeDir="false" />
+    <list default="true" id="32b06e09-1dee-43e5-a0c9-4d7a064d5b47" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/serve.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dev/serve.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/serve.vue" beforeDir="false" afterPath="$PROJECT_DIR$/dev/serve.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-forms.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-forms.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postcss.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/sass/styles.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/Files/FormFile.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/Files/FormFileUpload.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/Files/FormFiles.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormAutocomplete.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormCheckbox.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormCode.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormColumn.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormDatePicker.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormMultiSelect.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormPassword.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormRadio.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormSelect.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormStatic.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormTab.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormTabs.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormText.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormTextarea.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormTimePicker.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FormComponents/FormWYSIWYG.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/composition/formField.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/composition/vueForm.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/Actions.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/FormConfig.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/FormField.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/FormProps.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/HasOptions.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/UpdatesValuesAndConditions.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plugin.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shims-vue.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/example.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/admin.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/assets/sass/_table.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/assets/sass/admin.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/bootstrap.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/classes/configuration.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/classes/models/formConfiguration.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/classes/models/formField.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/classes/notifications.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/common.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/CustomWidgets/FieldExtra.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/CustomWidgets/FieldExtraOptions/HasOptions.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/CustomWidgets/FormValidation.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/CustomWidgets/FormValidationRule.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/Examples/FormTextExamples.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/FormAdmin.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/FormConfigurationFormField.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/Modal.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/NestedFormFieldList.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/components/grid-rows/HomeFormConfigurationRow.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/fa-bootstrap.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/router/router.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/router/routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/modules/form_administration/actions.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/modules/form_administration/getters.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/modules/form_administration/module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/modules/form_administration/mutations.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/modules/form_administration/state.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/modules/form_administration/utils.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/store/store.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/views/CustomEntities.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/views/CustomEntityTypes.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/views/Examples.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/views/FormConfiguration.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/views/FormConfigurationForm.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/admin/views/Home.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/Form.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/Form.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/apiClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/apiClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/collection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/collection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/jsonapi_parser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/jsonapi_parser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Form.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Form.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form-components/FormPassword.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/form-components/FormPassword.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form-components/FormSelect.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/form-components/FormSelect.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form-components/FormStatic.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/form-components/FormStatic.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/form-components/FormText.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/form-components/FormText.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/laravel-vue-forms-sample.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/composition/formField.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/composition/formField.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/composition/vueForm.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/composition/vueForm.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,73 +77,33 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="JupyterTrust" id="fe167478-b7be-456f-8cfd-5e24da0fabdf" />
-  <component name="ProjectId" id="1hjashPtJQ651rah73JnbCDv8e0" />
+  <component name="ProjectId" id="1sauZQnhFdpcG3n17X5biDza3Vq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="js.linters.configure.manually.selectedeslint" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/classes" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.standard" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.standard" value="project" />
-    <property name="node.js.selected.package.eslint" value="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\node_modules\eslint" />
-    <property name="node.js.selected.package.standard" value="" />
-    <property name="nodejs_interpreter_path" value="wsl://UBUNTU2004@/home/jhoopes/.nvm/versions/node/v12.18.3/bin/node" />
-    <property name="nodejs_package_manager_path" value="\\wsl$\Ubuntu-20.04\home\jhoopes\.nvm\versions\node\v12.18.3\lib\node_modules\yarn\bin\yarn" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
-    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\classes" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\components" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\classes\models" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\admin\views" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\admin\assets\sass" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\classes\models" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\classes" />
-      <recent name="\\wsl$\Ubuntu-20.04\home\jhoopes\development\npm-packages\laravel-vue-forms\src\admin" />
-    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="e0e61d0d-0255-4ad2-8517-c735f629afb5" name="Default Changelist" comment="" />
-      <created>1600527168730</created>
+      <changelist id="32b06e09-1dee-43e5-a0c9-4d7a064d5b47" name="Default Changelist" comment="" />
+      <created>1621123080155</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1600527168730</updated>
-      <workItem from="1600527169832" duration="57000" />
-      <workItem from="1600527230594" duration="70000" />
-      <workItem from="1600527312450" duration="1019000" />
-      <workItem from="1600704302845" duration="984000" />
-      <workItem from="1600813930657" duration="31923000" />
-      <workItem from="1601404763251" duration="379000" />
-      <workItem from="1609217850246" duration="300000" />
-      <workItem from="1615068680728" duration="32000" />
-      <workItem from="1615347985831" duration="4552000" />
-      <workItem from="1615428916470" duration="10000" />
-      <workItem from="1615428939355" duration="8845000" />
-      <workItem from="1615571293823" duration="634000" />
-      <workItem from="1616245904669" duration="477000" />
-      <workItem from="1616247874997" duration="13927000" />
-      <workItem from="1617905140551" duration="23500000" />
-      <workItem from="1619381227103" duration="7142000" />
-      <workItem from="1619532617434" duration="4919000" />
+      <updated>1621123080155</updated>
+      <workItem from="1621123082651" duration="569000" />
+      <workItem from="1621123672028" duration="14101000" />
+      <workItem from="1621391573332" duration="5513000" />
     </task>
     <servers />
   </component>
@@ -198,7 +120,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

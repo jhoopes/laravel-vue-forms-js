@@ -3,34 +3,34 @@ import {HTTPWebProtocol, IApiClient, IHTTPClientBody, IHTTPClientResponse} from 
 import ApiError from "./ApiError";
 
 export class ApiClient implements IApiClient {
-  urlBase: string;
-  fetch: typeof fetch;
-  protocol: HTTPWebProtocol;
-  defaultHeaders: Record<string, string>;
+    urlBase: string;
+    fetch: typeof fetch;
+    protocol: HTTPWebProtocol;
+    defaultHeaders: Record<string, string>;
 
-  constructor(fetchInjection?: typeof fetch) {
-    if (!fetchInjection) {
-      this.fetch = window.fetch.bind(window);
-    } else {
-      this.fetch = fetchInjection;
+    constructor(fetchInjection?: typeof fetch) {
+        if (!fetchInjection) {
+            this.fetch = window.fetch.bind(window);
+        } else {
+            this.fetch = fetchInjection;
+        }
+        this.urlBase = "";
+        if (window.location && window.location.origin) {
+            this.urlBase = window.location.origin;
+        }
+        this.protocol = HTTPWebProtocol.HTTPS;
+        this.defaultHeaders = {
+            Accept: "application/json"
+        };
     }
-    this.urlBase = "";
-    if (window.location && window.location.origin) {
-      this.urlBase = window.location.origin;
+
+    setUrlBase(url: string) {
+        this.urlBase = url;
     }
-    this.protocol = HTTPWebProtocol.HTTPS;
-    this.defaultHeaders = {
-      Accept: "application/json"
-    };
-  }
 
-  setUrlBase(url: string) {
-    this.urlBase = url;
-  }
-
-  setProtocol(protocol: HTTPWebProtocol) {
-    this.protocol = protocol;
-  }
+    setProtocol(protocol: HTTPWebProtocol) {
+        this.protocol = protocol;
+    }
 
     header(header: string, value: string) {
         this.defaultHeaders[header] = value;
@@ -108,71 +108,75 @@ export class ApiClient implements IApiClient {
 
     async http(path: string, config: RequestInit): Promise<IHTTPClientResponse> {
 
-      let XSRFToken = this.getCookie('XSRF-TOKEN');
-      if(XSRFToken !== null) {
-          config.headers = Object.assign({
-              'X-XSRF-TOKEN': XSRFToken
-          }, config.headers)
-      }
-
-    const request = new Request(path, config);
-
-    const response = await this.fetch(request);
-    const body = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      throw new ApiError(response, body);
-    }
-
-    return {
-      data: body,
-      response: response
-    };
-  }
-
-  buildBodyFromClientBodyOptions(body?: IHTTPClientBody): BodyInit {
-    if (body && body.searchParams) {
-      const searchParams = new URLSearchParams();
-      Object.keys(body.searchParams).forEach(key => {
-        if (body.searchParams && body.searchParams[key]) {
-          searchParams.append(key, body.searchParams[key] as string);
+        let XSRFToken = this.getCookie('XSRF-TOKEN');
+        if (XSRFToken !== null) {
+            config.headers = Object.assign({
+                'X-XSRF-TOKEN': XSRFToken
+            }, config.headers)
         }
-      });
 
-      return searchParams;
+        if (config.body === "") {
+            delete config.body;
+        }
+
+        const request = new Request(path, config);
+
+        const response = await this.fetch(request);
+        const body = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new ApiError(response, body);
+        }
+
+        return {
+            data: body,
+            response: response
+        };
     }
 
-    if (body && body.requestBody && body.requestBody instanceof FormData) {
-      return body.requestBody;
+    buildBodyFromClientBodyOptions(body?: IHTTPClientBody): BodyInit {
+        if (body && body.searchParams) {
+            const searchParams = new URLSearchParams();
+            Object.keys(body.searchParams).forEach(key => {
+                if (body.searchParams && body.searchParams[key]) {
+                    searchParams.append(key, body.searchParams[key] as string);
+                }
+            });
+
+            return searchParams;
+        }
+
+        if (body && body.requestBody && body.requestBody instanceof FormData) {
+            return body.requestBody;
+        }
+
+        if (body && body.requestBody) {
+            this.defaultHeaders["Content-Type"] = "application/json";
+            return JSON.stringify(body.requestBody);
+        }
+
+        return "";
     }
 
-    if (body && body.requestBody) {
-      this.defaultHeaders["Content-Type"] = "application/json";
-      return JSON.stringify(body.requestBody);
+    getCookie(name: string): string | null {
+        // Split cookie string and get all individual name=value pairs in an array
+        var cookieArr = document.cookie.split(";");
+
+        // Loop through the array elements
+        for (var i = 0; i < cookieArr.length; i++) {
+            var cookiePair = cookieArr[i].split("=");
+
+            /* Removing whitespace at the beginning of the cookie name
+            and compare it with the given string */
+            if (name == cookiePair[0].trim()) {
+                // Decode the cookie value and return
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+
+        // Return null if not found
+        return null;
     }
-
-    return "";
-  }
-
-  getCookie(name: string): string | null {
-      // Split cookie string and get all individual name=value pairs in an array
-      var cookieArr = document.cookie.split(";");
-
-      // Loop through the array elements
-      for(var i = 0; i < cookieArr.length; i++) {
-          var cookiePair = cookieArr[i].split("=");
-
-          /* Removing whitespace at the beginning of the cookie name
-          and compare it with the given string */
-          if(name == cookiePair[0].trim()) {
-              // Decode the cookie value and return
-              return decodeURIComponent(cookiePair[1]);
-          }
-      }
-
-      // Return null if not found
-      return null;
-  }
 }
 
 const client = new ApiClient();

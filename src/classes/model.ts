@@ -1,7 +1,7 @@
 import {Base} from "./base";
 import {Collection} from "./collection";
 import {DateTime, LocaleOptions} from "luxon";
-import {reactive, isReactive, toRaw} from "vue";
+import {isReactive, toRaw} from "vue";
 
 import castArray from "lodash/castArray";
 import cloneDeep from "lodash/cloneDeep";
@@ -55,8 +55,8 @@ export class Model extends Base {
         super(options);
 
         this.id = 0;
-        this._reference = reactive({});
-        this._attributes = reactive({});
+        this._reference = {};
+        this._attributes = {};
         this._casts = {};
         this._registeredAttributes = [];
 
@@ -245,7 +245,7 @@ export class Model extends Base {
 
         // Sync either specific attributes or all attributes if none provided.
         if (isUndefined(attribute)) {
-            this._reference = reactive(active);
+            this._reference = active;
         } else {
             // otherwise set specific ones, _reference is already reactive from constructor
             each(castArray(attribute), attribute => {
@@ -411,11 +411,11 @@ export class Model extends Base {
     }
 
     dateFormat(): LocaleOptions | Intl.DateTimeFormatOptions {
-        return DateTime.DATE_SHORT;
+        return DateTime.DATETIME_FULL;
     }
 
     parseDate(value: string) {
-        return DateTime.fromSQL(value).toLocaleString(this.dateFormat());
+        return DateTime.fromISO(value).toLocaleString(this.dateFormat());
     }
 
     ensureRelationshipIsSet(relationship: string) {
