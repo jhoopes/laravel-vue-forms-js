@@ -4,3 +4,10 @@ declare module '*.vue' {
   const Component: DefineComponent<{}, {}, any>;
   export default Component;
 }
+
+
+declare module "vue-multiselect" {
+
+
+
+}

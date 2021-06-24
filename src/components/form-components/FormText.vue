@@ -1,60 +1,69 @@
 <template>
-  <div
-    class="form-group"
-    :id="fieldName + '-text-field'"
-    :class="{ 'has-error': hasError }"
-  >
-    <label class="form-control-label">
-      <span v-html="fieldConfig.label"></span>
-      <span class="required" v-if="fieldConfig.fieldExtra.required">
-        &nbsp;&nbsp;(*)
-      </span>
-      <span
-        v-if="withHelpIcon"
-        :class="fieldConfig.fieldExtra.withIcon"
-        :title="fieldConfig.fieldExtra.helpText"
-      ></span>
-    </label>
-    <div class="">
-      <input
-        type="text"
-        class="form-control"
-        :name="fieldConfig.fieldName"
-        ref="formText"
-        :value="modelValue"
-        @input="updateValue($event.target.value)"
-        :disabled="fieldConfig.disabled === 1 || fieldConfig.disabled === true"
-      />
-      <span class="errors" v-if="hasError">
-          <ul>
-              <li v-for="message in errorMessages">{{ message }}</li>
-          </ul>
-      </span>
+    <div
+        class="form-group"
+        :id="fieldName + '-text-field'"
+        :class="{ 'has-error': hasError }"
+    >
+        <label class="form-control-label">
+            <span v-html="fieldConfig.label"></span>
+            <span class="required" v-if="fieldConfig.fieldExtra.required">
+                &nbsp;&nbsp;(*)
+            </span>
+            <span
+                v-if="withHelpIcon"
+                :class="fieldConfig.fieldExtra.withIcon"
+                :title="fieldConfig.fieldExtra.helpText"
+            ></span>
+        </label>
+        <div class="">
+            <input
+                type="text"
+                class="form-control"
+                :name="fieldConfig.fieldName"
+                ref="formText"
+                :value="modelValue"
+                @input="updateValue($event.target.value)"
+                :disabled="
+                    fieldConfig.disabled === 1 || fieldConfig.disabled === true
+                "
+            />
+            <span class="errors" v-if="hasError">
+                <ul>
+                    <li v-for="message in errorMessages" :key="message">
+                        {{ message }}
+                    </li>
+                </ul>
+            </span>
+        </div>
+        <div v-if="hasHelpText">
+            <span v-html="fieldConfig.fieldExtra.helpText"></span>
+        </div>
     </div>
-    <div v-if="hasHelpText">
-      <span v-html="fieldConfig.fieldExtra.helpText"></span>
-    </div>
-  </div>
 </template>
 <script lang="ts">
-
-import {defineComponent, SetupContext} from 'vue';
-import { setupFormField, helpTextComputedProperties, errorComputedProperties } from "./../../composition/formField";
+import { defineComponent, SetupContext } from "vue";
+import {
+    setupFormField,
+    helpTextComputedProperties,
+    errorComputedProperties,
+} from "./../../composition/formField";
 
 export default defineComponent({
-
     name: "form-text",
 
     setup(props, context: SetupContext) {
-
-        let {form, fieldConfig } = setupFormField(props, context);
-        let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig)
-        let { hasError, errorMessages } = errorComputedProperties(form, fieldConfig)
+        let { form, fieldConfig } = setupFormField(props, context);
+        let { withHelpIcon, hasHelpText } =
+            helpTextComputedProperties(fieldConfig);
+        let { hasError, errorMessages } = errorComputedProperties(
+            form,
+            fieldConfig
+        );
 
         let updateValue = (value: string) => {
             context.emit("update:modelValue", value);
             form.errors.clear(fieldConfig.valueField);
-        }
+        };
 
         return {
             form,
@@ -63,45 +72,43 @@ export default defineComponent({
             withHelpIcon,
             hasHelpText,
             hasError,
-            errorMessages
-        }
+            errorMessages,
+        };
     },
 
-    emits: [
-        'update:modelValue'
-    ],
+    emits: ["update:modelValue"],
 
     props: {
         label: {
-            type: String
+            type: String,
         },
         fieldName: {
             type: String,
-            required: true
+            required: true,
         },
         modelValue: {
-            required: true
+            required: true,
         },
         showLabel: {
             type: Boolean,
-            default: true
+            default: true,
         },
         required: {
             type: Boolean,
-            default: false
+            default: false,
         },
         disabled: {
             type: Boolean,
-            default: false
+            default: false,
         },
         findInForm: {
             type: Boolean,
-            default: false
+            default: false,
         },
         useJsonApi: {
             type: Boolean,
-            default: false
-        }
-    }
+            default: false,
+        },
+    },
 });
 </script>

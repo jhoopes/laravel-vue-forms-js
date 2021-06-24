@@ -1,4 +1,9 @@
-import {HTTPWebProtocol, IApiClient, IHTTPClientBody, IHTTPClientResponse} from "../types/index";
+import {
+    HTTPWebProtocol,
+    IApiClient,
+    IHTTPClientBody,
+    IHTTPClientResponse,
+} from "../types/index";
 
 import ApiError from "./ApiError";
 
@@ -7,6 +12,7 @@ export class ApiClient implements IApiClient {
     fetch: typeof fetch;
     protocol: HTTPWebProtocol;
     defaultHeaders: Record<string, string>;
+    withCredentials = false;
 
     constructor(fetchInjection?: typeof fetch) {
         if (!fetchInjection) {
@@ -20,7 +26,7 @@ export class ApiClient implements IApiClient {
         }
         this.protocol = HTTPWebProtocol.HTTPS;
         this.defaultHeaders = {
-            Accept: "application/json"
+            Accept: "application/json",
         };
     }
 
@@ -36,6 +42,14 @@ export class ApiClient implements IApiClient {
         this.defaultHeaders[header] = value;
     }
 
+    useCredentials(credentials?: boolean) {
+        if (!credentials) {
+            this.withCredentials = false;
+        }
+
+        this.withCredentials = true;
+    }
+
     async get(
         path: string,
         body?: IHTTPClientBody,
@@ -46,7 +60,7 @@ export class ApiClient implements IApiClient {
             method: "GET",
             body: this.buildBodyFromClientBodyOptions(body),
             headers: Object.assign({}, this.defaultHeaders, headers),
-            ...config
+            ...config,
         });
     }
 
@@ -60,7 +74,7 @@ export class ApiClient implements IApiClient {
             method: "POST",
             body: this.buildBodyFromClientBodyOptions(body),
             headers: Object.assign({}, this.defaultHeaders, headers),
-            ...config
+            ...config,
         });
     }
 
@@ -74,7 +88,7 @@ export class ApiClient implements IApiClient {
             method: "PUT",
             body: this.buildBodyFromClientBodyOptions(body),
             headers: Object.assign({}, this.defaultHeaders, headers),
-            ...config
+            ...config,
         });
     }
 
@@ -88,7 +102,7 @@ export class ApiClient implements IApiClient {
             method: "PATCH",
             body: this.buildBodyFromClientBodyOptions(body),
             headers: Object.assign({}, this.defaultHeaders, headers),
-            ...config
+            ...config,
         });
     }
 
@@ -102,21 +116,46 @@ export class ApiClient implements IApiClient {
             method: "DELETE",
             body: this.buildBodyFromClientBodyOptions(body),
             headers: Object.assign({}, this.defaultHeaders, headers),
-            ...config
+            ...config,
         });
     }
 
-    async http(path: string, config: RequestInit): Promise<IHTTPClientResponse> {
-
-        let XSRFToken = this.getCookie('XSRF-TOKEN');
+    async http(
+        path: string,
+        config: RequestInit
+    ): Promise<IHTTPClientResponse> {
+        const XSRFToken = this.getCookie("XSRF-TOKEN");
         if (XSRFToken !== null) {
-            config.headers = Object.assign({
-                'X-XSRF-TOKEN': XSRFToken
-            }, config.headers)
+            config.headers = Object.assign(
+                {
+                    "X-XSRF-TOKEN": XSRFToken,
+                },
+                config.headers
+            );
         }
 
         if (config.body === "") {
             delete config.body;
+        } else if (
+            config.method === "GET" &&
+            config.body &&
+            config.body instanceof URLSearchParams
+        ) {
+            path += "?" + config.body.toString();
+            delete config.body;
+            console.log(path);
+        }
+
+        try {
+            // determine if path contains full URL, exception is thrown otherwise, and we'll add the urlBase
+            new URL(path);
+        } catch (err) {
+            path = this.urlBase + path;
+            console.log("overall path", path);
+        }
+
+        if (this.withCredentials) {
+            config.credentials = "include";
         }
 
         const request = new Request(path, config);
@@ -130,14 +169,14 @@ export class ApiClient implements IApiClient {
 
         return {
             data: body,
-            response: response
+            response: response,
         };
     }
 
     buildBodyFromClientBodyOptions(body?: IHTTPClientBody): BodyInit {
         if (body && body.searchParams) {
             const searchParams = new URLSearchParams();
-            Object.keys(body.searchParams).forEach(key => {
+            Object.keys(body.searchParams).forEach((key) => {
                 if (body.searchParams && body.searchParams[key]) {
                     searchParams.append(key, body.searchParams[key] as string);
                 }
@@ -160,11 +199,11 @@ export class ApiClient implements IApiClient {
 
     getCookie(name: string): string | null {
         // Split cookie string and get all individual name=value pairs in an array
-        var cookieArr = document.cookie.split(";");
+        const cookieArr = document.cookie.split(";");
 
         // Loop through the array elements
-        for (var i = 0; i < cookieArr.length; i++) {
-            var cookiePair = cookieArr[i].split("=");
+        for (let i = 0; i < cookieArr.length; i++) {
+            const cookiePair = cookieArr[i].split("=");
 
             /* Removing whitespace at the beginning of the cookie name
             and compare it with the given string */

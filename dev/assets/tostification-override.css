@@ -1,0 +1,18 @@
+
+
+.Vue-Toastification__toast {
+    @apply p-0 pr-2;
+}
+
+.Vue-Toastification__close-button {
+    @apply text-gray-800;
+}
+
+.Vue-Toastification__toast--default {
+    @apply bg-white text-gray-800;
+}
+
+
+.Vue-Toastification__progress-bar {
+    @apply bg-gray-400;
+}

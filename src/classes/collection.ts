@@ -1,7 +1,6 @@
-import {toRaw} from "vue";
+import { toRaw } from "vue";
 import Base from "./base";
-import Model from "./model";
-import Generic from "./../classes/models/generic";
+import { Model } from "./model";
 import defaultsDeep from "lodash/defaultsDeep";
 import each from "lodash/each";
 import filter from "lodash/filter";
@@ -18,26 +17,31 @@ import size from "lodash/size";
 import unset from "lodash/unset";
 import values from "lodash/values";
 import at from "lodash/at";
-import {ITypedCollection, ILengthAwarePaginatedResponse, ILengthAwarePaginator} from "./../types/index";
+import {
+    ITypedCollection,
+    ILengthAwarePaginatedResponse,
+    ILengthAwarePaginator,
+} from "./../types/index";
 
 /**
  * Base collection class.
  */
-export class Collection<MT extends Model> extends Base
-    implements ITypedCollection<MT> {
+export class Collection<MT extends Model>
+    extends Base
+    implements ITypedCollection<MT>
+{
     public models: MT[];
     private _attributes: Record<string, any>;
     private _registry: Record<string, number>;
     private _id_registry: Record<number, number>;
-    private _current: number
-    private _isPaginating: boolean
-    private _page: number
-    private _from: number
-    private _to: number
-    private _per_page: number
-    private _last_page: number
-    private _total: number
-
+    private _current: number;
+    private _isPaginating: boolean;
+    private _page: number;
+    private _from: number;
+    private _to: number;
+    private _per_page: number;
+    private _last_page: number;
+    private _total: number;
 
     /**
      * Creates a new instance, called when using 'new'.
@@ -57,36 +61,39 @@ export class Collection<MT extends Model> extends Base
         this._attributes = {};
         this._registry = {};
         this._id_registry = {};
-        this._current = 0
-        this._page = 0
-        this._from = 0
-        this._to = 0
-        this._per_page = 0
-        this._last_page = 0
-        this._total = 0
-        this._isPaginating = false
+        this._current = 0;
+        this._page = 0;
+        this._from = 0;
+        this._to = 0;
+        this._per_page = 0;
+        this._last_page = 0;
+        this._total = 0;
+        this._isPaginating = false;
 
         // Add all given models (if any) to this collection. We explicitly ask
         // for the values here as it's common for some sources to be objects.
 
         if (models && this.dataIsPaginated(models)) {
-            this.setPagination(models)
+            this.setPagination(models);
             /* @ts-ignore */
-            this.add(models.data)
-        } else if (models && attributes && this.attributesIsPaginated(attributes)) {
-            this.setPagination(attributes)
-            this.add(values(models))
+            this.add(models.data);
+        } else if (
+            models &&
+            attributes &&
+            this.attributesIsPaginated(attributes)
+        ) {
+            this.setPagination(attributes);
+            this.add(values(models));
         } else if (models) {
-            this.add(values(models))
+            this.add(values(models));
         }
-
 
         // Set all given attributes.
         this.set(defaultsDeep({}, attributes, this.defaults()));
 
         Object.defineProperty(this, "length", {
             get: () => this.models.length,
-            set: value => value
+            set: (value) => value,
         });
     }
 
@@ -102,14 +109,14 @@ export class Collection<MT extends Model> extends Base
 
     next() {
         if (this.length === 0 || this._current >= this.length) {
-            return {done: true};
+            return { done: true };
         }
 
-        let value = this.models[this._current];
+        const value = this.models[this._current];
         this._current++;
         return {
             done: false,
-            value
+            value,
         };
     }
 
@@ -127,10 +134,7 @@ export class Collection<MT extends Model> extends Base
      * @returns {Collection}
      */
     clone(): Collection<MT> {
-        return new Collection<MT>(
-            this.getModels(),
-            this.getOptions(),
-        )
+        return new Collection<MT>(this.getModels(), this.getOptions());
     }
 
     /**
@@ -192,7 +196,7 @@ export class Collection<MT extends Model> extends Base
      */
     getDefaultOptions(): Record<string, any> {
         return merge(super.getDefaultOptions(), {
-            model: Generic
+            model: Model,
         });
     }
 
@@ -254,7 +258,7 @@ export class Collection<MT extends Model> extends Base
      * @return {Boolean} true if this collection has the model in its registry.
      */
     hasModelInRegistry(model: MT): boolean {
-        let hasInRegistry = has(this._registry, model.getUid());
+        const hasInRegistry = has(this._registry, model.getUid());
         let hasInIdRegistry = false;
         if (model.id) {
             hasInIdRegistry = has(this._id_registry, model.id);
@@ -289,7 +293,7 @@ export class Collection<MT extends Model> extends Base
     add(model: MT | MT[] | Record<string, any>): void {
         // If given an array, assume an array of models and add them all.
         if (Array.isArray(model)) {
-            model.forEach(m => {
+            model.forEach((m) => {
                 this.add(m);
             });
 
@@ -297,20 +301,22 @@ export class Collection<MT extends Model> extends Base
         }
 
         // Objects should be converted to model instances first, then added.
-        if (isPlainObject(model)) {;
+        if (isPlainObject(model)) {
             return this.add(this.createModel(model));
         }
 
         // This is also just to catch a potential bug. All models should have
         // an auto id so this would indicate an unexpected state.
         if (!this.isModel(model)) {
-            throw new Error("Expected a model, plain object, or array of either");
+            throw new Error(
+                "Expected a model, plain object, or array of either"
+            );
         }
 
         // Make sure we don't add the same model twice.
         // @ts-ignore
         if (this.hasModelInRegistry(model)) {
-            console.log('Model in registry', model);
+            console.log("Model in registry", model);
             return;
         }
 
@@ -367,7 +373,7 @@ export class Collection<MT extends Model> extends Base
     remove(model: MT | number): MT | void {
         if (typeof model === "number") {
             // find the model to remove
-            const foundModel = this.models.find(m => {
+            const foundModel = this.models.find((m) => {
                 return m.id === model;
             });
             if (foundModel) {
@@ -413,7 +419,7 @@ export class Collection<MT extends Model> extends Base
 
             // There is no need to filter on the entire object, because the
             // unique ID of the model is all we need to identify it.
-            filter = {id: model.id};
+            filter = { id: model.id };
         } else {
             filter = model;
         }
@@ -513,7 +519,7 @@ export class Collection<MT extends Model> extends Base
     }
 
     first(): MT | null {
-        if(this.models.length > 0) {
+        if (this.models.length > 0) {
             return this.models[0];
         }
 
@@ -526,39 +532,42 @@ export class Collection<MT extends Model> extends Base
      * @return {object[]} converted collection
      */
     toArray() {
-        return this.map(model => model.toJSON());
+        return this.map((model) => model.toJSON());
     }
 
     /**
      * @returns {boolean} Whether the data is currently paginated.
      */
-    dataIsPaginated(data: MT[] | ILengthAwarePaginatedResponse<MT> | Record<string, any>): boolean {
-        if (Array.isArray(data)) { // determine if it's an array of model type, if so return false
-            return false
+    dataIsPaginated(
+        data: MT[] | ILengthAwarePaginatedResponse<MT> | Record<string, any>
+    ): boolean {
+        if (Array.isArray(data)) {
+            // determine if it's an array of model type, if so return false
+            return false;
         }
 
         return (
             data.current_page !== null &&
-            typeof data.current_page !== 'undefined'
-        )
+            typeof data.current_page !== "undefined"
+        );
     }
 
     attributesIsPaginated(attributes?: Record<string, any>): boolean {
         if (!attributes) {
-            return false
+            return false;
         }
 
         return (
             attributes.current_page !== null &&
-            typeof attributes.current_page !== 'undefined'
-        )
+            typeof attributes.current_page !== "undefined"
+        );
     }
 
     /**
      * @returns {integer|null} The page that this collection is on.
      */
     getPage() {
-        return this._page
+        return this._page;
     }
 
     /**
@@ -566,7 +575,7 @@ export class Collection<MT extends Model> extends Base
      *                            ie. there won't be more results that follow.
      */
     isLastPage() {
-        return this._page === this._last_page
+        return this._page === this._last_page;
     }
 
     /**
@@ -576,14 +585,14 @@ export class Collection<MT extends Model> extends Base
      * @param {[]} data
      */
     setPagination(data: Record<string, any>) {
-        this._isPaginating = true
+        this._isPaginating = true;
 
-        this._page = data.current_page
-        this._from = data.from
-        this._to = data.to
-        this._per_page = data.per_page
-        this._last_page = data.last_page
-        this._total = data.total
+        this._page = data.current_page;
+        this._from = data.from;
+        this._to = data.to;
+        this._per_page = data.per_page;
+        this._last_page = data.last_page;
+        this._total = data.total;
     }
 
     /**
@@ -593,18 +602,30 @@ export class Collection<MT extends Model> extends Base
      */
     paginate(): ILengthAwarePaginator<MT> | MT[] {
         if (!this._isPaginating) {
-            return this.models
+            return this.models;
         }
 
         return {
-            current_page: this.get('page'),
+            current_page: this.get("page"),
             data: this.models,
             from: this._from,
             to: this._to,
             per_page: this._per_page,
             last_page: this._last_page,
-            total: this._total
-        } as ILengthAwarePaginator<MT>
+            total: this._total,
+        } as ILengthAwarePaginator<MT>;
+    }
+
+    isPaginating(): boolean {
+        return this._isPaginating;
+    }
+
+    totalPages(): number {
+        if (!this._isPaginating) {
+            return 0;
+        }
+
+        return this._last_page;
     }
 }
 

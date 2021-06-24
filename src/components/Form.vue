@@ -7,9 +7,11 @@
             <div
                 class="m-4 p-4 flex items-center"
                 :class="{
-          'bg-red-300': form.errors.getGeneralMessageType() === 'error',
-          'bg-blue-300': form.errors.getGeneralMessageType() === 'info'
-        }"
+                    'bg-red-300':
+                        form.errors.getGeneralMessageType() === 'error',
+                    'bg-blue-300':
+                        form.errors.getGeneralMessageType() === 'info',
+                }"
             >
                 <font-awesome-icon
                     :icon="warningIcon"
@@ -28,7 +30,11 @@
                     <component
                         v-for="field in topFields"
                         :key="field.id"
-                        :name="field.field_extra ? field.field_extra.name : field.name"
+                        :name="
+                            field.field_extra
+                                ? field.field_extra.name
+                                : field.name
+                        "
                         :is="getFormFieldComponent(field.widget)"
                         :field-name="field.name"
                         :disabled="disabled"
@@ -49,20 +55,30 @@
                     v-for="field in topFields"
                     :key="field.id"
                     :is="getFormFieldComponent(field.widget)"
-                    v-show="field.visible && form.fieldMeetsConditions[field.name]"
+                    v-show="
+                        field.visible && form.fieldMeetsConditions[field.name]
+                    "
                     :field-name="field.name"
                     :modelValue="form.getFieldValue(field)"
-                    @update:modelValue="newVal => form.updateValueAndConditionals(newVal, field)"
+                    @update:modelValue="
+                        (newVal) =>
+                            form.updateValueAndConditionals(newVal, field)
+                    "
                     @options-updated="
-            newOptions => form.updateOptionsForField(newOptions, field)
-          "
+                        (newOptions) =>
+                            form.updateOptionsForField(newOptions, field)
+                    "
                     :class="columnWidth + ' ' + 'm-2'"
                     :find-in-form="true"
                 ></component>
             </div>
             <div
                 class="controls-row"
-                v-if="disabled === false && autoSave === false && layoutType !== 'tabs'"
+                v-if="
+                    disabled === false &&
+                    autoSave === false &&
+                    layoutType !== 'tabs'
+                "
             >
                 <button
                     class="button"
@@ -73,45 +89,56 @@
                     :disabled="showSaving && saving"
                 ></button>
                 <span v-if="saving && showSaving"
-                ><font-awesome-icon
-                    :icon="spinnerIcon"
-                    :spin="true"
-                ></font-awesome-icon
-                >{{ savingText }}</span
+                    ><font-awesome-icon
+                        :icon="spinnerIcon"
+                        :spin="true"
+                    ></font-awesome-icon
+                    >{{ savingText }}</span
                 >
             </div>
             <div
                 class="controls-row"
                 v-if="showSaving && saving && autoSave === true"
             >
-                <font-awesome-icon :icon="spinnerIcon" :spin="true"></font-awesome-icon
+                <font-awesome-icon
+                    :icon="spinnerIcon"
+                    :spin="true"
+                ></font-awesome-icon
                 >{{ savingText }}
             </div>
         </form>
     </div>
 </template>
 <script lang="ts">
-
-import {defineComponent, toRefs, reactive, SetupContext, provide} from "vue";
+import { defineComponent, toRefs, reactive, SetupContext, provide } from "vue";
 import { Form } from "../classes/Form";
 import FormText from "./FormComponents/FormText.vue";
 
 import {
     faSpinner,
     faExclamationTriangle,
-    faInfoCircle
+    faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import apiClient from "./../classes/apiClient";
-import {FormConfiguration} from "./../classes/models/formConfiguration";
+import { FormConfiguration } from "./../classes/models/formConfiguration";
 import {
     defaultFields,
     submitForm,
     saveSuccess as saveSuccessDefault,
-    setupComputed, setupWatchers, emitOrRunCustomAction, cancelForm
+    setupComputed,
+    setupWatchers,
+    emitOrRunCustomAction,
+    cancelForm,
 } from "./../composition/vueForm";
-import {IApiClient, ISubmitFormElements, IVueFormData, SaveSuccessFunction} from "./../types";
+import {
+    IApiClient,
+    ISubmitFormElements,
+    IVueFormData,
+    SaveSuccessFunction,
+    ICustomActionFunction,
+} from "./../types";
 import ApiError from "./../classes/ApiError";
 
 export default defineComponent({
@@ -119,23 +146,15 @@ export default defineComponent({
 
     components: {
         FormText,
-        FontAwesomeIcon
+        FontAwesomeIcon,
     },
 
-
-
     setup(props, context: SetupContext) {
+        let formData = defaultFields(props.formData, props.formConfig);
+        let formObj = new Form(formData, props.formConfig);
 
-
-        let formData = defaultFields(props.formData, props.formConfig)
-        let formObj = new Form(formData, props.formConfig)
-
-        let {
-            topFields,
-            layoutType,
-            columnCount,
-            columnWidth
-        } = setupComputed(formObj)
+        let { topFields, layoutType, columnCount, columnWidth } =
+            setupComputed(formObj);
 
         let vueFormData = reactive({
             form: formObj,
@@ -150,13 +169,13 @@ export default defineComponent({
             columnWidth,
         }) as unknown as IVueFormData;
 
-
         const submitFormFunc = () => {
             vueFormData.saving = true;
 
-            let saveSuccess: SaveSuccessFunction = props.saveSuccess as SaveSuccessFunction;
-            if(!props.saveSuccess) {
-                saveSuccess = saveSuccessDefault
+            let saveSuccess: SaveSuccessFunction =
+                props.saveSuccess as SaveSuccessFunction;
+            if (!props.saveSuccess) {
+                saveSuccess = saveSuccessDefault;
             }
             try {
                 submitForm(formObj, {
@@ -166,31 +185,30 @@ export default defineComponent({
                     apiClient: props.apiClient as IApiClient,
                     formSubmitUrl: props.formSubmitUrl,
                     context,
-                    closeOnSave: props.closeOnSave
-                } as ISubmitFormElements)
+                    closeOnSave: props.closeOnSave,
+                } as ISubmitFormElements);
                 vueFormData.saving = false;
-            }catch(err) {
+            } catch (err) {
                 console.log(err);
                 vueFormData.saving = false;
                 props.errorHandler(err, formObj);
             }
-        }
+        };
 
-
-
-        provide('form', vueFormData.form);
-        provide('apiClient', props.apiClient);
-        provide('formHasJsonApi', props.useJsonApi);
+        provide("form", vueFormData.form);
+        provide("apiClient", props.apiClient);
+        provide("formHasJsonApi", props.useJsonApi);
 
         vueFormData.form.generateConditionValues();
 
         setupWatchers(vueFormData, submitFormFunc, props, context);
 
-
-        const runAction = (action: string | Function) =>{
-
-            if(typeof action === "string" && (action === "submitForm" || action === "cancelForm")) {
-                switch(action) {
+        const runAction = (action: string | ICustomActionFunction) => {
+            if (
+                typeof action === "string" &&
+                (action === "submitForm" || action === "cancelForm")
+            ) {
+                switch (action) {
                     case "submitForm":
                         submitFormFunc();
                         break;
@@ -198,36 +216,32 @@ export default defineComponent({
                         cancelForm(context);
                         break;
                 }
-            }else {
+            } else {
                 emitOrRunCustomAction(action, vueFormData.form, context);
             }
-        }
+        };
 
         return {
             runAction,
-            ...toRefs(vueFormData)
+            ...toRefs(vueFormData),
         };
     },
-
-
-
-
 
     props: {
         formConfig: {
             required: true,
-            type: FormConfiguration
+            type: FormConfiguration,
         },
         formData: {
             required: true,
-            type: Object
+            type: Object,
         },
         formSubmitUrl: {
             type: String,
-            default: "/api/forms/submit"
+            default: "/api/forms/submit",
         },
         apiClient: {
-            default: apiClient
+            default: apiClient,
         },
         saveSuccess: {
             type: Function,
@@ -236,35 +250,35 @@ export default defineComponent({
             type: Function,
             default: (error: ApiError, form: Form) => {
                 form.errors.report(error);
-            }
+            },
         },
         formErrors: {
             type: Object,
-            default: null
+            default: null,
         },
         disabled: {
             type: Boolean,
-            default: false
+            default: false,
         },
         closeOnSave: {
             type: Boolean,
-            default: false
+            default: false,
         },
         showCloseIcon: {
             type: Boolean,
-            default: false
+            default: false,
         },
         passThru: {
             type: Boolean,
-            default: false
+            default: false,
         },
         autoSave: {
             type: Boolean,
-            default: false
+            default: false,
         },
         autoSaveTimeout: {
             type: Number,
-            default: 4000
+            default: 4000,
         },
         // ability to define custom actions, custom actions will emit the action if the function does not exist on the form
         actions: {
@@ -273,41 +287,39 @@ export default defineComponent({
                 {
                     name: "submit",
                     label: "Submit",
-                    action: "submitForm"
+                    action: "submitForm",
                 },
                 {
                     name: "cancel",
                     label: "Cancel",
-                    action: "cancelForm"
-                }
-            ]
+                    action: "cancelForm",
+                },
+            ],
         },
         // whether or not to show the saving functionality
         showSaving: {
             type: Boolean,
-            default: true
+            default: true,
         },
         // allows parent components to define if its saving
         isSaving: {
             type: Boolean,
-            default: false
+            default: false,
         },
         // text to show with the spinner if it's saving
         savingText: {
             type: String,
-            default: "Saving..."
+            default: "Saving...",
         },
         useJsonApi: {
             type: Boolean,
-            default: false
+            default: false,
         },
         forceUpdate: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
-
-
 
     methods: {
         getFormFieldComponent(fieldWidget: string) {
@@ -349,10 +361,6 @@ export default defineComponent({
             }
         },
 
-
-
-
-
         // getFormFieldFieldExtra(field) {
         //   var fieldExtra = field.field_extra;
         //   if (!fieldExtra) {
@@ -371,7 +379,6 @@ export default defineComponent({
         //   assignOnObject(this.form.formFieldOptions, field.value_field, newOptions);
         //   this.generateConditionValues();
         // }
-    }
-
+    },
 });
 </script>

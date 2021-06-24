@@ -1,7 +1,7 @@
-import {Base} from "./base";
-import {Collection} from "./collection";
-import {DateTime, LocaleOptions} from "luxon";
-import {isReactive, toRaw} from "vue";
+import { Base } from "./base";
+import { Collection } from "./collection";
+import { DateTime, LocaleOptions } from "luxon";
+import { isReactive, toRaw } from "vue";
 
 import castArray from "lodash/castArray";
 import cloneDeep from "lodash/cloneDeep";
@@ -17,18 +17,16 @@ import merge from "lodash/merge";
 import invert from "lodash/invert";
 import defaults from "lodash/defaults";
 
-
 const RESERVEDKEYS = invert([
-    '_attributes',
-    '_casts',
-    '_collections',
-    '_errors',
-    '_listeners',
-    '_reference',
-    '_uid',
-    'attributes'
-])
-
+    "_attributes",
+    "_casts",
+    "_collections",
+    "_errors",
+    "_listeners",
+    "_reference",
+    "_uid",
+    "attributes",
+]);
 
 export class Model extends Base {
     public id: number;
@@ -36,7 +34,7 @@ export class Model extends Base {
     public _attributes: Record<string, any>;
     private _casts: Record<string, any>;
     private _registeredAttributes: string[];
-    private _current: number = 0;
+    private _current = 0;
     private _reserved: Array<string> = [
         "_attributes",
         "_casts",
@@ -45,7 +43,7 @@ export class Model extends Base {
         "_listeners",
         "_reference",
         "_uid",
-        "attributes"
+        "attributes",
     ];
 
     constructor(
@@ -92,7 +90,7 @@ export class Model extends Base {
             Object.keys(this._attributes).length === 0 ||
             this._current >= Object.keys(this._attributes).length
         ) {
-            return {done: true};
+            return { done: true };
         }
 
         const key = Object.keys(this._attributes)[this._current];
@@ -101,7 +99,7 @@ export class Model extends Base {
         this._current++;
         return {
             done: false,
-            value
+            value,
         };
     }
 
@@ -129,7 +127,7 @@ export class Model extends Base {
                 // Whether this model should mutate all attributes before they are
                 // synced to the "saved" state. This would include construction,
                 // and on assign.
-                castBeforeSync: true
+                castBeforeSync: true,
             }
         );
     }
@@ -163,7 +161,7 @@ export class Model extends Base {
     }
 
     ensureAttributesAreRegistered(properties: string[]) {
-        properties.forEach(prop => {
+        properties.forEach((prop) => {
             // Protect against unwillingly using an attribute name that already
             // exists as an internal property or method name.
             if (has(RESERVEDKEYS, prop)) {
@@ -179,11 +177,9 @@ export class Model extends Base {
         });
     }
 
-
     removeParentPropertyNames(properties: string[]): string[] {
-        return properties.filter(prop => prop.indexOf('_') !== 0);
+        return properties.filter((prop) => prop.indexOf("_") !== 0);
     }
-
 
     /**
      * @returns {*} The value of an attribute after applying its mutations.
@@ -209,7 +205,7 @@ export class Model extends Base {
             });
         } else {
             // Only mutate specific attributes.
-            each(castArray(attribute), attribute => {
+            each(castArray(attribute), (attribute) => {
                 this._attributes[attribute] = this.casted(
                     attribute,
                     this.get(attribute)
@@ -248,7 +244,7 @@ export class Model extends Base {
             this._reference = active;
         } else {
             // otherwise set specific ones, _reference is already reactive from constructor
-            each(castArray(attribute), attribute => {
+            each(castArray(attribute), (attribute) => {
                 this._reference[attribute] = get(active, attribute);
             });
         }
@@ -273,7 +269,7 @@ export class Model extends Base {
         // model directly while also keeping the model attributes in sync.
         Object.defineProperty(this, attribute, {
             get: () => this.get(attribute),
-            set: value => this.set(attribute, value)
+            set: (value) => this.set(attribute, value),
         });
 
         this._registeredAttributes.push(attribute);
@@ -292,7 +288,6 @@ export class Model extends Base {
     set(attribute: string | { [key: string]: any }, value?: any) {
         // Allow batch set of multiple attributes at once, ie. set({...});
         if (isPlainObject(attribute) && typeof attribute !== "string") {
-
             each(attribute, (value: any, key: string) => {
                 this.set(key, value);
             });
@@ -338,15 +333,13 @@ export class Model extends Base {
             // value already a collection
             this._attributes[relationship] = value;
         } else {
+            const relationshipModel = this.relationships()[
+                relationship
+            ] as typeof Model;
 
-            const relationshipModel = this.relationships()[relationship] as typeof Model;
-
-            this._attributes[relationship] = new Collection(
-                value,
-                {
-                    model: relationshipModel
-                }
-            );
+            this._attributes[relationship] = new Collection(value, {
+                model: relationshipModel,
+            });
         }
 
         return this._attributes[relationship];
@@ -403,7 +396,7 @@ export class Model extends Base {
     }
 
     compileCasts(): void {
-        this._casts = mapValues(this.casts(), m => flow(m).bind(this));
+        this._casts = mapValues(this.casts(), (m) => flow(m).bind(this));
     }
 
     toJSON(): Record<string, any> {
@@ -414,11 +407,11 @@ export class Model extends Base {
         return DateTime.DATETIME_FULL;
     }
 
-    parseDate(value: string) {
+    parseDate(value: string): string {
         return DateTime.fromISO(value).toLocaleString(this.dateFormat());
     }
 
-    ensureRelationshipIsSet(relationship: string) {
+    ensureRelationshipIsSet(relationship: string): void {
         const rel = get(this, relationship);
 
         if (rel !== null && typeof rel !== "undefined") {
@@ -434,7 +427,7 @@ export class Model extends Base {
         }
 
         const relationshipCollection = new Collection([], {
-            model: relationshipModel
+            model: relationshipModel,
         });
 
         this.registerAttribute(relationship);

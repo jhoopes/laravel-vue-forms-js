@@ -5,9 +5,9 @@
         :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
     >
         <label class="form-control-label"
-        ><span v-html="fieldConfig.label"></span>
+            ><span v-html="fieldConfig.label"></span>
             <span class="required" v-if="fieldConfig.fieldExtra.required"
-            >&nbsp;&nbsp;(*)</span
+                >&nbsp;&nbsp;(*)</span
             >
             <span
                 v-if="withHelpIcon"
@@ -16,14 +16,17 @@
             ></span>
         </label>
         <div class="">
-      <pre
-          class="m-0"
-          :style="'height: ' + height"
-          :id="'code-' + randomId"
-      ></pre>
-            <span class="errors" v-if="form.errors.has(this.fieldConfig.value_field)">
-        {{ form.errors.get(this.fieldConfig.value_field, true) }}
-      </span>
+            <pre
+                class="m-0"
+                :style="'height: ' + height"
+                :id="'code-' + randomId"
+            ></pre>
+            <span
+                class="errors"
+                v-if="form.errors.has(this.fieldConfig.value_field)"
+            >
+                {{ form.errors.get(this.fieldConfig.value_field, true) }}
+            </span>
         </div>
         <div v-if="hasHelpText">
             <span v-html="fieldConfig.fieldExtra.helpText"></span>
@@ -31,34 +34,41 @@
     </div>
 </template>
 <script lang="ts">
+import {
+    defineComponent,
+    SetupContext,
+    ref,
+    onMounted,
+    reactive,
+    computed,
+} from "vue";
+import { debounce } from "lodash";
 
-
-import {defineComponent, SetupContext, ref, onMounted, reactive, computed} from 'vue';
-import {debounce} from "lodash";
-
-const Ace = require('brace');
+// eslint-disable-next-line
+const Ace = require("brace");
 
 // TODO: make this available to be configured through plugin options
-require('brace/mode/javascript');
-require('brace/mode/json');
-require('brace/theme/monokai');
+require("brace/mode/javascript");
+require("brace/mode/json");
+require("brace/theme/monokai");
 
-
-import {guid} from "./../../utilities/utils"
-import {helpTextComputedProperties, setupFormField} from "../../composition/formField";
-import {FormField} from "../../classes/models/formField";
-import {Editor} from "brace";
+import { guid } from "./../../utilities/utils";
+import {
+    helpTextComputedProperties,
+    setupFormField,
+} from "../../composition/formField";
+import { FormField } from "../../classes/models/formField";
+import { Editor } from "brace";
 
 export default defineComponent({
     name: "form-code",
 
-
     setup(props, context: SetupContext) {
-
         let randomId = ref(guid());
 
         let { form, fieldConfig } = setupFormField(props, context);
-        let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig)
+        let { withHelpIcon, hasHelpText } =
+            helpTextComputedProperties(fieldConfig);
 
         if (
             props.findInForm &&
@@ -69,14 +79,16 @@ export default defineComponent({
                 if (field.name === props.fieldName) {
                     fieldConfig.options.editorEoptions = {};
                     if (field.field_extra.editorOptions) {
-                        fieldConfig.options.editorOptions = field.field_extra.editorOptions;
+                        fieldConfig.options.editorOptions =
+                            field.field_extra.editorOptions;
                     }
                 }
             });
         } else {
-            fieldConfig.options.editorOptions = props.editorOptions;
+            fieldConfig.options.editorOptions = computed(() => {
+                return props.editorOptions;
+            });
         }
-
 
         let height = computed(() => {
             if (!fieldConfig.options.editorOptions.height) {
@@ -99,7 +111,7 @@ export default defineComponent({
                 enableBasicAutocompletion: true,
                 enableSnippets: false,
                 enableLiveAutocompletion: false,
-                enableEmmet: true
+                enableEmmet: true,
             };
 
             if (!fieldConfig.options.editorOptions.ace_options) {
@@ -110,7 +122,7 @@ export default defineComponent({
                 defaultOptions,
                 fieldConfig.options.editorOptions.ace_options
             );
-        })
+        });
 
         let editor: Editor;
 
@@ -118,7 +130,9 @@ export default defineComponent({
             let value = editor.session.getValue();
             if (mode.value === "json") {
                 try {
-                    value = JSON.stringify(JSON.parse(editor.session.getValue()));
+                    value = JSON.stringify(
+                        JSON.parse(editor.session.getValue())
+                    );
                 } catch {
                     return;
                 }
@@ -129,14 +143,13 @@ export default defineComponent({
         }, 1000);
 
         onMounted(() => {
-            editor = reactive(Ace.edit('code-' + randomId.value))
-            editor.setTheme('ace/theme/monokai')
-            editor.getSession().setMode('ace/mode/' + mode.value)
-            editor.getSession().on('change', updateValue)
-            editor.setValue(props.modelValue)
+            editor = reactive(Ace.edit("code-" + randomId.value));
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/" + mode.value);
+            editor.getSession().on("change", updateValue);
+            editor.setValue(props.modelValue);
             editor.setOptions(aceOptions);
-        })
-
+        });
 
         return {
             randomId,
@@ -144,58 +157,56 @@ export default defineComponent({
             form,
             withHelpIcon,
             hasHelpText,
-            height
-        }
+            height,
+        };
     },
 
-    emits: [
-        'update:modelValue'
-    ],
+    emits: ["update:modelValue"],
 
     props: {
-
         label: {
-            type: String
+            type: String,
         },
         fieldName: {
             type: String,
-            required: true
+            required: true,
         },
         modelValue: {
             required: true,
-            default: ''
+            default: "",
         },
         showLabel: {
             type: Boolean,
-            default: true
+            default: true,
         },
         required: {
             type: Boolean,
-            default: false
+            default: false,
         },
         disabled: {
             type: Boolean,
-            default: false
+            default: false,
         },
         findInForm: {
             type: Boolean,
-            default: false
+            default: false,
         },
         useJsonApi: {
             type: Boolean,
-            default: false
+            default: false,
         },
 
         editorOptions: {
             type: Object,
-            default: {
-                height: '400px',
-                mode: 'json',
-                ace_options: []
-            }
-        },
+            default() {
+                return {
+                    height: "400px",
+                    mode: "json",
+                    ace_options: [],
+                };
+            },
+        } as Record<string, any>,
     },
-
 
     // computed: {
     //     aceOptions() {

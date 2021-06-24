@@ -1,15 +1,21 @@
 import Model from "./../model";
-import {DateTime} from "luxon";
 
 export class Generic extends Model {
-    public id: number = 0;
-    public created_at: DateTime = DateTime.now()
-    public updated_at: DateTime = DateTime.now()
+    public id = 0;
 
-    casts() {
+    constructor(attributes: Record<string, any>) {
+        super(attributes);
+
+        this.assign(attributes);
+        this.ensureAttributesAreRegistered(
+            this.removeParentPropertyNames(Object.getOwnPropertyNames(this))
+        );
+    }
+
+    casts(): Record<string, any> {
         return {
             created_at: this.parseDate,
-            updated_at: this.parseDate
+            updated_at: this.parseDate,
         };
     }
 }

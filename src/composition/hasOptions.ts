@@ -1,31 +1,34 @@
-import {Form} from "./../classes/Form";
-import {IFormFieldFieldConfig} from "@/types";
-import {FormField} from "@/classes/models/formField";
+import { Form } from "./../classes/Form";
+import { IFormFieldFieldConfig } from "./../types";
+import { FormField } from "./../classes/models/formField";
 
-
-export const setupHasOptions = (props: Record<string, any>, form: Form, fieldConfig: IFormFieldFieldConfig) => {
-
+export const setupHasOptions = (
+    props: Record<string, any>,
+    form: Form,
+    fieldConfig: IFormFieldFieldConfig
+) => {
     if (
         props.findInForm &&
         (Array.isArray(form.formConfig.fields) ||
             typeof form.formConfig.fields[Symbol.iterator] === "function")
     ) {
+        const field = form.formConfig.fields.find(
+            (field: FormField) => field.name === props.fieldName
+        );
 
-        let field = form.formConfig.fields.find((field: FormField) => field.name === props.fieldName);
-
-        if(field) {
-            if(!field.field_extra.options_config ||
-                (
-                    field.field_extra.options_config.vuex_store_path &&
-                    field.field_extra.options_config.vuex_getter_path
-                )
+        if (field) {
+            if (
+                !field.field_extra.options_config ||
+                (field.field_extra.options_config.vuex_store_path &&
+                    field.field_extra.options_config.vuex_getter_path)
             ) {
-                throw new Error('Invalid field configuration for field: ' + field.name);
+                throw new Error(
+                    "Invalid field configuration for field: " + field.name
+                );
             }
 
-
             fieldConfig.options.options = [];
-            fieldConfig.options.optionsUrlParams = {}
+            fieldConfig.options.optionsUrlParams = {};
 
             if (field.field_extra.options_config.vuex_store_path) {
                 fieldConfig.options.vuexStorePath =
@@ -43,7 +46,6 @@ export const setupHasOptions = (props: Record<string, any>, form: Form, fieldCon
             }
 
             if (field.field_extra.options_config.optionsUrlParams) {
-
                 fieldConfig.options.optionsUrlParams =
                     field.field_extra.options_config.optionsUrlParams;
             }
@@ -53,8 +55,8 @@ export const setupHasOptions = (props: Record<string, any>, form: Form, fieldCon
                 // this.setUpOptions(field);
             }
 
-            fieldConfig.options.optionValueField = 'id';
-            fieldConfig.options.optionLableField = 'name';
+            fieldConfig.options.optionValueField = "id";
+            fieldConfig.options.optionLableField = "name";
 
             if (field.field_extra.options_config.optionValueField) {
                 fieldConfig.options.optionValueField =
@@ -67,8 +69,7 @@ export const setupHasOptions = (props: Record<string, any>, form: Form, fieldCon
             }
 
             if (field.field_extra.options_config.default) {
-                fieldConfig.default =
-                    field.field_extra.options_config.default;
+                fieldConfig.default = field.field_extra.options_config.default;
             }
         }
     } else {
@@ -80,5 +81,4 @@ export const setupHasOptions = (props: Record<string, any>, form: Form, fieldCon
         fieldConfig.options.vuexStorePath = props.vuexPath;
         fieldConfig.options.vuexGetterPath = props.vuexPath;
     }
-
-}
+};

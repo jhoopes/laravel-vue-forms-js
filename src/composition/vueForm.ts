@@ -1,15 +1,18 @@
 import Model from "./../classes/model";
-import {SetupContext, watch, computed} from "vue";
-import {assignOnObject, getFieldValue} from "./../utilities/utils";
-import {FormConfiguration} from "./../classes/models/formConfiguration";
-import {FormField} from "./../classes/models/formField";
-import {Form} from "./../classes/Form";
+import { SetupContext, watch, computed, WatchStopHandle } from "vue";
+import { assignOnObject, getFieldValue } from "./../utilities/utils";
+import { FormConfiguration } from "./../classes/models/formConfiguration";
+import { FormField } from "./../classes/models/formField";
+import { Form } from "./../classes/Form";
 import Parser from "./../classes/jsonapi_parser";
 import {
     HTTPMethods,
     IHTTPClientResponse,
-    ISubmitFormElements, IVueFormData,
-    SaveSuccessFunction
+    ISubmitFormElements,
+    IVueFormData,
+    SaveSuccessFunction,
+    ISubmitFormFunction,
+    ICustomActionFunction,
 } from "./../types/index";
 import debounce from "lodash/debounce";
 import ApiError from "./../classes/ApiError";
@@ -21,43 +24,49 @@ export const saveSuccess: SaveSuccessFunction = (
     record: Record<string, any> | Model,
     actionType: string,
     context: SetupContext,
-    passThru: boolean = false,
-    closeOnSave: boolean = false,
+    passThru = false,
+    closeOnSave = false
 ) => {
-
     if (passThru) {
         context.emit(actionType, record);
     } else {
         context.emit(actionType, record);
     }
     if (closeOnSave) {
-        close(context)
+        close(context);
     }
-}
+};
 
 export const close = (context: SetupContext) => {
-    context.emit('close-form');
-}
+    context.emit("close-form");
+};
 
 export const cancelForm = (context: SetupContext) => {
-    context.emit('cancel-form');
-}
+    context.emit("cancel-form");
+};
 
-export const emitOrRunCustomAction = (action: Function | string, form: Form, context: SetupContext) => {
-
+export const emitOrRunCustomAction = (
+    action: ICustomActionFunction | string,
+    form: Form,
+    context: SetupContext
+) => {
     if (typeof action === "function") {
         action(form);
     } else {
-        context.emit('runAction', {
+        context.emit("runAction", {
             action,
-            form
-        })
+            form,
+        });
     }
-}
+};
 
-export const updateFormValue = (form: Form, field: FormField, newValue: any) => {
+export const updateFormValue = (
+    form: Form,
+    field: FormField,
+    newValue: any
+) => {
     assignOnObject(form, field.value_field, newValue);
-}
+};
 
 export const getSubmitHttpMethod = (form: Form): HTTPMethods => {
     if (form.id) {
@@ -65,17 +74,17 @@ export const getSubmitHttpMethod = (form: Form): HTTPMethods => {
     }
 
     return HTTPMethods.POST;
-}
+};
 
 export const getSubmitData = (form: Form) => {
-    var data: Record<string, any> = {};
+    const data: Record<string, any> = {};
     if (form.id) {
         data.entityId = form.id;
     }
     data.formConfigurationId = form.formConfig.id;
     data.data = form.getData();
     return data;
-}
+};
 
 export const submitForm = async (
     form: Form,
@@ -84,7 +93,8 @@ export const submitForm = async (
     // If this form is a pass through form, run the save success for updated only to push data out of the form
     // object
     if (submitFormElements.passThru) {
-        submitFormElements.saveSuccess(form.getData(),
+        submitFormElements.saveSuccess(
+            form.getData(),
             "updated",
             submitFormElements.context,
             submitFormElements.passThru,
@@ -93,25 +103,26 @@ export const submitForm = async (
         return;
     }
 
-    let method = getSubmitHttpMethod(form);
-    let data = getSubmitData(form);
+    const method = getSubmitHttpMethod(form);
+    const data = getSubmitData(form);
     // TODO
     // this.saving = true;
 
-    let options: Record<string, any> = {};
+    const options: Record<string, any> = {};
     if (submitFormElements.useJsonApi) {
         options.headers = {
-            Accept: "application/vnd.api+json"
+            Accept: "application/vnd.api+json",
         };
     }
 
-
-    let response: IHTTPClientResponse = await submitFormElements.apiClient[method](submitFormElements.formSubmitUrl, data, options);
-    var record: Record<string, any> | undefined;
+    const response: IHTTPClientResponse = await submitFormElements.apiClient[
+        method
+    ](submitFormElements.formSubmitUrl, data, options);
+    let record: Record<string, any> | undefined;
     if (submitFormElements.useJsonApi) {
         record = Parser.parseJSONAPIResponse(response.data);
-    }else {
-        record = response.data
+    } else {
+        record = response.data;
     }
 
     if (method === "post" && typeof record !== "undefined") {
@@ -120,8 +131,8 @@ export const submitForm = async (
         form.id = record.id;
     }
 
-    if(typeof record !== "undefined") {
-        var actionType = "updated";
+    if (typeof record !== "undefined") {
+        let actionType = "updated";
         if (method === "post") {
             actionType = "created";
         }
@@ -131,17 +142,18 @@ export const submitForm = async (
             actionType,
             submitFormElements.context,
             submitFormElements.passThru,
-            submitFormElements.closeOnSave);
+            submitFormElements.closeOnSave
+        );
     }
-}
-
-
+};
 
 /** Vue Form Component Setup **/
 
-
-export const defaultFields = (data: Record<string, any>, formConfig: FormConfiguration) => {
-    formConfig.fields.forEach(field => {
+export const defaultFields = (
+    data: Record<string, any>,
+    formConfig: FormConfiguration
+) => {
+    formConfig.fields.forEach((field) => {
         if (
             typeof getFieldValue(data, field) === "undefined" ||
             getFieldValue(data, field) === ""
@@ -151,34 +163,41 @@ export const defaultFields = (data: Record<string, any>, formConfig: FormConfigu
                 field.field_extra !== null &&
                 typeof field.field_extra.default !== "undefined"
             ) {
-                assignOnObject(data, field.value_field, field.field_extra.default);
+                assignOnObject(
+                    data,
+                    field.value_field,
+                    field.field_extra.default
+                );
             }
         }
     });
 
     return data;
-}
+};
 
 export const setupComputed = (formObj: Form) => {
-    let topFields = computed(() => {
-        let topLevelFields:Collection<FormField> = formObj.formConfig.fields.filter((field: FormField) => {
-            if (field.parent_id) {
-                return false;
-            }
-            return true;
-        });
+    const topFields = computed(() => {
+        const topLevelFields: Collection<FormField> =
+            formObj.formConfig.fields.filter((field: FormField) => {
+                if (field.parent_id) {
+                    return false;
+                }
+                return true;
+            });
 
-        topLevelFields.forEach(topLevelField => {
-            topLevelField.children = formObj.formConfig.fields.filter((field: FormField) => {
-                return field.parent_id === topLevelField.id;
-            }).getModels();
+        topLevelFields.forEach((topLevelField) => {
+            topLevelField.children = formObj.formConfig.fields
+                .filter((field: FormField) => {
+                    return field.parent_id === topLevelField.id;
+                })
+                .getModels();
         });
 
         return topLevelFields;
     });
 
-    let layoutType = computed(() => {
-        let tabField = topFields.value.find((field: FormField) => {
+    const layoutType = computed(() => {
+        const tabField = topFields.value.find((field: FormField) => {
             if (field.widget === "tab") {
                 return true;
             }
@@ -192,9 +211,9 @@ export const setupComputed = (formObj: Form) => {
         return "normal";
     });
 
-    let columnCount = computed(() => {
-        var columnCount = 0;
-        topFields.value.forEach(field => {
+    const columnCount = computed(() => {
+        let columnCount = 0;
+        topFields.value.forEach((field) => {
             if (field.widget === "column") {
                 columnCount++;
             }
@@ -207,7 +226,7 @@ export const setupComputed = (formObj: Form) => {
         return columnCount;
     });
 
-    let columnWidth = computed(() => {
+    const columnWidth = computed(() => {
         if (columnCount.value === 0) {
             return null;
         }
@@ -219,33 +238,36 @@ export const setupComputed = (formObj: Form) => {
         topFields,
         layoutType,
         columnCount,
-        columnWidth
-    }
-}
+        columnWidth,
+    };
+};
 
-
-export const setupWatchers = (vueFormData: IVueFormData, submitFormFunc: Function, props: Record<string, any>, context: SetupContext) => {
-
-    let formDataWatcher: Function;
+export const setupWatchers = (
+    vueFormData: IVueFormData,
+    submitFormFunc: ISubmitFormFunction,
+    props: Record<string, any>,
+    context: SetupContext
+) => {
+    let formDataWatcher: WatchStopHandle;
     const setupAutoSave = () => {
         formDataWatcher = watch(
             () => vueFormData.form.data,
-            debounce(function() {
+            debounce(function () {
                 submitFormFunc();
             }, props.autoSaveTimeout),
             { deep: true }
         );
-    }
-    if(props.autoSave) {
-        setupAutoSave()
+    };
+    if (props.autoSave) {
+        setupAutoSave();
     }
 
     watch(
         () => vueFormData.form.data,
         (data) => {
-            context.emit('changed', data);
+            context.emit("changed", data);
         }
-    )
+    );
 
     watch(
         () => props.formData,
@@ -263,7 +285,7 @@ export const setupWatchers = (vueFormData: IVueFormData, submitFormFunc: Functio
             }
         },
         { deep: true }
-    )
+    );
 
     watch(
         () => props.formErrors,
@@ -272,20 +294,20 @@ export const setupWatchers = (vueFormData: IVueFormData, submitFormFunc: Functio
                 vueFormData.form.errors.report(newFormErrors as ApiError);
             }
         },
-        { deep: true}
-    )
+        { deep: true }
+    );
 
     watch(
         () => props.forceUpdate,
         (force) => {
             if (force) {
-                var newFormData = JSON.parse(JSON.stringify(props.formData));
+                const newFormData = JSON.parse(JSON.stringify(props.formData));
 
                 if (formDataWatcher) {
                     formDataWatcher();
                 }
 
-                vueFormData.form.clearFields()
+                vueFormData.form.clearFields();
                 vueFormData.form.updateData(newFormData, true);
 
                 if (props.autoSave) {
@@ -295,25 +317,23 @@ export const setupWatchers = (vueFormData: IVueFormData, submitFormFunc: Functio
 
             context.emit("update:forceUpdate", false);
         }
-    )
-
+    );
 
     watch(
         () => props.disabled,
         (disabled) => {
-            vueFormData.form.disabled = disabled
+            vueFormData.form.disabled = disabled;
         }
-    )
+    );
 
     watch(
         () => props.isSaving,
         (newIsSaving) => {
-            if(newIsSaving) {
+            if (newIsSaving) {
                 vueFormData.saving = true;
                 return;
             }
-            vueFormData.saving = false
+            vueFormData.saving = false;
         }
-    )
-
-}
+    );
+};

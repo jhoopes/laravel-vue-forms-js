@@ -1,32 +1,37 @@
-import {Collection} from "./collection";
+import { Collection } from "./collection";
 import {
     IJSONAPIResponse,
     ITypedCollection,
     IJSONAPIResource,
-    IJSONAPIRelationshipResource
+    IJSONAPIRelationshipResource,
 } from "./../types/index";
 import Model from "./model";
 import Generic from "./models/generic";
-import {FormConfiguration} from "./models/formConfiguration";
-import {FormField} from "./models/formField";
+import { FormConfiguration } from "./models/formConfiguration";
+import { FormField } from "./models/formField";
 
 export class Parser {
     public models: Record<string, typeof Model> = {
         generic: Generic,
         form_configuration: FormConfiguration,
-        form_field: FormField
+        form_field: FormField,
     };
 
     constructor(initialModels?: Record<string, typeof Model>) {
-        if(initialModels) {
+        if (initialModels) {
             Object.assign(this.models, initialModels);
         }
     }
 
-    appendModels(type: string | Record<string, typeof Model>, model?: typeof Model): void | never {
-        if(typeof type === "string" && !model) {
-            throw new Error("Invalid argument set.  You must supply model if type is string");
-        } else if(typeof type === "string" && typeof model !== "undefined") {
+    appendModels(
+        type: string | Record<string, typeof Model>,
+        model?: typeof Model
+    ): void | never {
+        if (typeof type === "string" && !model) {
+            throw new Error(
+                "Invalid argument set.  You must supply model if type is string"
+            );
+        } else if (typeof type === "string" && typeof model !== "undefined") {
             this.models[type] = model;
         }
 
@@ -34,7 +39,7 @@ export class Parser {
     }
 
     getModelForJSONAPIType(type: string): typeof Model {
-        if(typeof this.models[type] === "undefined") {
+        if (typeof this.models[type] === "undefined") {
             return this.models.generic;
         }
 
@@ -50,18 +55,21 @@ export class Parser {
             return;
         }
 
-        for (var relKey in resource.relationships) {
+        for (const relKey in resource.relationships) {
             let related = null;
 
             if (
-                !Object.prototype.hasOwnProperty.call(resource.relationships, relKey)
+                !Object.prototype.hasOwnProperty.call(
+                    resource.relationships,
+                    relKey
+                )
             ) {
                 continue;
             }
 
             let relationshipType: typeof Model;
             if (model.hasRelationship(relKey)) {
-                relationshipType = model.relationships()[relKey]
+                relationshipType = model.relationships()[relKey];
             } else {
                 relationshipType = this.models.generic;
             }
@@ -70,31 +78,33 @@ export class Parser {
             if (Array.isArray(resource.relationships[relKey].data)) {
                 const relatedRecords = resource.relationships[relKey]
                     .data as IJSONAPIRelationshipResource[];
-                relatedRecords.forEach(relRecord => {
+                relatedRecords.forEach((relRecord) => {
                     if (!relRecord || !relRecord.type) {
                         return;
                     }
 
-                    var relatedRecord;
                     if (!included) {
                         return;
                     }
 
                     // check to see if it is in our includes
-                    relatedRecord = included.find(include => {
+                    const relatedRecord = included.find((include) => {
                         return (
-                            include.type === relRecord.type && include.id === relRecord.id
+                            include.type === relRecord.type &&
+                            include.id === relRecord.id
                         );
                     });
 
                     if (relatedRecord) {
-                        relationshipSet.push(this.parseSingleResource(relatedRecord));
+                        relationshipSet.push(
+                            this.parseSingleResource(relatedRecord)
+                        );
                     }
                 });
 
                 // create and set related collection on model
                 related = new Collection(relationshipSet, {
-                    model: relationshipType
+                    model: relationshipType,
                 });
             } else {
                 const relRecord = resource.relationships[relKey]
@@ -104,8 +114,11 @@ export class Parser {
                     continue;
                 }
 
-                const relatedRecord = included.find(include => {
-                    return include.type === relRecord.type && include.id === relRecord.id;
+                const relatedRecord = included.find((include) => {
+                    return (
+                        include.type === relRecord.type &&
+                        include.id === relRecord.id
+                    );
                 });
 
                 if (relatedRecord) {
@@ -123,12 +136,9 @@ export class Parser {
         meta?: Record<string, any>
     ): MT {
         const attributes = resource.attributes;
-        let ModelType: typeof Model;
-        if (!this.models[resource.type]) {
-            ModelType = this.models.generic;
-        } else {
-            ModelType = this.models[resource.type];
-        }
+        const ModelType: typeof Model = this.getModelForJSONAPIType(
+            resource.type
+        );
 
         const model = new ModelType(attributes);
 
@@ -149,16 +159,18 @@ export class Parser {
     ): ITypedCollection<MT> {
         const models = [] as MT[];
         let ModelType: typeof Model = this.models.generic;
-        resources.forEach(resource => {
-            if (this.models[resource.type]) {
-                ModelType = this.models[resource.type];
-            }
+        resources.forEach((resource) => {
+            ModelType = this.getModelForJSONAPIType(resource.type);
             models.push(this.parseSingleResource<MT>(resource, included, meta));
         });
 
-        return new Collection<MT>(models, {
-            model: ModelType
-        }, meta) as ITypedCollection<MT>;
+        return new Collection<MT>(
+            models,
+            {
+                model: ModelType,
+            },
+            meta
+        ) as ITypedCollection<MT>;
     }
 
     parseJSONAPIResponse<MT extends Model>(
