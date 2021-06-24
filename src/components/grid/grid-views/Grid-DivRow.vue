@@ -21,7 +21,7 @@
             @click="handleSelectionClick(record)"
             @record-selected="selectRecord(record)"
             @record-unselected="deSelectRecord(record)"
-            @refreshRecords="$parent.runRefresh()"
+            @refreshRecords="runRefresh()"
             :args="args"
         ></component>
         <div v-if="records.length === 0"></div>
@@ -117,11 +117,18 @@ export default defineComponent({
             }
         };
 
+        const runRefresh = () => {
+            if(instance && instance.parent && instance.parent.exposed) {
+                instance.parent.exposed.runRefresh();
+            }
+        }
+
         return {
             getHeaderName,
             handleSelectionClick,
             selectRecord,
             deSelectRecord,
+            runRefresh,
             tableHeaders,
             baseRecordId,
             ...toRefs(props),

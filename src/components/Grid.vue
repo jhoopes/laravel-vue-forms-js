@@ -149,7 +149,6 @@ export default defineComponent({
                 | unknown
         ) => {
             if (!newGridData) {
-                console.log("is empty");
                 gridData.value = {
                     data: [] as Model[],
                     total: 0,
@@ -158,13 +157,10 @@ export default defineComponent({
                     last_page: 1,
                 } as ILengthAwarePaginator<Model>;
             } else if (newGridData instanceof Collection) {
-                console.log("Is Collection");
                 gridData.value = newGridData.getModels();
             } else if (Array.isArray(gridData)) {
-                console.log("Is Array");
                 gridData.value = newGridData as Record<string, any>[];
             } else {
-                console.log("Is Length aware paginator");
                 gridData.value = newGridData as ILengthAwarePaginator<Model>;
             }
         };
@@ -186,7 +182,6 @@ export default defineComponent({
                 recordUrl.value,
                 useJsonApi.value
             );
-            console.log(data);
             assignGridData(data);
             loadingData.value = false;
         };
@@ -311,13 +306,13 @@ export default defineComponent({
         assignGridData(data);
 
         if(data) {
-          watch(
-              data,
-              () => {
-                assignGridData(data);
-              },
-              { deep: true }
-          );
+            watch(
+                data,
+                () => {
+                    assignGridData(data);
+                },
+                { deep: true }
+            );
         }
 
 

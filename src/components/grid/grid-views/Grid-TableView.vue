@@ -2,23 +2,21 @@
     <div class="table-responsive">
         <table class="table table-hover" v-if="records.length > 0">
             <thead>
-                <tr>
-                    <th v-for="headerName in tableHeaders" :key="headerName">
-                        {{ getHeaderName(headerName) }}
-                    </th>
-                </tr>
+            <tr>
+                <th v-for="headerName in tableHeaders" :key="headerName">
+                    {{ getHeaderName(headerName) }}
+                </th>
+            </tr>
             </thead>
             <tbody>
-                <component
-                    v-for="record in records"
-                    :key="record.id"
-                    :is="recordType"
-                    :record="record"
-                    :base-record-id="baseRecordId"
-                    v-on:remove="removeRecord(record, $event)"
-                    @refreshRecords="$parent.runRefresh()"
-                    :args="args"
-                ></component>
+            <component
+                v-for="record in records"
+                :key="record.id"
+                :is="recordType"
+                :record="record"
+                :base-record-id="baseRecordId"
+                :args="args"
+            ></component>
             </tbody>
         </table>
 
@@ -77,7 +75,7 @@ export default defineComponent({
             tableHeaders = instance.parent.data.headers as Record<
                 string,
                 any
-            >[];
+                >[];
         }
 
         if (instance && instance.parent && instance.parent.props.baseRecordId) {
@@ -96,11 +94,18 @@ export default defineComponent({
             return "No Records";
         });
 
+        const runRefresh = () => {
+            if(instance && instance.parent && instance.parent.exposed) {
+                instance.parent.exposed.runRefresh();
+            }
+        }
+
         return {
             getHeaderName,
             tableHeaders,
             baseRecordId,
             noRecordsText,
+            runRefresh,
             ...toRefs(props),
         };
     },

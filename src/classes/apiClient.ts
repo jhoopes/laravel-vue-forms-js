@@ -143,7 +143,6 @@ export class ApiClient implements IApiClient {
         ) {
             path += "?" + config.body.toString();
             delete config.body;
-            console.log(path);
         }
 
         try {
@@ -151,7 +150,6 @@ export class ApiClient implements IApiClient {
             new URL(path);
         } catch (err) {
             path = this.urlBase + path;
-            console.log("overall path", path);
         }
 
         if (this.withCredentials) {
