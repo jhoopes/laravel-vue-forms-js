@@ -1,136 +1,177 @@
-<template>
-    <section
-        :aria-hidden="!isActive"
-        class="tabs-component-panel"
-        :id="hash"
-        role="tabpanel"
-    >
-        <div v-show="isActive">
-            <component
-                v-for="field in visibleChildren"
-                :key="field.id"
-                :is="getFormFieldComponent(field.widget)"
-                v-show="conditionValues[field.name]"
-                :field-name="field.name"
-                :value="getFieldValue(form.data, field)"
-                @input="(newVal) => updateValueAndConditionals(newVal, field)"
-                @options-updated="
-                    (newOptions) => updateOptionsForField(newOptions, field)
-                "
-                :children="field.children || null"
-            ></component>
-            <div
-                class="controls-row"
-                v-if="disabled === false && autoSave === false"
-            >
-                <button
-                    class="button"
-                    v-for="action in actions"
-                    :key="action.action"
-                    @click.prevent="runAction(action.action)"
-                    v-html="action.label"
-                    :disabled="showSaving && saving"
-                ></button>
-                <span v-if="saving && showSaving"
-                    ><font-awesome-icon
-                        :icon="spinner"
-                        :spin="true"
-                    ></font-awesome-icon
-                    >{{ savingText }}</span
-                >
-            </div>
-        </div>
-    </section>
-</template>
+<script lang="ts">
+import {
+  inject,
+  watch,
+  ref,
+  onBeforeMount,
+  defineComponent,
+  computed,
+  SetupContext,
+  PropType,
+  reactive,
+} from "vue";
+import { getFormFieldComponent } from "../../composition/vueForm";
+import { setupFormField } from "../../composition/formField";
+import { FormField } from "../../classes/models/formField";
 
-<script>
-import FormField from "../../mixins/FormField";
-import FormConfig from "../../mixins/FormConfig";
-import UpdatesValuesAndConditions from "../../mixins/UpdatesValuesAndConditions";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+export default defineComponent({
+  name: "FormTab",
 
-export default {
-    mixins: [FormField, FormConfig, UpdatesValuesAndConditions],
+  emits: ["runAction"],
 
-    name: "form-tab",
+  setup(props, context: SetupContext) {
+    let { form, fieldConfig } = setupFormField(props, context);
+    const isActive = ref(false);
+    const tabsProvider: Record<string, any> = inject(
+      "tabsProvider",
+      reactive({
+        activeTabHash: "",
+        lastActiveTabHash: "",
+        tabs: [],
+      })
+    );
+    const header = props.prefix + props.name + props.suffix;
+    const computedId = props.id
+      ? props.id
+      : props.name.toLowerCase().replace(/ /g, "-");
+    const hash = "#" + (!props.isDisabled ? computedId : "");
+    watch(
+      () => tabsProvider.activeTabHash,
+      () => {
+        isActive.value = hash === tabsProvider.activeTabHash;
+      }
+    );
+    onBeforeMount(() => {
+      tabsProvider.tabs.push({
+        name: props.name,
+        header: header,
+        isDisabled: props.isDisabled,
+        hash: hash,
+        index: tabsProvider.tabs.length,
+      });
+    });
 
-    components: {
-        FontAwesomeIcon,
+    const visibleChildren = computed(() => {
+      return props.children.filter((child: FormField) => {
+        return child.visible;
+      });
+    });
+
+    const runAction = (action: string) => {
+      context.emit("runAction", action);
+    };
+
+    return {
+      form,
+      fieldConfig,
+      header,
+      computedId,
+      hash,
+      isActive,
+      visibleChildren,
+      runAction,
+      getFormFieldComponent,
+    };
+  },
+
+  props: {
+    panelClass: {
+      type: String,
+      default: "tabs-component-panel",
     },
-
-    props: {
-        children: {
-            type: Array,
-            default() {
-                return [];
-            },
-        },
-        id: {
-            default: null,
-        },
-        name: {
-            required: true,
-        },
-        value: {
-            required: false,
-        },
-        prefix: {
-            default: "",
-        },
-        suffix: {
-            default: "",
-        },
-        disabled: {
-            required: true,
-        },
-        autoSave: {
-            required: true,
-        },
-        actions: {
-            required: true,
-        },
-        saving: {
-            required: true,
-        },
-        showSaving: {
-            required: true,
-        },
-        savingText: {
-            required: true,
-        },
+    children: {
+      type: Array as PropType<FormField[]>,
+      default: () => {
+        return [];
+      },
     },
-
-    created() {
-        this.generateConditionValues();
+    id: {
+      type: String,
+      default: null,
     },
-
-    data: () => ({
-        isActive: false,
-        spinner: faSpinner,
-    }),
-
-    computed: {
-        header() {
-            return this.prefix + this.name + this.suffix;
-        },
-
-        hash() {
-            return this.id
-                ? "#" + this.id
-                : "#" + this.name.toLowerCase().replace(/ /g, "-");
-        },
-        visibleChildren() {
-            return this.children.filter((child) => {
-                return Boolean(child.visible);
-            });
-        },
+    name: {
+      type: String,
+      required: true,
     },
-
-    methods: {
-        runAction(action) {
-            this.$emit("runAction", action);
-        },
+    prefix: {
+      type: String,
+      default: "",
     },
-};
+    suffix: {
+      type: String,
+      default: "",
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    autoSave: {
+      required: true,
+    },
+    actions: {
+      required: true,
+    },
+    saving: {
+      required: true,
+    },
+    showSaving: {
+      required: true,
+    },
+    savingText: {
+      required: true,
+    },
+    findInForm: {
+      type: Boolean,
+      default: false,
+    },
+    useJsonApi: {
+      type: Boolean,
+      default: false,
+    },
+  },
+});
 </script>
+
+<template>
+  <section
+    v-show="isActive"
+    :aria-hidden="!isActive"
+    :class="panelClass"
+    :id="computedId"
+    role="tabpanel"
+    ref="tab"
+  >
+    <div v-show="isActive">
+      <component
+        v-for="field in visibleChildren"
+        :key="field.id"
+        :is="getFormFieldComponent(field.widget)"
+        v-show="field.visible && form.fieldMeetsConditions[field.name]"
+        :field-name="field.name"
+        :modelValue="form.getFieldValue(field)"
+        @update:modelValue="
+          (newVal) => form.updateValueAndConditionals(newVal, field)
+        "
+        @options-updated="
+          (newOptions) => form.updateOptionsForField(newOptions, field)
+        "
+        :children="field.children || null"
+        :find-in-form="findInForm"
+      ></component>
+      <div class="controls-row" v-if="disabled === false && autoSave === false">
+        <button
+          class="button"
+          v-for="action in actions"
+          :key="action.action"
+          @click.prevent="runAction(action.action)"
+          v-html="action.label"
+          :disabled="showSaving && saving"
+        ></button>
+        <span v-if="saving && showSaving"
+          ><font-awesome-icon :icon="spinner" :spin="true"></font-awesome-icon
+          >{{ savingText }}</span
+        >
+      </div>
+    </div>
+  </section>
+</template>

@@ -1,0 +1,12 @@
+@import "vue-multiselect/dist/vue-multiselect.css";
+
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
+.button {
+    @apply p-2 text-white rounded;
+    background-color: #00ffae;
+}

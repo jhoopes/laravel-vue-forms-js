@@ -1,13 +1,222 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "vue-multiselect/dist/vue-multiselect.css";
+
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
+.button {
+    @apply p-2 text-white rounded;
+    background-color: #00ffae;
+}
 
 
 
-.form-group {
-    @apply m-2;
+
+
+
+.form-control-label {
+    @apply block m-1;
+    .required {
+        @apply text-red-600;
+    }
 }
 
 .form-control {
-    @apply rounded p-2 w-full border border-gray-300
+    @apply block appearance-none outline-none w-full bg-white border border-gray-400 px-2 py-2 rounded shadow leading-normal;
+
+    &:disabled {
+        @apply bg-gray-500;
+    }
 }
+
+.form-control:hover {
+    @apply border-gray-500;
+}
+
+.multiselect {
+
+    input {
+        @apply border-0;
+    }
+
+    .multiselect__tags {
+        border: 0;
+    }
+
+    &.form-control {
+        padding: 0;
+    }
+
+    .multiselect__content-wrapper {
+        z-index: 99999;
+    }
+
+    .multiselect__element {
+        .multiselect__option--highlight {
+            @apply bg-gray-400 text-gray-800;
+        }
+
+        .multiselect__option--highlight:after {
+            @apply bg-gray-400 text-gray-800;
+        }
+
+        .multiselect__option--selected {
+            @apply bg-green-500 text-white;
+        }
+
+        .multiselect__option--selected:after {
+            @apply bg-green-500 text-white;
+        }
+    }
+
+    &.inline-form-controls {
+        .form-group {
+            @apply flex justify-between;
+
+            label {
+                @apply w-1/2;
+            }
+
+            .form-control {
+                @apply w-1/2;
+            }
+        }
+    }
+}
+
+.form-file-dropzone {
+
+    @apply text-center border cursor-pointer;
+
+}
+
+.form-check {
+
+
+    input[type=checkbox] + label {
+        display: block;
+        margin: 0.2em;
+        cursor: pointer;
+        padding: 0.2em;
+    }
+
+    input[type=checkbox] {
+        display: none;
+    }
+
+    input[type=checkbox] + label:before {
+        content: "\2714";
+        border: 0.1em solid #000;
+        border-radius: 0.2em;
+        display: inline-block;
+        padding-left: 0.2em;
+        padding-right: 0.1em;
+        margin-right: 0.2em;
+        color: transparent;
+        transition: .2s;
+    }
+
+    input[type=checkbox] + label:active:before {
+        transform: scale(0);
+    }
+
+    input[type=checkbox]:checked + label:before {
+        @apply bg-white text-gray-800 border-gray-800 rounded;
+    }
+
+}
+
+.inline-form {
+    @apply flex justify-between;
+}
+
+.autocomplete {
+    position: relative;
+
+    .autocomplete-results {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 5px;
+        border: 1px solid #a5a5a5;
+        background: white;
+        min-width: 100%;
+        height: 120px;
+        overflow: auto;
+        z-index: 999;
+    }
+
+    .autocomplete-result {
+        list-style: none;
+        text-align: left;
+        padding: 4px 2px;
+        cursor: pointer;
+    }
+
+    .autocomplete-result:hover, .autocomplete-result.is-active {
+        @apply bg-blue-600;
+        color: white;
+    }
+
+    .form-control-label {
+        @apply block m-1;
+    }
+
+    .form-control {
+        @apply block appearance-none outline-none w-full bg-white border border-gray-400 px-2 py-2 rounded shadow;
+    }
+
+    .form-control:hover {
+        @apply border-gray-500;
+    }
+}
+
+.form-group {
+    @apply pb-3;
+
+    &.has-error {
+        input[type=text] {
+            @apply border-red-300;
+        }
+
+        .help-block {
+            @apply text-red-300;
+        }
+    }
+}
+
+.form-file-upload-container {
+
+    .existing-files {
+        @apply my-2 flex justify-center items-center;
+
+        .file {
+            @apply m-2;
+        }
+    }
+
+}
+
+.block-form .weekly-schedule-form .form-check input[type="checkbox"] + label {
+    margin-bottom: -20px;
+    white-space: nowrap;
+
+    &::before {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 22px;
+        text-align: center;
+    }
+}
+
+.lvf-button:disabled {
+    @apply bg-gray-600
+}
+
+
+
+
+

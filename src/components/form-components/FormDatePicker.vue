@@ -1,85 +1,123 @@
-<template>
-    <div
-        class="datepicker form-group"
-        :id="fieldName + '-date-field'"
-        :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
-    >
-        <label class="form-control-label">
-            <span v-html="fieldConfig.label"></span>
-            <span class="required" v-if="fieldConfig.field_extra.required">
-                &nbsp;&nbsp;(*)
-            </span>
-            <span
-                v-if="withHelpIcon"
-                :class="fieldConfig.field_extra.withIcon"
-                :title="fieldConfig.field_extra.helpText"
-            ></span>
-        </label>
-        <div>
-            <div
-                class="input-group date"
-                :id="datePickerId"
-                data-target-input="nearest"
-            >
-                <vue-ctk-date-time-picker
-                    :label="''"
-                    formatted="MM/DD/Y"
-                    format="MM/DD/Y"
-                    :value="value"
-                    @input="updateValue"
-                    :only-date="true"
-                    :no-header="true"
-                    :without-header="true"
-                    :auto-close="true"
-                    :disabled="
-                        fieldConfig.disabled === 1 ||
-                        fieldConfig.disabled === true
-                    "
-                ></vue-ctk-date-time-picker>
-                <span
-                    class="errors"
-                    v-if="form.errors.has(this.fieldConfig.value_field)"
-                >
-                    {{ form.errors.get(this.fieldConfig.value_field, true) }}
-                </span>
-            </div>
-            <div v-if="hasHelpText">
-                <span v-html="fieldConfig.field_extra.helpText"></span>
-            </div>
-        </div>
-    </div>
-</template>
-<script>
+<script lang="ts">
 import { guid } from "../../utilities/utils";
-import FormField from "../../mixins/FormField";
-import VueCtkDateTimePicker from "vue-ctk-date-time-picker";
-export default {
-    name: "form-datepicker",
+import { computed, defineComponent, Ref, ref, SetupContext } from "vue";
+import {
+  setupFormField,
+  helpTextComputedProperties,
+  errorComputedProperties,
+} from "./../../composition/formField";
 
-    mixins: [FormField],
+import Datepicker from "vue3-datepicker";
 
-    components: {
-        VueCtkDateTimePicker,
+export default defineComponent({
+  name: "form-datepicker",
+  emits: ["update:modelValue"],
+
+  components: {
+    Datepicker,
+  },
+
+  setup(props, context: SetupContext) {
+    let { form, fieldConfig } = setupFormField(props, context);
+    let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig);
+    let { hasError, errorMessages } = errorComputedProperties(
+      form,
+      fieldConfig
+    );
+    const guidString: Ref<string> = ref("");
+    guidString.value = guid();
+
+    const datePickerId = computed(() => {
+      return guidString.value + "-datepicker";
+    });
+
+    let updateValue = (value: string) => {
+      context.emit("update:modelValue", value);
+      form.errors.clear(fieldConfig.valueField);
+    };
+
+    return {
+      form,
+      fieldConfig,
+      updateValue,
+      withHelpIcon,
+      hasHelpText,
+      hasError,
+      errorMessages,
+      datePickerId,
+    };
+  },
+
+  props: {
+    label: {
+      type: String,
     },
-
-    data() {
-        return {
-            guid: guid(),
-            datePicker: {},
-        };
+    fieldName: {
+      type: String,
+      required: true,
     },
-
-    computed: {
-        datePickerId() {
-            return this.guid + "-datepicker";
-        },
+    modelValue: {
+      required: true,
     },
-
-    methods: {
-        updateValue(value) {
-            this.form.errors.clear(this.fieldConfig.value_field);
-            this.$emit("input", value);
-        },
+    showLabel: {
+      type: Boolean,
+      default: true,
     },
-};
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    findInForm: {
+      type: Boolean,
+      default: false,
+    },
+    useJsonApi: {
+      type: Boolean,
+    },
+    children: {},
+  },
+});
 </script>
+
+<template>
+  <div
+    class="datepicker form-group"
+    :id="fieldConfig.fieldName + '-date-field'"
+    :class="{ 'has-error': hasError }"
+  >
+    <label class="form-control-label">
+      <span v-html="fieldConfig.label"></span>
+      <span class="required" v-if="fieldConfig.fieldExtra.required">
+        &nbsp;&nbsp;(*)
+      </span>
+      <span
+        v-if="withHelpIcon"
+        :class="fieldConfig.fieldExtra.withIcon"
+        :title="fieldConfig.fieldExtra.helpText"
+      ></span>
+    </label>
+    <div>
+      <div
+        class="form-group date"
+        :id="datePickerId"
+        data-target-input="nearest"
+      >
+        <datepicker
+          :model-value="modelValue"
+          @update:modelValue="updateValue"
+          class="form-control"
+        ></datepicker>
+        <span class="errors" v-if="hasError">
+          {{ errorMessages }}
+        </span>
+      </div>
+      <div v-if="hasHelpText">
+        <span v-html="fieldConfig.fieldExtra.helpText"></span>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,23 +1,28 @@
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import FormSelect from "@/components/form-components/FormSelect.vue";
+import {defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: 'Dashboard',
-  components: {FormSelect},
   setup() {
 
 
     let formTextValue = ref('');
     let formPasswordValue = ref('');
     let code = ref('')
+    let wysiwyg = ref('')
     let formSelectValue = ref('');
+
+    let datepicker = ref(null);
+    let files = ref([]);
 
     return {
       formTextValue,
       formPasswordValue,
       code,
-      formSelectValue
+      wysiwyg,
+      formSelectValue,
+      datepicker,
+      files
     }
   }
 })
@@ -62,6 +67,28 @@ export default defineComponent({
       ></form-select>
       <span class="mx-4" v-text="formPasswordValue"></span>
     </div>
+
+    <div class="mx-4 p-4 bg-white rounded">
+      <form-datepicker
+          label="Datepicker field"
+          field-name="datepicker"
+          v-model="datepicker"
+      ></form-datepicker>
+      <span class="mx-4" v-text="formTextValue"></span>
+    </div>
+
+    <form-files
+      fileable-type="form_configuration"
+      :fileable-id="1"
+      field-name="form-files-test"
+      v-model="files"
+    ></form-files>
+
+    <form-wysiwyg
+        field-name="wysiwyg"
+        label="test"
+      v-model="wysiwyg"
+    ></form-wysiwyg>
 
     <div class="mx-4 p-4 bg-white rounded">
       <form-code

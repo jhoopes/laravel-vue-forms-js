@@ -3,60 +3,61 @@ import { ILengthAwarePaginator } from "./../types";
 import { Model } from "./../classes/model";
 import Collection from "./../classes/collection";
 import { ApiClient } from "./../classes/apiClient";
+import { Ref } from "vue";
 
 export const getApiParamsForGrid = (
-    page: number,
-    sortBy: Record<string, any> | null,
-    currentFilter: Record<string, any> | null,
-    recordUrlParams: Record<string, any>
+  page: number,
+  sortBy: Ref<Record<string, any>> | Ref<null>,
+  currentFilter: Ref<Record<string, any>> | Ref<null>,
+  recordUrlParams: Ref<Record<string, any>>
 ): Record<string, any> => {
-    if (page == null) {
-        page = 1;
+  if (page == null) {
+    page = 1;
+  }
+
+  const params: Record<string, any> = {
+    page,
+  };
+
+  if (sortBy.value && sortBy.value.by) {
+    params.sortBy = sortBy.value.by;
+
+    if (sortBy.value.dir) {
+      params.sortDir = sortBy.value.dir;
     }
+  }
 
-    const params: Record<string, any> = {
-        page,
-    };
+  if (currentFilter.value && currentFilter.value.params) {
+    Object.assign(params, currentFilter.value.params);
+  }
 
-    if (sortBy && sortBy.by) {
-        params.sortBy = sortBy.by;
-
-        if (sortBy.dir) {
-            params.sortDir = sortBy.dir;
-        }
+  for (const key in recordUrlParams.value) {
+    if (
+      Object.hasOwnProperty.call(recordUrlParams.value, key) &&
+      recordUrlParams.value[key]
+    ) {
+      params[key] = recordUrlParams.value[key];
     }
+  }
 
-    if (currentFilter && currentFilter.params) {
-        Object.assign(params, currentFilter.params);
-    }
-
-    for (const key in recordUrlParams) {
-        if (
-            Object.hasOwnProperty.call(recordUrlParams, key) &&
-            recordUrlParams[key]
-        ) {
-            params[key] = recordUrlParams[key];
-        }
-    }
-
-    return params;
+  return params;
 };
 
 export const getRecordsFromAPI = async (
-    params: Record<string, any>,
-    apiClient: ApiClient,
-    recordUrl: string,
-    useJsonApi: boolean
+  params: Record<string, any>,
+  apiClient: ApiClient,
+  recordUrl: string,
+  useJsonApi: boolean
 ): Promise<
-    Collection<Model> | ILengthAwarePaginator<Model> | Record<string, any>[]
+  Collection<Model> | ILengthAwarePaginator<Model> | Record<string, any>[]
 > => {
-    const response = await apiClient.get(recordUrl, {
-        searchParams: params,
-    });
+  const response = await apiClient.get(recordUrl, {
+    searchParams: params,
+  });
 
-    if (useJsonApi) {
-        return Parser.parseJSONAPIResponse(response.data) as Collection<Model>;
-    }
+  if (useJsonApi) {
+    return Parser.parseJSONAPIResponse(response.data) as Collection<Model>;
+  }
 
-    return response.data as ILengthAwarePaginator<Model>;
+  return response.data as ILengthAwarePaginator<Model>;
 };

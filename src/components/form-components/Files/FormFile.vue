@@ -1,110 +1,124 @@
-<template>
-    <div class="existing-files row">
-        <div class="file" v-for="file in files" :key="file.id">
-            <div class="file-icon">
-                <div v-if="previewIcon(file)" class="thumbnail">
-                    <img :src="previewIcon(file)" width="80px" />
-                </div>
-                <font-awesome-icon
-                    :icon="fileIcon"
-                    size="4x"
-                    v-else
-                ></font-awesome-icon>
-            </div>
-            <div class="action-row">
-                <font-awesome-icon
-                    :icon="downloadIcon"
-                    @click="downloadFile(file)"
-                ></font-awesome-icon>
-                <font-awesome-icon
-                    :icon="closeIcon"
-                    @click="selectForDeletion(file)"
-                    v-if="disabled === 0"
-                ></font-awesome-icon>
-            </div>
-            <div class="file-name">
-                {{ file.original_filename }}
-            </div>
-        </div>
-        <modal
-            v-if="showFileDeleteModal"
-            :isConfirm="true"
-            confirmText="Confirm Delete"
-            modalWidth="300px"
-            @close="showFileDeleteModal = false"
-            @confirmed="deleteSelectedFile"
-        >
-            <span slot="header">Delete File</span>
-            <div slot="body" id="measure-delete-dialog-text">
-                Are you sure you want to delete this file?
-            </div>
-        </modal>
-    </div>
-</template>
-<script>
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faFile, faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
-export default {
-    inject: {
-        apiClient: {
-            default() {
-                return axios;
-            },
-        },
+<script lang="ts">
+
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {faFile, faDownload, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {PropType, SetupContext, defineComponent, ref, reactive, inject} from "vue";
+import {IApiClient, IFormFieldFieldConfig} from "./../../../types";
+import defaultApiClient from "./../../../classes/apiClient";
+
+export default defineComponent({
+
+  setup(props, context: SetupContext) {
+
+    const apiClient: IApiClient = inject("apiClient", defaultApiClient);
+
+    let showFileDeleteModal = ref(false);
+    let deleteFile: Record<string, any> = reactive({});
+
+    const downloadFile = (file: Record<string, any>) => {
+      window.open(props.fieldConfig.options.fileApiUrl + '/' + file.id + '/download');
+    }
+
+    const previewIcon = (file: Record<string, any>): string | null => {
+      if (file.thumbnail) {
+        return props.fieldConfig.options.fileApiUrl + '/' + file.id + '/thumbnail';
+      }
+
+      return null;
+    }
+
+    const selectFileForDeletion = (file: Record<string, any>) => {
+      deleteFile = file;
+      showFileDeleteModal.value = true;
+    }
+
+    const deleteSelectedFile = async () => {
+      if (props.fieldConfig.disabled) {
+        return;
+      }
+
+      showFileDeleteModal.value = false;
+      await apiClient.delete(props.fieldConfig.options.fileApiUrl + '/' + deleteFile.id);
+      context.emit("deletedFile", deleteFile);
+      deleteFile = reactive({});
+    }
+
+    return {
+      showFileDeleteModal,
+      deleteFile,
+      fileIcon: faFile,
+      downloadIcon: faDownload,
+      closeIcon: faTimes,
+      downloadFile,
+      previewIcon,
+      selectFileForDeletion,
+      deleteSelectedFile
+    }
+  },
+
+  props: {
+    files: {
+      required: true,
+      type: Array as PropType<Record<string, any>[]>
     },
+    fieldConfig: {
+      required: true,
+      type: Object as PropType<IFormFieldFieldConfig>,
+    }
+  },
 
-    props: ["files", "disabled"],
-
-    components: {
-        FontAwesomeIcon,
-    },
-
-    data() {
-        return {
-            showFileDeleteModal: false,
-            deleteFile: {},
-            fileIcon: faFile,
-            downloadIcon: faDownload,
-            closeIcon: faTimes,
-        };
-    },
-
-    methods: {
-        downloadFile(file) {
-            window.open("/files/" + file.id + "/download");
-        },
-        previewIcon(file) {
-            if (file.thumbnail && file.thumbnail !== null) {
-                return "/files/" + file.id + "/thumbnail";
-            }
-
-            return false;
-        },
-        selectForDeletion(file) {
-            this.deleteFile = file;
-            this.showFileDeleteModal = true;
-        },
-        deleteSelectedFile() {
-            if (this.disabled === 1) {
-                return;
-            }
-
-            this.showFileDeleteModal = false;
-            this.apiClient
-                .delete("/api/files/" + this.deleteFile.id)
-                .then(() => {
-                    this.$emit("deletedFile", this.deleteFile);
-                    this.deleteFile = {};
-                    window.notify.message(
-                        "Successfully deleted file",
-                        "success"
-                    );
-                })
-                .catch((error) => {
-                    window.notify.apiError(error);
-                });
-        },
-    },
-};
+  components: {
+    FontAwesomeIcon,
+  },
+});
 </script>
+<template>
+  <div class="existing-files row">
+    <div class="text-center file" v-for="file in files" :key="file.id">
+      <div class="file-icon">
+        <div v-if="previewIcon(file)" class="thumbnail">
+          <img :src="previewIcon(file)" width="80px"/>
+        </div>
+        <font-awesome-icon
+            :icon="fileIcon"
+            size="4x"
+            v-else
+        ></font-awesome-icon>
+      </div>
+      <div class="flex justify-around action-row">
+        <font-awesome-icon
+            :icon="downloadIcon"
+            @click="downloadFile(file)"
+        ></font-awesome-icon>
+        <font-awesome-icon
+            :icon="closeIcon"
+            @click="selectFileForDeletion(file)"
+            v-if="!fieldConfig.disabled"
+        ></font-awesome-icon>
+      </div>
+      <div class="file-name">
+        {{ file.file_name }}
+      </div>
+    </div>
+    <lvf-modal v-if="showFileDeleteModal" @close="showConfirmDelete = false">
+      <template v-slot:header>
+        <h2>Delete or Dissociate?</h2>
+      </template>
+      <template v-slot:body>
+        <div>
+          <p class="mb-8">
+            Are you sure you want to delete this file?
+          </p>
+          <div class="flex justify-around">
+            <button class="button" @click="deleteSelectedFile">
+              Delete Permanently
+            </button>
+            <button class="button" @click="() => showFileDeleteModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </template>
+    </lvf-modal>
+  </div>
+</template>

@@ -1,0 +1,58 @@
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faSpinner,
+  faSearch,
+  faAngleLeft,
+  faAngleRight,
+  faAngleDown,
+  faPlusCircle,
+  faMinusCircle,
+  faPlus,
+  faEdit,
+  faTimes,
+  faEye,
+  faCheck,
+  faQuestionCircle,
+  faSync,
+  faDownload,
+  faFile,
+  faFolder,
+  faFolderOpen,
+  faFileArchive,
+  faPaperPlane,
+  faSave,
+  faTachometerAlt,
+  faUser,
+  faCogs,
+  faExclamationTriangle,
+  faInfoCircle,
+  faBook,
+} from "@fortawesome/free-solid-svg-icons";
+
+library.add(faSpinner);
+library.add(faSearch);
+library.add(faAngleLeft);
+library.add(faAngleRight);
+library.add(faAngleDown);
+library.add(faPlusCircle);
+library.add(faMinusCircle);
+library.add(faPlus);
+library.add(faEdit);
+library.add(faTimes);
+library.add(faEye);
+library.add(faCheck);
+library.add(faQuestionCircle);
+library.add(faSync);
+library.add(faDownload);
+library.add(faFile);
+library.add(faFolder);
+library.add(faFolderOpen);
+library.add(faFileArchive);
+library.add(faPaperPlane);
+library.add(faSave);
+library.add(faTachometerAlt);
+library.add(faUser);
+library.add(faCogs);
+library.add(faExclamationTriangle);
+library.add(faInfoCircle);
+library.add(faBook);

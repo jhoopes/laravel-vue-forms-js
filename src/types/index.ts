@@ -21,6 +21,10 @@ export interface ILengthAwarePaginator<T> {
     total: number;
 }
 
+export interface IModel extends Model {
+    id: number;
+}
+
 export interface IPaginationPage {
     number: number | null
 }
@@ -75,6 +79,12 @@ export enum HTTPWebProtocol {
 }
 
 export interface IApiClient {
+    urlBase: string;
+    fetch: typeof fetch;
+    protocol: HTTPWebProtocol;
+    defaultHeaders: Record<string, string>;
+    withCredentials: boolean;
+
     header(header: string, value: string): void;
 
     get(
@@ -122,6 +132,11 @@ export type SaveSuccessFunction = {
         closeOnSave: boolean
     ): void;
 };
+
+export interface IStore {
+    addModule(key: string, module: object): void;
+    getModule(key: string): object;
+}
 
 export interface ISubmitFormElements {
     passThru: boolean;

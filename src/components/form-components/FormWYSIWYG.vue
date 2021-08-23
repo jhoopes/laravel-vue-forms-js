@@ -1,137 +1,166 @@
-<template>
-    <div class="form-wysiwyg form-group">
-        <label class="form-control-label"
-            ><span v-html="fieldConfig.label"></span>
-            <span class="required" v-if="fieldConfig.field_extra.required"
-                >&nbsp;&nbsp;(*)</span
-            >
-            <span
-                v-if="withHelpIcon"
-                :class="fieldConfig.field_extra.withIcon"
-                :title="fieldConfig.field_extra.helpText"
-            ></span>
-        </label>
-        <div class="form-wysiwyg-editor">
-            <textarea
-                :id="fieldName + '-editor-' + randomId"
-                :value="value"
-                :disabled="
-                    fieldConfig.disabled === 1 || fieldConfig.disabled === true
-                "
-            ></textarea>
-            <span
-                class="help-block"
-                v-if="form.errors.has(this.fieldConfig.value_field)"
-            >
-                {{ form.errors.get(this.fieldConfig.value_field, true) }}
-            </span>
-        </div>
-        <div v-if="hasHelpText">
-            <span v-html="fieldConfig.field_extra.helpText"></span>
-        </div>
-    </div>
-</template>
-<script>
-import FormField from "../../mixins/FormField";
+<script lang="ts">
+import { defineComponent, SetupContext, ref, computed } from "vue";
 import { guid } from "../../utilities/utils";
-import jquery from "jquery";
 
-require("summernote/dist/summernote-lite");
-export default {
-    name: "form-wysiwyg",
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import {
+  errorComputedProperties,
+  helpTextComputedProperties,
+  setupFormField,
+} from "../../composition/formField";
 
-    mixins: [FormField],
+export default defineComponent({
+  components: {
+    QuillEditor,
+  },
 
-    props: {
-        initialEditorOptions: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-    },
+  emits: ["update:modelValue"],
 
-    data() {
-        return {
-            randomId: guid(),
-            editor: null,
-        };
-    },
+  setup(props, context: SetupContext) {
+    let { form, fieldConfig } = setupFormField(props, context);
+    let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig);
+    let { hasError, errorMessages } = errorComputedProperties(
+      form,
+      fieldConfig
+    );
 
-    created() {
-        if (
-            this.findInForm &&
-            this.form &&
-            this.form.formConfig &&
-            (Array.isArray(this.form.formConfig.fields) ||
-                typeof this.form.formConfig.fields[Symbol.iterator] ===
-                    "function")
-        ) {
-            this.form.formConfig.fields.forEach((field) => {
-                if (field.name === this.fieldName) {
-                    this.$set(this.fieldConfig, "editorOptions", {});
-                    if (field.field_extra.editorOptions) {
-                        this.fieldConfig.editorOptions =
-                            field.field_extra.editorOptions;
-                    }
-                }
-            });
-        } else {
-            this.$set(
-                this.fieldConfig,
-                "editorOptions",
-                this.initialEditorOptions
-            );
+    let randomId = ref(guid());
+
+    let updateValue = (value: string) => {
+      context.emit("update:modelValue", value);
+      form.errors.clear(fieldConfig.valueField);
+    };
+
+    if (
+      props.findInForm &&
+      (Array.isArray(form.formConfig.fields) ||
+        typeof form.formConfig.fields[Symbol.iterator] === "function")
+    ) {
+      form.formConfig.fields.forEach((field) => {
+        if (field.name === props.fieldName) {
+          fieldConfig.options.editorOptions = {};
+          if (field.field_extra.editorOptions) {
+            fieldConfig.options.editorOptions = field.field_extra.editorOptions;
+          }
         }
-    },
+      });
+    } else {
+      // eslint-disable-next-line
+      fieldConfig.options.editorOptions = props.initialEditorOptions;
+    }
 
-    computed: {
-        editorOptions() {
-            let vm = this;
-            var defaultOptions = {
-                toolbar: [
-                    ["style", ["bold", "italic", "underline"]],
-                    ["fontsize", ["fontsize"]],
-                    ["color", ["color"]],
-                    ["para", ["ul", "ol", "paragraph"]],
-                    ["insert", ["hr"]],
-                    ["height", ["height"]],
-                ],
-                callbacks: {
-                    onChange: function (contents) {
-                        vm.$emit("input", contents);
-                    },
-                },
-            };
-            if (this.fieldConfig.editorOptions) {
-                return Object.assign(
-                    defaultOptions,
-                    this.fieldConfig.editorOptions
-                );
-            }
-
-            return defaultOptions;
+    const editorOptions = computed(() => {
+      return {
+        toolbar: [
+          ["style", ["bold", "italic", "underline"]],
+          ["fontsize", ["fontsize"]],
+          ["color", ["color"]],
+          ["para", ["ul", "ol", "paragraph"]],
+          ["insert", ["hr"]],
+          ["height", ["height"]],
+        ],
+        callbacks: {
+          onChange: function (contents: string) {
+            updateValue(contents);
+          },
         },
-    },
+      };
+    });
 
-    mounted() {
-        this.editor = jquery(
-            "#" + this.fieldName + "-editor-" + this.randomId
-        ).summernote(this.editorOptions);
-    },
+    // if (fieldConfig.options.editorOptions) {
+    //   return Object.assign(editorOptions, fieldConfig.options.editorOptions);
+    // }
 
-    watch: {
-        "fieldConfig.disabled": function (disabled) {
-            if (disabled) {
-                jquery(
-                    "#" + this.fieldName + "-editor-" + this.randomId
-                ).summernote("disable");
-            } else {
-                jquery(
-                    "#" + this.fieldName + "-editor-" + this.randomId
-                ).summernote("enable");
-            }
-        },
+    return {
+      form,
+      fieldConfig,
+      withHelpIcon,
+      hasHelpText,
+      hasError,
+      errorMessages,
+      randomId,
+      editorOptions,
+      updateValue,
+    };
+  },
+
+  props: {
+    label: {
+      type: String,
     },
-};
+    fieldName: {
+      type: String,
+      required: true,
+    },
+    modelValue: {
+      required: true,
+    },
+    showLabel: {
+      type: Boolean,
+      default: true,
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    findInForm: {
+      type: Boolean,
+      default: false,
+    },
+    useJsonApi: {
+      type: Boolean,
+    },
+    children: {},
+
+    // quill options
+
+    initialEditorOptions: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
+});
 </script>
+
+<template>
+  <div class="form-wysiwyg form-group">
+    <label class="form-control-label"
+      ><span v-html="fieldConfig.label"></span>
+      <span class="required" v-if="fieldConfig.fieldExtra.required"
+        >&nbsp;&nbsp;(*)</span
+      >
+      <span
+        v-if="withHelpIcon"
+        :class="fieldConfig.fieldExtra.withIcon"
+        :title="fieldConfig.fieldExtra.helpText"
+      ></span>
+    </label>
+    <div class="form-wysiwyg-editor">
+      <quill-editor
+        theme="snow"
+        toolbar="full"
+        :content="modelValue"
+        @update:content="updateValue"
+        content-type="html"
+      ></quill-editor>
+      <span class="help-block" v-if="form.errors.has(fieldConfig.valueField)">
+        {{ form.errors.get(fieldConfig.valueField, true) }}
+      </span>
+    </div>
+    <div v-if="hasHelpText">
+      <span v-html="fieldConfig.fieldExtra.helpText"></span>
+    </div>
+  </div>
+</template>
+<style>
+.ql-editor {
+  min-height: 200px;
+}
+</style>

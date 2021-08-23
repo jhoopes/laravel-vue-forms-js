@@ -1,234 +1,263 @@
-<template>
-    <div
-        class="form-group form-file-upload-container"
-        :id="fieldName + '-text-field'"
-        :class="{ 'has-error': form.errors.has(this.fieldConfig.value_field) }"
-    >
-        <label class="form-control-label"
-            ><span v-html="fieldConfig.label"></span>
-            <span class="required" v-if="fieldConfig.field_extra.required"
-                >&nbsp;&nbsp;(*)</span
-            >
-            <span
-                v-if="withHelpIcon"
-                :class="fieldConfig.field_extra.withIcon"
-                :title="fieldConfig.field_extra.helpText"
-            ></span>
-        </label>
-        <div>
-            <form-file
-                :files="value"
-                :disabled="fieldConfig.disabled"
-                @deletedFile="deleteFile"
-            ></form-file>
-            <form-file-upload
-                v-if="showUploadContainer"
-                :type="fieldConfig.fileable_type"
-                :type-id="fieldConfig.fileable_id"
-                :meta-type="fieldConfig.fieldName"
-                :max-files="fieldConfig.maxFiles"
-                @addFile="addFile"
-                :upload-api-url="fieldConfig.fileApiUrl"
-                :upload-params="fieldConfig.uploadParams"
-            ></form-file-upload>
-            <span
-                class="help-block"
-                v-if="form.errors.has(this.fieldConfig.value_field)"
-            >
-                {{ form.errors.get(this.fieldConfig.value_field, true) }}
-            </span>
-        </div>
-        <div v-if="hasHelpText">
-            <span v-html="fieldConfig.field_extra.helpText"></span>
-        </div>
-    </div>
-</template>
-<script>
-import FormField from "../../../mixins/FormField";
-import FormFile from "./FormFile.vue";
-import FormFileUpload from "./FormFileUpload.vue";
-export default {
-    name: "form-files",
+<script lang="ts">
+import {
+  defineComponent,
+  ref,
+  SetupContext,
+  toRefs,
+  watch,
+  watchEffect,
+    PropType
+} from "vue";
+import {
+  setupFormField,
+  helpTextComputedProperties,
+  errorComputedProperties,
+  getFormFieldFieldExtra,
+} from "./../../../composition/formField";
+import config from "@/classes/configuration";
+import {IApiClient} from "@/types";
 
-    mixins: [FormField],
 
-    components: {
-        FormFile,
-        FormFileUpload,
-    },
+// import FormFile from "./FormFile.vue";
+// import FormFileUpload from "./FormFileUpload.vue";
 
-    props: {
-        stepId: {
-            type: Number,
-            default: null,
-        },
-        uploadParams: {
-            type: Object,
-            default() {
-                return {};
-            },
-        },
-        metaType: {
-            type: String,
-        },
-        maxFiles: {
-            type: Number,
-            default: 100,
-        },
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
-        fileableType: {
-            type: String,
-        },
-        fileableId: {
-            type: Number,
-        },
-        fileApiUrl: {
-            type: String,
-            default() {
-                return "/api/files/saveFiles";
-            },
-        },
-    },
+export default defineComponent({
+  name: "form-files",
 
-    data() {
-        return {
-            showUploadContainer: true,
-        };
-    },
+  setup(props, context: SetupContext) {
+    let { form, fieldConfig } = setupFormField(props, context);
+    let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig);
+    let { hasError, errorMessages } = errorComputedProperties(
+      form,
+      fieldConfig
+    );
 
-    watch: {
-        value() {
-            this.checkIfReachedMaxFiles();
-        },
-        uploadParams: {
-            handler(newParams) {
-                this.$set(this.fieldConfig, "uploadParams", newParams);
-            },
-            deep: true,
-        },
-    },
+    let hasIdentity = ref(Boolean(form.id));
+    let showUploadContainer = ref(Boolean(form.id));
 
-    created() {
-        if (
-            this.findInForm &&
-            this.form &&
-            this.form.formConfig &&
-            (Array.isArray(this.form.formConfig.fields) ||
-                typeof this.form.formConfig.fields[Symbol.iterator] ===
-                    "function")
-        ) {
-            this.form.formConfig.fields.forEach((field) => {
-                if (field.name === this.fieldName) {
-                    var fieldExtra = this.getFormFieldFieldExtra(field);
-                    this.$set(
-                        this.fieldConfig,
-                        "fileable_type",
-                        this.form.formConfig.entity_model
-                    );
+    if (
+      props.findInForm &&
+      (Array.isArray(form.formConfig.fields) ||
+        typeof form.formConfig.fields[Symbol.iterator] === "function")
+    ) {
+      form.formConfig.fields.forEach((field) => {
+        if (field.name === props.fieldName) {
+          var fieldExtra = getFormFieldFieldExtra(field);
 
-                    //TODO: Will need to figure out a better way to define the entity id and not
-                    //TODO: hard checking id on form
-                    if (this.form.id) {
-                        this.$set(
-                            this.fieldConfig,
-                            "fileable_id",
-                            this.form.id
-                        );
-                    }
+          if (form.formConfig.entity_type_id) {
+            fieldConfig.options.entity_type_id = form.formConfig.entity_type_id;
+          } else {
+            fieldConfig.options.fileable_type = form.formConfig.entity_model;
+          }
 
-                    if (fieldExtra.maxFiles) {
-                        this.$set(
-                            this.fieldConfig,
-                            "maxFiles",
-                            fieldExtra.maxFiles
-                        );
-                    } else {
-                        this.$set(this.fieldConfig, "maxFiles", 100);
-                    }
+          if (form.id) {
+            fieldConfig.options.fileable_id = form.id;
+          }
 
-                    if (fieldExtra.fileApiUrl) {
-                        this.$set(
-                            this.fieldConfig,
-                            "fileApiUrl",
-                            fieldExtra.fileApiUrl
-                        );
-                    } else {
-                        this.$set(
-                            this.fieldConfig,
-                            "fileApiUrl",
-                            this.fileApiUrl
-                        );
-                    }
+          fieldConfig.options.maxFiles = 100;
+          if (fieldExtra.maxFiles) {
+            fieldConfig.options.maxFiles = fieldExtra.maxFiles;
+          }
 
-                    if (fieldExtra.uploadParams) {
-                        this.$set(
-                            this.fieldConfig,
-                            "uploadParams",
-                            fieldExtra.uploadParams
-                        );
-                    } else {
-                        this.$set(this.fieldConfig, "uploadParams", {});
-                    }
-                }
-            });
+          fieldConfig.options.fileApiUrl = props.fileApiUrl;
+          if (fieldExtra.fileApiUrl) {
+            fieldConfig.options.fileApiUrl = fieldExtra.filApiUrl;
+          }
 
-            this.$watch("form.id", {
-                handler: function (newFormId, oldFormId) {
-                    if (newFormId !== oldFormId) {
-                        this.$set(this.fieldConfig, "fileable_id", newFormId);
-                    }
-                },
-                deep: true,
-            });
-        } else {
-            this.$set(this.fieldConfig, "fileable_type", this.fileableType);
-            this.$set(this.fieldConfig, "fileable_id", this.fileableId);
-            this.$set(this.fieldConfig, "maxFiles", this.maxFiles);
-            this.$set(this.fieldConfig, "fileApiUrl", this.fileApiUrl);
-            this.$set(this.fieldConfig, "uploadParams", this.uploadParams);
+          fieldConfig.options.uploadParams = {};
+          if (fieldExtra.uploadParams) {
+            fieldConfig.options.uploadParams = fieldExtra.uploadParams;
+          }
         }
+      });
+    } else {
+      // eslint-disable-next-line
+      fieldConfig.options.fileable_type = props.fileableType;
+      // eslint-disable-next-line
+      fieldConfig.options.fileable_id = props.fileableId;
+      // eslint-disable-next-line
+      fieldConfig.options.maxFiles = props.maxFiles;
+      // eslint-disable-next-line
+      fieldConfig.options.fileApiUrl = props.fileApiUrl;
+      // eslint-disable-next-line
+      fieldConfig.options.uploadParams = props.uploadParams;
+    }
 
-        this.checkIfReachedMaxFiles();
+    watch(form, function (newForm, oldForm) {
+      if (!oldForm.id) {
+        fieldConfig.options.fileable_id = newForm.id;
+      }
+    }, {deep: true});
+
+    watchEffect(() => {
+      showUploadContainer.value = false;
+      if (
+        Array.isArray(props.modelValue) &&
+        props.modelValue.length >= fieldConfig.options.maxFiles
+      ) {
+        showUploadContainer.value = false;
+      } else if(form.id) {
+        showUploadContainer.value = true;
+      }
+    });
+
+    const addFile = (file: Record<string, any>) => {
+
+      if(!Array.isArray(props.modelValue)) {
+        return;
+      }
+
+      let newFiles: Record<string, any>[] = props.modelValue;
+      if (!newFiles) {
+        newFiles = [];
+      }
+
+      newFiles.push(file);
+      context.emit("update:modelValue", newFiles);
+    };
+
+    const deleteFile = (deletedFile: Record<string, any>) => {
+      if (!Array.isArray(props.modelValue)) {
+        throw new Error(
+          "Invalid model value for form files.  Please pass in an array"
+        );
+      }
+
+      context.emit(
+        "update:modelValue",
+        props.modelValue.filter((file: Record<string, any>) => {
+          return file.id !== deletedFile.id;
+        })
+      );
+    };
+
+    // if(!props.modelValue ||
+    //     (
+    //         !Array.isArray(props.modelValue) &&
+    //         props.modelValue !instanceof Collection
+    //     )
+    //   ) {
+    //   context.emit("update:modelValue", []);
+    // }
+
+    return {
+      form,
+      fieldConfig,
+      withHelpIcon,
+      hasHelpText,
+      hasError,
+      errorMessages,
+      hasIdentity,
+      showUploadContainer,
+      addFile,
+      deleteFile,
+      ...toRefs(props),
+    };
+  },
+
+  props: {
+    // formField Props
+    label: {
+      type: String,
     },
-
-    methods: {
-        deleteFile(deleteFile) {
-            this.$emit(
-                "input",
-                this.value.filter((file) => {
-                    return file.id !== deleteFile.id;
-                })
-            );
-
-            this.checkIfReachedMaxFiles();
-        },
-        addFile(file) {
-            var newFiles = this.value;
-
-            if (!newFiles) {
-                newFiles = [];
-            }
-
-            newFiles.push(file);
-            this.$emit("input", newFiles);
-
-            this.checkIfReachedMaxFiles();
-        },
-
-        checkIfReachedMaxFiles() {
-            if (
-                this.value &&
-                (this.value.length == this.fieldConfig.maxFiles ||
-                    this.fieldConfig.disabled === 1)
-            ) {
-                this.showUploadContainer = false;
-            } else {
-                this.showUploadContainer = true;
-            }
-        },
+    fieldName: {
+      type: String,
+      required: true,
     },
-};
+    modelValue: {
+      type: Array as PropType<Record<string, any>[]>
+    },
+    showLabel: {
+      type: Boolean,
+      default: true,
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    findInForm: {
+      type: Boolean,
+      default: false,
+    },
+    apiClient: {
+      type: Object as PropType<IApiClient>,
+    },
+    useJsonApi: {
+      type: Boolean,
+    },
+    children: {},
+
+    // file props
+    uploadParams: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    metaType: {
+      type: String,
+    },
+    maxFiles: {
+      type: Number,
+      default: 100,
+    },
+    fileableType: {
+      type: String,
+    },
+    fileableId: {
+      type: Number,
+    },
+    fileApiUrl: {
+      type: String,
+      default: () => {
+        return config.apiPrefix + '/files'
+      }
+    },
+  },
+});
 </script>
+<template>
+  <div
+    class="form-group form-file-upload-container"
+    :id="fieldName + '-text-field'"
+    :class="{ 'has-error': hasError }"
+  >
+    <label class="form-control-label"
+      ><span v-html="fieldConfig.label"></span>
+      <span class="required" v-if="fieldConfig.fieldExtra.required"
+        >&nbsp;&nbsp;(*)</span
+      >
+      <span
+        v-if="withHelpIcon"
+        :class="fieldConfig.fieldExtra.withIcon"
+        :title="fieldConfig.fieldExtra.helpText"
+      ></span>
+    </label>
+    <div>
+      <form-file
+        :files="modelValue"
+        :field-config="fieldConfig"
+        @deletedFile="deleteFile"
+      ></form-file>
+      <form-file-upload
+        v-if="showUploadContainer"
+        :field-config="fieldConfig"
+        :form="form"
+        @addFile="addFile"
+      ></form-file-upload>
+      <div class="help-block text-center" v-if="!hasIdentity">
+        Please create your record before being able to upload files
+      </div>
+      <span class="help-block" v-if="hasError">
+        {{ errorMessages }}
+      </span>
+    </div>
+    <div v-if="hasHelpText">
+      <span v-html="fieldConfig.fieldExtra.helpText"></span>
+    </div>
+  </div>
+</template>
