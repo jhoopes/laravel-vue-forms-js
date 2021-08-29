@@ -206,7 +206,7 @@ export default defineComponent({
     const updatePagination = (newPage: number) => {
       if (internalPagination.value) {
         internalCurrentPage.value = newPage;
-      } else if (recordUrl) {
+      } else if (recordUrl.value) {
         getRecords(newPage);
       } else {
         context.emit("updatePagination", newPage);
@@ -231,7 +231,7 @@ export default defineComponent({
         return;
       }
 
-      if (recordUrl) {
+      if (recordUrl.value) {
         getRecords();
       }
     };
@@ -239,7 +239,7 @@ export default defineComponent({
     const runBulkAction = (action: Record<string, any>) => {
       action.action(selectedRecords);
 
-      if (recordUrl && updateAfterBulkAction) {
+      if (recordUrl.value && updateAfterBulkAction.value) {
         getRecords();
       }
       context.emit("actionRun", action);
@@ -251,7 +251,7 @@ export default defineComponent({
         // reset filter
         currentFilter.value = null;
         context.emit("updateFilter", null);
-        if (recordUrl) {
+        if (recordUrl.value) {
           getRecords();
         }
         return;
@@ -263,7 +263,7 @@ export default defineComponent({
 
       currentFilter.value = filter;
       context.emit("updateFilter", filter);
-      if (recordUrl) {
+      if (recordUrl.value) {
         getRecords();
       }
     };
@@ -273,7 +273,7 @@ export default defineComponent({
         // reset sort
         sortBy.value = null;
         context.emit("updateSort", null);
-        if (recordUrl) {
+        if (recordUrl.value) {
           getRecords();
         }
         return;
@@ -286,7 +286,7 @@ export default defineComponent({
       }
 
       sortBy.value = sort;
-      if (recordUrl) {
+      if (recordUrl.value) {
         getRecords();
       }
       context.emit("updateSort", sort);
@@ -332,7 +332,7 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      if (typeof recordUrl !== "undefined" && recordUrl !== null) {
+      if (typeof recordUrl.value !== "undefined" && recordUrl.value !== null) {
         getRecords();
       }
     });

@@ -27,12 +27,17 @@ export default defineComponent({
     const { currentOptionsURL } = setupHasOptions(props, form, fieldConfig);
 
     let updateValue = (value: string) => {
-      if (value) {
-        value = value[fieldConfig.options.optionValueField];
+      form.errors.clear(fieldConfig.valueField);
+
+      if(!value) {
+        context.emit("update:modelValue", null);
+        return;
       }
 
-      context.emit("update:modelValue", value);
-      form.errors.clear(fieldConfig.valueField);
+      context.emit(
+          "update:modelValue",
+          value[fieldConfig.options.optionValueField]
+      );
     };
 
     const optionValue = computed(() => {

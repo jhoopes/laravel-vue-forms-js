@@ -1,7 +1,7 @@
 import { Form } from "./../classes/Form";
 import { IFormFieldFieldConfig } from "./../types";
 import { FormField } from "./../classes/models/formField";
-import { computed, reactive, Ref } from "vue";
+import {computed, reactive, Ref, watchEffect} from "vue";
 import get from "lodash/get";
 import parser from "./../classes/jsonapi_parser";
 import Collection from "./../classes/collection";
@@ -78,11 +78,17 @@ export const setupHasOptions = (
       }
     }
   } else {
-    fieldConfig.options.options = props.options;
-    fieldConfig.options.optionValueField = props.optionValueField;
-    fieldConfig.options.optionLabelField = props.optionLabelField;
-    fieldConfig.options.optionsURL = props.optionsUrl;
-    fieldConfig.options.optionsUrlParams = props.optionsUrlParams;
+    watchEffect(() => {
+      fieldConfig.options.options = props.options;
+      fieldConfig.options.optionValueField = props.optionValueField;
+      fieldConfig.options.optionLabelField = props.optionLabelField;
+      fieldConfig.options.optionsURL = props.optionsUrl;
+      fieldConfig.options.optionsUrlParams = props.optionsUrlParams;
+      form.setFormFieldOptions(
+          fieldConfig.valueField,
+          props.options as Record<string, any>[]
+      );
+    });
   }
 
   const { currentOptionsURL } = setupComputedOptionsVars(
