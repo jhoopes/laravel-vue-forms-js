@@ -103,7 +103,14 @@ export const submitForm = async (
     return;
   }
 
-  const method = getSubmitHttpMethod(form);
+  let method: HTTPMethods;
+  if(submitFormElements.formSubmitMethod) {
+    /** @ts-ignore **/
+    method = HTTPMethods[submitFormElements.formSubmitMethod];
+  }else {
+    method = getSubmitHttpMethod(form);
+  }
+
   const data = getSubmitData(form);
   // TODO
   // this.saving = true;
@@ -121,7 +128,7 @@ export const submitForm = async (
 
   let record: Record<string, any> | undefined;
   if (submitFormElements.useJsonApi) {
-    record = Parser.parseJSONAPIResponse(response.data);
+    record = Parser.parseJSONAPIResponse(response.data as IJSONAPIResponse);
   } else {
     record = response.data;
   }

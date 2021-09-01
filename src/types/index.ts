@@ -144,6 +144,7 @@ export interface ISubmitFormElements {
     useJsonApi: boolean;
     apiClient: IApiClient;
     formSubmitUrl: string;
+    formSubmitMethod?: string
     context: SetupContext;
     closeOnSave: boolean;
 }

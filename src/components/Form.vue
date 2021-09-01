@@ -80,6 +80,7 @@ export default defineComponent({
           useJsonApi: props.useJsonApi,
           apiClient: props.apiClient as IApiClient,
           formSubmitUrl: props.formSubmitUrl,
+          formSubmitMethod: props.formSubmitMethod,
           context,
           closeOnSave: props.closeOnSave,
         } as ISubmitFormElements);
@@ -146,6 +147,9 @@ export default defineComponent({
     formSubmitUrl: {
       type: String,
       default: "/api/forms",
+    },
+    formSubmitMethod: {
+      type: String,
     },
     apiClient: {
       default: apiClient,
