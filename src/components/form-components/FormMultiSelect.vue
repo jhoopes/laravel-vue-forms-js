@@ -2,10 +2,14 @@
 /** @ts-ignore **/
 import MultiSelect from "vue-multiselect";
 
-import {computed, defineComponent, PropType, SetupContext} from "vue";
-import {IApiClient} from "../../types";
-import {errorComputedProperties, helpTextComputedProperties, setupFormField} from "../../composition/formField";
-import {setupHasOptions} from "../../composition/hasOptions";
+import { computed, defineComponent, PropType, SetupContext } from "vue";
+import { IApiClient } from "../../types";
+import {
+  errorComputedProperties,
+  helpTextComputedProperties,
+  setupFormField,
+} from "../../composition/formField";
+import { setupHasOptions } from "../../composition/hasOptions";
 
 export default defineComponent({
   name: "form-multi-select",
@@ -15,12 +19,11 @@ export default defineComponent({
   },
 
   setup(props, context: SetupContext) {
-
     let { form, fieldConfig } = setupFormField(props, context);
     let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig);
     let { hasError, errorMessages } = errorComputedProperties(
-        form,
-        fieldConfig
+      form,
+      fieldConfig
     );
     const { currentOptionsURL } = setupHasOptions(props, form, fieldConfig);
 
@@ -36,24 +39,26 @@ export default defineComponent({
 
     const optionValue = computed(() => {
       if (
-          (!props.modelValue && props.modelValue !== 0) ||
-          !Array.isArray(props.modelValue)
+        (!props.modelValue && props.modelValue !== 0) ||
+        !Array.isArray(props.modelValue)
       ) {
         return [];
       }
 
-
       let selectedOptions: Record<string, any> = [];
       fieldConfig.options.options.forEach((option: Record<string, any>) => {
-        /** @ts-ignore **/
-        if (props.modelValue.indexOf(option[fieldConfig.options.optionValueField]) !== -1) {
+        if (
+          /** @ts-ignore **/
+          props.modelValue.indexOf(
+            option[fieldConfig.options.optionValueField]
+          ) !== -1
+        ) {
           selectedOptions.push(option);
         }
       });
 
       return selectedOptions;
     });
-
 
     return {
       fieldConfig,
@@ -150,7 +155,6 @@ export default defineComponent({
       default: "Press enter to remove",
     },
   },
-
 });
 </script>
 
@@ -213,10 +217,7 @@ export default defineComponent({
         </span>
       </template>
     </multi-select>
-    <span
-      class="help-block"
-      v-if="hasError"
-    >
+    <span class="help-block" v-if="hasError">
       {{ errorMessages }}
     </span>
     <div v-if="hasHelpText">

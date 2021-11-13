@@ -29,14 +29,14 @@ export default defineComponent({
     let updateValue = (value: string) => {
       form.errors.clear(fieldConfig.valueField);
 
-      if(!value) {
+      if (!value) {
         context.emit("update:modelValue", null);
         return;
       }
 
       context.emit(
-          "update:modelValue",
-          value[fieldConfig.options.optionValueField]
+        "update:modelValue",
+        value[fieldConfig.options.optionValueField]
       );
     };
 

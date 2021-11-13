@@ -59,7 +59,7 @@ export interface IJSONAPIRelationshipResource {
 }
 
 export interface IHTTPClientBody {
-    searchParams?: Record<string, string | number | boolean>;
+    searchParams?: Record<string, string | number | boolean | Array<any>>;
     requestBody?: Record<string, any> | FormData;
 }
 

@@ -2,7 +2,6 @@ import Model from "./../model";
 import { FormField } from "./formField";
 import { DateTime } from "luxon";
 import Collection from "./../collection";
-import { reactive } from "vue";
 
 export class FormConfiguration extends Model {
   public id = 0;
@@ -17,9 +16,7 @@ export class FormConfiguration extends Model {
   public updated_at: DateTime = DateTime.now();
 
   /** @ts-ignore **/
-  public fields: Collection<FormField> = reactive(
-    new Collection<FormField>([])
-  );
+  public fields: Collection<FormField> = new Collection<FormField>([]);
 
   constructor(attributes: Record<string, any>) {
     super({});

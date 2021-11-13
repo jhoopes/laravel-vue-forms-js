@@ -6,7 +6,7 @@ import {
   toRefs,
   watch,
   watchEffect,
-    PropType
+  PropType,
 } from "vue";
 import {
   setupFormField,
@@ -14,26 +14,22 @@ import {
   errorComputedProperties,
   getFormFieldFieldExtra,
 } from "./../../../composition/formField";
-import config from "@/classes/configuration";
-import {IApiClient} from "@/types";
-
-
-// import FormFile from "./FormFile.vue";
-// import FormFileUpload from "./FormFileUpload.vue";
+import config from "./../../../classes/configuration";
+import { IApiClient } from "./../../../types";
+import { Collection } from "./../../../classes/collection";
 
 export default defineComponent({
   name: "form-files",
 
   setup(props, context: SetupContext) {
-    let { form, fieldConfig } = setupFormField(props, context);
+    let { form, fieldConfig, apiClient } = setupFormField(props, context);
     let { withHelpIcon, hasHelpText } = helpTextComputedProperties(fieldConfig);
     let { hasError, errorMessages } = errorComputedProperties(
       form,
       fieldConfig
     );
 
-    let hasIdentity = ref(Boolean(form.id));
-    let showUploadContainer = ref(Boolean(form.id));
+    let showUploadContainer = ref(true);
 
     if (
       props.findInForm &&
@@ -64,55 +60,95 @@ export default defineComponent({
             fieldConfig.options.fileApiUrl = fieldExtra.filApiUrl;
           }
 
+          fieldConfig.options.fileDeleteUrl = props.fileDeleteUrl;
+          if (fieldExtra.fileDeleteUrl) {
+            fieldConfig.options.fileDeleteUrl = fieldExtra.fileDeleteUrl;
+          }
+
           fieldConfig.options.uploadParams = {};
           if (fieldExtra.uploadParams) {
             fieldConfig.options.uploadParams = fieldExtra.uploadParams;
           }
+
+          fieldConfig.options.allowableTypes =
+            "image/jpeg, image/png, application/pdf";
+          if (fieldExtra.allowableTypes) {
+            fieldConfig.options.allowableTypes = fieldExtra.allowableTypes;
+          }
         }
       });
     } else {
-      // eslint-disable-next-line
-      fieldConfig.options.fileable_type = props.fileableType;
-      // eslint-disable-next-line
-      fieldConfig.options.fileable_id = props.fileableId;
+      // // eslint-disable-next-line
+      // fieldConfig.options.fileable_type = props.fileableType;
+      // // eslint-disable-next-line
+      // fieldConfig.options.fileable_id = props.fileableId;
       // eslint-disable-next-line
       fieldConfig.options.maxFiles = props.maxFiles;
       // eslint-disable-next-line
       fieldConfig.options.fileApiUrl = props.fileApiUrl;
       // eslint-disable-next-line
+      fieldConfig.options.fileDeleteUrl = props.fileDeleteUrl;
+      // eslint-disable-next-line
       fieldConfig.options.uploadParams = props.uploadParams;
+      // eslint-disable-next-line
+      fieldConfig.options.allowableTypes = props.allowableTypes;
     }
 
-    watch(form, function (newForm, oldForm) {
-      if (!oldForm.id) {
-        fieldConfig.options.fileable_id = newForm.id;
-      }
-    }, {deep: true});
+    watch(
+      form,
+      function (newForm, oldForm) {
+        if (!oldForm.id) {
+          fieldConfig.options.fileable_id = newForm.id;
+        }
+      },
+      { deep: true }
+    );
 
     watchEffect(() => {
-      showUploadContainer.value = false;
-      if (
-        Array.isArray(props.modelValue) &&
-        props.modelValue.length >= fieldConfig.options.maxFiles
-      ) {
-        showUploadContainer.value = false;
-      } else if(form.id) {
-        showUploadContainer.value = true;
-      }
+      showUploadContainer.value =
+        !(
+          Array.isArray(props.modelValue) &&
+          props.modelValue.filter((file) => !file.temporary).length >=
+            fieldConfig.options.maxFiles
+        ) && !props.disabled;
     });
 
     const addFile = (file: Record<string, any>) => {
-
-      if(!Array.isArray(props.modelValue)) {
-        return;
+      let newFiles: Record<string, any>[];
+      if (props.modelValue instanceof Collection) {
+        newFiles = props.modelValue.getModels();
+      } else {
+        newFiles = props.modelValue;
       }
 
-      let newFiles: Record<string, any>[] = props.modelValue;
       if (!newFiles) {
         newFiles = [];
       }
 
       newFiles.push(file);
+      context.emit("update:modelValue", newFiles);
+    };
+
+    const removeTempFile = (fileId: string) => {
+      let newFiles: Record<string, any>[];
+      if (props.modelValue instanceof Collection) {
+        newFiles = props.modelValue.getModels();
+      } else {
+        newFiles = props.modelValue;
+      }
+
+      if (!newFiles) {
+        newFiles = [];
+      }
+
+      let index = newFiles.findIndex((file) => {
+        return file.temporary === true && file.uuid === fileId;
+      });
+
+      if (index !== -1) {
+        newFiles.splice(index, 1);
+      }
+
       context.emit("update:modelValue", newFiles);
     };
 
@@ -131,15 +167,6 @@ export default defineComponent({
       );
     };
 
-    // if(!props.modelValue ||
-    //     (
-    //         !Array.isArray(props.modelValue) &&
-    //         props.modelValue !instanceof Collection
-    //     )
-    //   ) {
-    //   context.emit("update:modelValue", []);
-    // }
-
     return {
       form,
       fieldConfig,
@@ -147,10 +174,11 @@ export default defineComponent({
       hasHelpText,
       hasError,
       errorMessages,
-      hasIdentity,
       showUploadContainer,
       addFile,
+      removeTempFile,
       deleteFile,
+      uploaderApiClient: apiClient,
       ...toRefs(props),
     };
   },
@@ -165,7 +193,10 @@ export default defineComponent({
       required: true,
     },
     modelValue: {
-      type: Array as PropType<Record<string, any>[]>
+      default: () => {
+        return new Collection([]);
+      },
+      type: Object as PropType<Record<string, any>[] | Collection<any>>,
     },
     showLabel: {
       type: Boolean,
@@ -196,7 +227,7 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {};
-      }
+      },
     },
     metaType: {
       type: String,
@@ -205,17 +236,21 @@ export default defineComponent({
       type: Number,
       default: 100,
     },
-    fileableType: {
-      type: String,
-    },
-    fileableId: {
-      type: Number,
-    },
     fileApiUrl: {
       type: String,
       default: () => {
-        return config.apiPrefix + '/files'
-      }
+        return config.apiPrefix + "/files/temp";
+      },
+    },
+    fileDeleteUrl: {
+      type: String,
+      default: () => {
+        return config.apiPrefix + "/files";
+      },
+    },
+    allowableTypes: {
+      type: String,
+      default: "image/jpeg, image/png, application/pdf",
     },
   },
 });
@@ -239,7 +274,7 @@ export default defineComponent({
     </label>
     <div>
       <form-file
-        :files="modelValue"
+        :files="modelValue ?? []"
         :field-config="fieldConfig"
         @deletedFile="deleteFile"
       ></form-file>
@@ -248,6 +283,11 @@ export default defineComponent({
         :field-config="fieldConfig"
         :form="form"
         @addFile="addFile"
+        @removeFile="removeTempFile"
+        :file-api-url="fieldConfig.options.fileApiUrl"
+        :allowable-types="fieldConfig.options.allowableTypes"
+        :api-client="uploaderApiClient"
+        :max-files="fieldConfig.options.maxFiles"
       ></form-file-upload>
       <div class="help-block text-center" v-if="!hasIdentity">
         Please create your record before being able to upload files

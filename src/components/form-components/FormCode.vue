@@ -16,6 +16,12 @@ const Ace = require("brace");
 require("brace/mode/javascript");
 require("brace/mode/json");
 require("brace/theme/monokai");
+require("brace/ext/language_tools");
+require("brace/ext/beautify");
+require("brace/ext/emmet");
+
+// @ts-ignore
+import jsBeautify from "js-beautify";
 
 import { guid } from "./../../utilities/utils";
 import {
@@ -109,7 +115,9 @@ export default defineComponent({
       if (props.modelValue) {
         let value: string = props.modelValue;
         if (mode.value === "json" && typeof props.modelValue !== "string") {
-          value = JSON.stringify(props.modelValue);
+          value = JSON.stringify(props.modelValue, null, 4);
+        } else if (mode.value === "javascript") {
+          value = jsBeautify.js(value);
         }
         editor.setValue(value);
       }

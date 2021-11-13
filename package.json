@@ -64,6 +64,7 @@
     "filepond-plugin-file-validate-type": "^1.2.6",
     "filepond-plugin-image-preview": "^4.6.8",
     "jquery": "^3.6.0",
+    "js-beautify": "^1.14.0",
     "json-formatter-js": "^2.3.4",
     "lodash": "^4.17.21",
     "luxon": "^1.27.0",

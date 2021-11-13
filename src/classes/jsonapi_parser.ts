@@ -95,7 +95,9 @@ export class Parser {
           });
 
           if (relatedRecord) {
-            relationshipSet.push(this.parseSingleResource(relatedRecord));
+            relationshipSet.push(
+              this.parseSingleResource(relatedRecord, included)
+            );
           }
         });
 
@@ -116,7 +118,7 @@ export class Parser {
         });
 
         if (relatedRecord) {
-          related = this.parseSingleResource(relatedRecord);
+          related = this.parseSingleResource(relatedRecord, included);
         }
       }
 

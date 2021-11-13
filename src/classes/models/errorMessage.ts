@@ -7,6 +7,7 @@ export class ErrorMessage extends Model {
   public detail: string | null;
   public meta: [];
   public source: Record<string, any>;
+  public errorMessage = "";
 
   constructor(attributes: Record<string, any>, options?: Record<string, any>) {
     super(attributes, options);

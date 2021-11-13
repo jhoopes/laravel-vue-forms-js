@@ -12,7 +12,12 @@ export class EntityStore extends LVFStore {
 
   public async getEntityForId(entityTypeName: string, entityId: number) {
     const response = await this.apiClient.get(
-      "/api/entities/" + entityTypeName + "/" + entityId
+      "/api/entities/" + entityTypeName + "/" + entityId,
+      {
+        searchParams: {
+          include: ["files"],
+        },
+      }
     );
 
     let entity: Generic;

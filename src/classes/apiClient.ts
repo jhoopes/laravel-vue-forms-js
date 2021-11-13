@@ -6,6 +6,7 @@ import {
 } from "../types/index";
 
 import ApiError from "./ApiError";
+import { getCookie } from "./../utilities/utils";
 
 export class ApiClient implements IApiClient {
   urlBase: string;
@@ -121,7 +122,7 @@ export class ApiClient implements IApiClient {
   }
 
   async http(path: string, config: RequestInit): Promise<IHTTPClientResponse> {
-    const XSRFToken = this.getCookie("XSRF-TOKEN");
+    const XSRFToken = getCookie("XSRF-TOKEN");
     if (XSRFToken !== null) {
       config.headers = Object.assign(
         {
@@ -173,10 +174,17 @@ export class ApiClient implements IApiClient {
       const searchParams = new URLSearchParams();
       Object.keys(body.searchParams).forEach((key) => {
         if (body.searchParams && body.searchParams[key]) {
-          searchParams.append(key, body.searchParams[key] as string);
+          if (Array.isArray(body.searchParams[key])) {
+            const searchParamsBodyArray = body.searchParams[key] as string[];
+            const searchParamKey = key + "[]";
+            searchParamsBodyArray.forEach((paramValue: string) => {
+              searchParams.append(searchParamKey, paramValue);
+            });
+          } else {
+            searchParams.append(key, body.searchParams[key] as string);
+          }
         }
       });
-
       return searchParams;
     }
 
@@ -190,26 +198,6 @@ export class ApiClient implements IApiClient {
     }
 
     return "";
-  }
-
-  getCookie(name: string): string | null {
-    // Split cookie string and get all individual name=value pairs in an array
-    const cookieArr = document.cookie.split(";");
-
-    // Loop through the array elements
-    for (let i = 0; i < cookieArr.length; i++) {
-      const cookiePair = cookieArr[i].split("=");
-
-      /* Removing whitespace at the beginning of the cookie name
-            and compare it with the given string */
-      if (name == cookiePair[0].trim()) {
-        // Decode the cookie value and return
-        return decodeURIComponent(cookiePair[1]);
-      }
-    }
-
-    // Return null if not found
-    return null;
   }
 }
 

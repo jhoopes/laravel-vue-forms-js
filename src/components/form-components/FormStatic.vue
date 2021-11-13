@@ -62,7 +62,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    value: {
+    modelValue: {
       required: true,
     },
     showLabel: {

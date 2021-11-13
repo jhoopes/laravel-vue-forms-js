@@ -6,7 +6,7 @@ import {
   faSpinner,
   faExclamationTriangle,
   faInfoCircle,
-  faCheckCircle
+  faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -86,8 +86,8 @@ export default defineComponent({
         } as ISubmitFormElements);
         vueFormData.saving = false;
         formObj.errors.message = {
-          type: 'success',
-          message: 'Saved!'
+          type: "success",
+          message: "Saved!",
         };
 
         setTimeout(() => {
@@ -250,16 +250,16 @@ export default defineComponent({
         }"
       >
         <font-awesome-icon
-            :icon="warningIcon"
-            v-if="form.errors.getGeneralMessageType() === 'error'"
+          :icon="warningIcon"
+          v-if="form.errors.getGeneralMessageType() === 'error'"
         ></font-awesome-icon>
         <font-awesome-icon
-            :icon="infoIcon"
-            v-if="form.errors.getGeneralMessageType() === 'info'"
+          :icon="infoIcon"
+          v-if="form.errors.getGeneralMessageType() === 'info'"
         ></font-awesome-icon>
         <font-awesome-icon
-            :icon="successIcon"
-            v-if="form.errors.getGeneralMessageType() === 'success'"
+          :icon="successIcon"
+          v-if="form.errors.getGeneralMessageType() === 'success'"
         ></font-awesome-icon>
         <span class="mx-4">{{ form.errors.getGeneralMessage() }}</span>
       </div>
@@ -294,6 +294,7 @@ export default defineComponent({
           v-show="field.visible && form.fieldMeetsConditions[field.name]"
           :field-name="field.name"
           :modelValue="form.getFieldValue(field)"
+          :disabled="disabled"
           @update:modelValue="
             (newVal) => form.updateValueAndConditionals(newVal, field)
           "

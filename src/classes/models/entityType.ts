@@ -6,7 +6,7 @@ export class EntityType extends Model {
   public name = "";
   public title = "";
   public type = "";
-  public entity_type_id: number | null = null;
+  public built_in_type: string | null = null;
   public entity_name: string | null = null;
   public entity_model: string | null = null;
   public entity_configuration: Record<string, any> = {};

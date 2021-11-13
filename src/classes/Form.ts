@@ -4,6 +4,7 @@ import { FormConfiguration } from "./models/formConfiguration";
 import { FormField } from "./models/formField";
 import { reactive } from "vue";
 import { IApiClient } from "./../types";
+import { Collection } from "./collection";
 
 export class Form {
   public data: Record<string, any>;
@@ -38,10 +39,40 @@ export class Form {
 
     config.fields.forEach((field) => {
       this.fields.push(field);
-      if (typeof data[field.value_field] !== "undefined") {
-        this.data[field.value_field] = data[field.value_field];
+
+      if (!field.value_field) {
+        return;
+      }
+
+      if (field.widget === "files" && typeof data.files !== "undefined") {
+        if (data.files && data.files instanceof Collection) {
+          assignOnObject(
+            this.data,
+            field.value_field,
+            data.files
+              .filter({
+                meta_type: field.value_field,
+              })
+              .getModels()
+          );
+        } else if (data.files && Array.isArray(data.files)) {
+          assignOnObject(
+            this.data,
+            field.value_field,
+            data.files.filter((file: Record<string, any>) => {
+              return file.meta_type === field.value_field;
+            })
+          );
+        } else {
+          assignOnObject(this.data, field.value_field, []);
+        }
       } else {
-        this.data[field.value_field] = null;
+        const value = byString(data, field.value_field);
+        if (typeof value !== "undefined" && value !== null) {
+          assignOnObject(this.data, field.value_field, value);
+        } else {
+          assignOnObject(this.data, field.value_field, null);
+        }
       }
     });
 
@@ -69,8 +100,26 @@ export class Form {
     }
 
     this.fields.forEach((field) => {
-      data[field.value_field] = this.data[field.value_field];
+      if (!field.value_field) {
+        return;
+      }
+
+      let value: any;
+      if (field.widget === "files") {
+        const potentialFiles = byString(this.data, field.value_field);
+        value = [];
+        if (Array.isArray(potentialFiles)) {
+          value = potentialFiles.filter((file: Record<string, any>) => {
+            return file.temporary;
+          });
+        }
+      } else {
+        value = byString(this.data, field.value_field);
+      }
+
+      assignOnObject(data, field.value_field, value);
     });
+
     return data;
   }
 

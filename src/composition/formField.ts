@@ -1,5 +1,5 @@
 import { IFormFieldFieldConfig } from "./../types";
-import { inject, reactive, computed, SetupContext } from "vue";
+import { inject, reactive, computed, SetupContext, watchEffect } from "vue";
 import { Form } from "./../classes/Form";
 import defaultApiClient from "./../classes/apiClient";
 import { FormConfiguration } from "./../classes/models/formConfiguration";
@@ -60,7 +60,15 @@ export const setupFormField = (props: any, context: SetupContext) => {
         fieldConfig.fieldExtra = fieldExtra;
         fieldConfig.label = field.label;
         fieldConfig.valueField = field.value_field;
-        fieldConfig.disabled = field.disabled;
+        watchEffect(() => {
+          fieldConfig.disabled = props.disabled;
+        });
+
+        if (props.disabled) {
+          fieldConfig.disabled = true;
+        } else {
+          fieldConfig.disabled = field.disabled;
+        }
       }
     });
   } else {
@@ -70,7 +78,9 @@ export const setupFormField = (props: any, context: SetupContext) => {
     };
     fieldConfig.label = props.label;
     fieldConfig.valueField = props.fieldName;
-    fieldConfig.disabled = props.disabled;
+    watchEffect(() => {
+      fieldConfig.disabled = props.disabled;
+    });
   }
 
   return {

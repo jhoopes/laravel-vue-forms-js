@@ -13,6 +13,7 @@ import {
   SaveSuccessFunction,
   ISubmitFormFunction,
   ICustomActionFunction,
+  IJSONAPIResponse,
 } from "./../types/index";
 import debounce from "lodash/debounce";
 import ApiError from "./../classes/ApiError";
@@ -104,10 +105,10 @@ export const submitForm = async (
   }
 
   let method: HTTPMethods;
-  if(submitFormElements.formSubmitMethod) {
+  if (submitFormElements.formSubmitMethod) {
     /** @ts-ignore **/
     method = HTTPMethods[submitFormElements.formSubmitMethod];
-  }else {
+  } else {
     method = getSubmitHttpMethod(form);
   }
 

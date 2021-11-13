@@ -5,7 +5,6 @@ import {
   getCurrentInstance,
   PropType,
   reactive,
-  ref,
   SetupContext,
   toRefs,
 } from "vue";
@@ -37,6 +36,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    baseRecordId: {
+      type: Number,
+      default: 0,
+    },
   },
 
   emits: ["refresh"],
@@ -45,14 +48,9 @@ export default defineComponent({
     const instance = getCurrentInstance();
 
     let tableHeaders: Record<string, any>[] = reactive([]);
-    let baseRecordId = ref(0);
 
     if (instance && instance.parent && instance.parent.props.headers) {
       tableHeaders = instance.parent.props.headers as Record<string, any>[];
-    }
-
-    if (instance && instance.parent && instance.parent.props.baseRecordId) {
-      baseRecordId.value = instance.parent.data.baseRecordId as number;
     }
 
     const getHeaderName = (name: string): string => {
@@ -74,7 +72,6 @@ export default defineComponent({
     return {
       getHeaderName,
       tableHeaders,
-      baseRecordId,
       noRecordsText,
       runRefresh,
       ...toRefs(props),

@@ -101,8 +101,12 @@ export const setupPagination = (
   });
 
   const from = computed(() => {
+    if (!canPaginate.value) {
+      return 0;
+    }
+
     if (gridData.value instanceof Collection) {
-      return gridData.value.paginationFrom();
+      return gridData.value.paginationFrom() || 0;
     } else if (!Array.isArray(gridData.value) && gridData.value.current_page) {
       return gridData.value.from;
     } else if (Array.isArray(gridData.value) && internalPagination.value) {
@@ -122,8 +126,12 @@ export const setupPagination = (
   });
 
   const to = computed(() => {
+    if (!canPaginate.value) {
+      return 0;
+    }
+
     if (gridData.value instanceof Collection) {
-      return gridData.value.paginationTo();
+      return gridData.value.paginationTo() || 0;
     } else if (!Array.isArray(gridData.value) && gridData.value.current_page) {
       return gridData.value.to;
     } else if (Array.isArray(gridData.value) && internalPagination.value) {

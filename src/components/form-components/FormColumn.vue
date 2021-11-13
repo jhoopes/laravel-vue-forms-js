@@ -21,6 +21,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   setup(props, context: SetupContext) {
@@ -52,6 +56,7 @@ export default defineComponent({
       v-show="field.visible && form.fieldMeetsConditions[field.name]"
       :field-name="field.name"
       :modelValue="form.getFieldValue(field)"
+      :disabled="disabled"
       @update:modelValue="
         (newVal) => form.updateValueAndConditionals(newVal, field)
       "

@@ -11,7 +11,7 @@ const parseValidationErrors = (
   });
 
   if (typeof responseData === "string") {
-    validationErrors.add(new ErrorMessage({ message: responseData }));
+    validationErrors.add(new ErrorMessage({ errorMessage: responseData }));
     return validationErrors;
   }
 

@@ -51,7 +51,7 @@ export default defineComponent({
     }
 
     const editorOptions = computed(() => {
-      return {
+      var defaultOptions = {
         toolbar: [
           ["style", ["bold", "italic", "underline"]],
           ["fontsize", ["fontsize"]],
@@ -66,11 +66,12 @@ export default defineComponent({
           },
         },
       };
-    });
+      if (fieldConfig.options.editorOptions) {
+        return Object.assign(defaultOptions, fieldConfig.options.editorOptions);
+      }
 
-    // if (fieldConfig.options.editorOptions) {
-    //   return Object.assign(editorOptions, fieldConfig.options.editorOptions);
-    // }
+      return defaultOptions;
+    });
 
     return {
       form,
@@ -149,6 +150,7 @@ export default defineComponent({
         :content="modelValue"
         @update:content="updateValue"
         content-type="html"
+        :read-only="fieldConfig.disabled"
       ></quill-editor>
       <span class="help-block" v-if="form.errors.has(fieldConfig.valueField)">
         {{ form.errors.get(fieldConfig.valueField, true) }}

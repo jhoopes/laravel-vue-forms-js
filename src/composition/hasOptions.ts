@@ -1,7 +1,7 @@
 import { Form } from "./../classes/Form";
 import { IFormFieldFieldConfig } from "./../types";
 import { FormField } from "./../classes/models/formField";
-import {computed, reactive, Ref, watchEffect} from "vue";
+import { computed, reactive, Ref, watchEffect } from "vue";
 import get from "lodash/get";
 import parser from "./../classes/jsonapi_parser";
 import Collection from "./../classes/collection";
@@ -36,13 +36,20 @@ export const setupHasOptions = (
       fieldConfig.options.options = [];
       fieldConfig.options.optionsUrlParams = {};
 
-      if (field.field_extra.options_config.optionsURL) {
+      if (
+        field.field_extra.options_config.optionsURL &&
+        typeof field.field_extra.options_config.optionsURL === "string"
+      ) {
         fieldConfig.options.optionsURL =
           field.field_extra.options_config.optionsURL;
         const pattern = /:([^:]*):/g;
-        const matches = pattern.exec(fieldConfig.options.optionsURL);
-        matches?.forEach((match: string) => {
-          fieldsToWatch.push(match);
+
+        const matches = Array.from(
+          fieldConfig.options.optionsURL.matchAll(pattern)
+        ) as string[];
+
+        matches.forEach((match) => {
+          fieldsToWatch.push(match[1]);
         });
       }
 
@@ -85,8 +92,8 @@ export const setupHasOptions = (
       fieldConfig.options.optionsURL = props.optionsUrl;
       fieldConfig.options.optionsUrlParams = props.optionsUrlParams;
       form.setFormFieldOptions(
-          fieldConfig.valueField,
-          props.options as Record<string, any>[]
+        fieldConfig.valueField,
+        props.options as Record<string, any>[]
       );
     });
   }
@@ -123,11 +130,13 @@ export const setupComputedOptionsVars = (
     if (fieldConfig.options.optionsURL) {
       let optionsURL = fieldConfig.options.optionsURL;
       fieldsToWatch.forEach((match) => {
-        let fieldValue = get(form.data, match[1], "");
-        if (!fieldValue) {
+        let fieldValue = get(form.data, match, "");
+        if (match === "id") {
+          fieldValue = form.id;
+        } else if (!fieldValue) {
           fieldValue = "";
         }
-        optionsURL = optionsURL.replace(match[0], fieldValue);
+        optionsURL = optionsURL.replace(":" + match + ":", fieldValue);
       });
 
       if (!paramsAreEmpty(fieldConfig.options.optionsUrlParams)) {

@@ -1,32 +1,3 @@
-<template>
-  <div id="records">
-    <table class="table table-hover">
-      <tr>
-        <th v-for="headerName in tableHeaders" :key="headerName">
-          {{ getHeaderName(headerName) }}
-        </th>
-      </tr>
-    </table>
-
-    <component
-      v-for="record in records"
-      :key="record.id"
-      :is="recordType"
-      :record="record"
-      :base-record-id="baseRecordId"
-      :class="{
-        selected: selectedRecords.find((r) => r.id === record.id),
-        'cursor-pointer': recordsAreSelectable,
-      }"
-      @click="handleSelectionClick(record)"
-      @record-selected="selectRecord(record)"
-      @record-unselected="deSelectRecord(record)"
-      @refreshRecords="runRefresh()"
-      :args="args"
-    ></component>
-    <div v-if="records.length === 0"></div>
-  </div>
-</template>
 <script lang="ts">
 import {
   defineComponent,
@@ -34,7 +5,6 @@ import {
   getCurrentInstance,
   SetupContext,
   toRefs,
-  ref,
   PropType,
 } from "vue";
 import { Model } from "./../../../classes/model";
@@ -64,6 +34,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    baseRecordId: {
+      type: Number,
+      default: 0,
+    },
   },
 
   emits: ["record-selected", "record-unselected"],
@@ -72,14 +46,8 @@ export default defineComponent({
     const instance = getCurrentInstance();
 
     let tableHeaders: Record<string, any>[] = reactive([]);
-    let baseRecordId = ref(0);
-
     if (instance && instance.parent && instance.parent.props.headers) {
       tableHeaders = instance.parent.data.headers as Record<string, any>[];
-    }
-
-    if (instance && instance.parent && instance.parent.props.baseRecordId) {
-      baseRecordId.value = instance.parent.data.baseRecordId as number;
     }
 
     const getHeaderName = (name: string): string => {
@@ -95,16 +63,16 @@ export default defineComponent({
     };
 
     const handleSelectionClick = (
-      record: Record<string, any> | Model
+        record: Record<string, any> | Model
     ): void => {
       if (!props.recordsAreSelectable) {
         return;
       }
 
       let foundRecord = props.selectedRecords.find(
-        (rec: Record<string, any> | Model) => {
-          return rec.id === record.id;
-        }
+          (rec: Record<string, any> | Model) => {
+            return rec.id === record.id;
+          }
       );
 
       if (foundRecord) {
@@ -115,9 +83,7 @@ export default defineComponent({
     };
 
     const runRefresh = () => {
-      if (instance && instance.parent && instance.parent.exposed) {
-        instance.parent.exposed.runRefresh();
-      }
+      context.emit("refresh");
     };
 
     return {
@@ -127,9 +93,38 @@ export default defineComponent({
       deSelectRecord,
       runRefresh,
       tableHeaders,
-      baseRecordId,
       ...toRefs(props),
     };
   },
 });
 </script>
+
+<template>
+  <div id="records">
+    <table class="table table-hover">
+      <tr>
+        <th v-for="headerName in tableHeaders" :key="headerName">
+          {{ getHeaderName(headerName) }}
+        </th>
+      </tr>
+    </table>
+
+    <component
+      v-for="record in records"
+      :key="record.id"
+      :is="recordType"
+      :record="record"
+      :base-record-id="baseRecordId"
+      :class="{
+        selected: selectedRecords.find((r) => r.id === record.id),
+        'cursor-pointer': recordsAreSelectable,
+      }"
+      @click="handleSelectionClick(record)"
+      @record-selected="selectRecord(record)"
+      @record-unselected="deSelectRecord(record)"
+      @refresh="runRefresh"
+      :args="args"
+    ></component>
+    <div v-if="records.length === 0"></div>
+  </div>
+</template>

@@ -46,6 +46,7 @@
         v-model:records="records"
         :record-type="recordType"
         :args="gridArgs"
+        :base-record-id="baseRecordId"
         :selected-records="selectedRecords"
         :records-are-selectable="bulkActions.length > 0"
         @record-selected="addRecordToSelections"
@@ -115,7 +116,13 @@ import { setupPagination } from "./../composition/gridPagination";
 export default defineComponent({
   name: "v-grid",
 
-  emits: ["updatePagination", "actionRun", "updateFilter", "updateSort"],
+  emits: [
+    "updatePagination",
+    "actionRun",
+    "updateFilter",
+    "updateSort",
+    "update:queueRefresh",
+  ],
 
   setup(props, context: SetupContext) {
     const uniqueId = guid();
@@ -296,7 +303,7 @@ export default defineComponent({
       loadingData.value = newLoading;
     });
 
-    watch(queueRefresh, (newRefresh) => {
+    watch(queueRefresh, (newRefresh: boolean) => {
       if (newRefresh) {
         runRefresh();
       }

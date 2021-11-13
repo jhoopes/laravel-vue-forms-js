@@ -3,7 +3,7 @@ import { ILengthAwarePaginator } from "./../types";
 import { Model } from "./../classes/model";
 import Collection from "./../classes/collection";
 import { ApiClient } from "./../classes/apiClient";
-import { Ref } from "vue";
+import { isReactive, Ref, toRaw } from "vue";
 
 export const getApiParamsForGrid = (
   page: number,
@@ -36,7 +36,11 @@ export const getApiParamsForGrid = (
       Object.hasOwnProperty.call(recordUrlParams.value, key) &&
       recordUrlParams.value[key]
     ) {
-      params[key] = recordUrlParams.value[key];
+      let paramValue = recordUrlParams.value[key];
+      if (isReactive(recordUrlParams.value[key])) {
+        paramValue = toRaw(recordUrlParams.value[key]);
+      }
+      params[key] = paramValue;
     }
   }
 
